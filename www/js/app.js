@@ -53,6 +53,7 @@ app.run(function($ionicPlatform) {
   
   .state('app.choredetails', {
     url: '/mychores/:id',
+    cache: false,
     views: {
       'menuContent': {
         templateUrl: 'templates/choredetails.html',

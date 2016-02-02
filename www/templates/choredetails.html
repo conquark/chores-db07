@@ -1,6 +1,36 @@
-<ion-view view-title="Chore Details">
+<ion-view view-title="{{currentMember.name}}'s chores">
   <ion-content>
-    <h1>Chore details</h1>
-    {{chore.name}}
+    <div ng-if="chore.assigned !== 'Chore Store'">
+        <h1>{{chore.name}}</h1>
+        {{chore.description}} <br>
+        <span ng-if="chore.assigned === currentMember.name">
+            You chose this chore from the Chore Store
+        </span>
+        <br>
+        <br>
+        <br>
+    </div>
+    <div ng-if="chore.assigned === 'Chore Store'">
+        Chore returned!
+    </div>
+    <div  ng-if="currentMember.admin === true">
+        <button class="button button-balanced" ng-click="edit()">Edit</button> <br> <br>
+    </div>
+    <div ng-if="chore.complete === false">
+        <button class="button button-balanced" ng-click="markcomplete()">Mark this chore complete</button> <br /><br />
+    </div>
+    <div ng-if="chore.complete === true">
+        <button class="button button-energized" ng-click="markincomplete()">Mark this chore incomplete</button> <br /><br />
+    </div>
+    <div ng-if="currentMember.name === chore.assignedby && chore.complete === false">
+        <button class="button button-calm button-small" ng-click="returnchore()">Return this chore to the Chore Store</button>
+    </div>
+    <div ng-if="currentMember.name !== chore.assignedby && chore.complete === false">
+        <button class="button button-stable button-small" ng-disabled>(Can't return assigned chores)</button>
+    </div>
+    <div style="margin-top:75px;border:3px solid black;border-radius: 12px;padding:30px;">
+        Brought to you by the good folks at <br>
+        <strong>{{sponsor.name}}</strong>
+    </div>
   </ion-content>
 </ion-view>

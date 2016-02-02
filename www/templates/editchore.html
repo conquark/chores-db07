@@ -1,0 +1,19 @@
+<ion-modal-view view-title="Edit Chore">
+  <ion-content>
+    <h1>{{chore.name}}</h1>
+    <div class="list">
+        <label class="item item-input item-floating-label">
+            <span class="input-label">Chore Name</span>
+            <input type="text" id="chorename" ng-model="chore.name" placeholder="Chore Name">
+        </label>
+    </div>
+    <div class="list">
+        <label class="item item-input item-floating-label">
+            <span class="input-label">Chore Description</span>
+            <input type="text" id="choredescription" ng-model="chore.description" placeholder="Chore Description">
+        </label>
+    </div>
+    <button ng-click="saveRecord()">Save</button>
+    <button ng-click="cancel()">Cancel</button>
+  </ion-content>
+</ion-modal-view>

@@ -1,11 +1,23 @@
-<ion-view view-title="My Chores">
+<ion-view cache-view="false" view-title="{{currentMember.name}}'s Chores">
   <ion-content>
-    <h1>My Chores</h1>
+    <h2>Incomplete Chores</h2>
     <ion-list>
         <ion-item ng-repeat="chore in service.mychores"
-               ui-sref="app.choredetails({id:chore._id})">
+               ui-sref="app.choredetails({id:chore._id})" ng-if="chore.complete !== true">
             {{chore.name}} <br>
-            {{chore._id}}
+            You can earn: ${{chore.value}}
+            <h4 ng-if="chore.assignedby !== currentMember.name">Assigned by: {{chore.assignedby}}{{currentMember.name}}</h4>
+            <h4 ng-if="chore.assignedby === currentMember.name">You chose this chore from the Chore Store</h4>
+        </ion-item>
+    </ion-list>
+    <ion-list>
+       <h2>Completed chores</h2>
+        <ion-item ng-repeat="chore in service.mychores"
+               ui-sref="app.choredetails({id:chore._id})" ng-if="chore.complete == true">
+            {{chore.name}} <br>
+            You can earn: ${{chore.value}}
+            <h4 ng-if="chore.assignedby !== currentMember.name">Assigned by: {{chore.assignedby}}{{currentMember.name}}</h4>
+            <h4 ng-if="chore.assignedby === currentMember.name">You chose this chore from the Chore Store</h4>
         </ion-item>
     </ion-list>
   </ion-content>

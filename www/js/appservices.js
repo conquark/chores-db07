@@ -76,7 +76,7 @@ app.factory('AppService', function() {
 
 .factory('MyChoresService', function(AppService){
   var currentMemberName = AppService.currentMember.name;
-
+    
 // Set chores property to an empty array
   var self = {
     'mychores': []

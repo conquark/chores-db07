@@ -14,7 +14,9 @@ angular.module('taskMasterApp.controllers', [])
     AppService.setAllRecords();
     AppService.setCurrentMember();
     AppService.setFamily();
-    AppService.setSponsor();   
+    AppService.setSponsor();
+    
+    $scope.sponsor = AppService.sponsor;
     
   // Form data for the login modal
   $scope.loginData = {};
@@ -48,8 +50,9 @@ angular.module('taskMasterApp.controllers', [])
   };
 })
 
-.controller('MyChoresCtrl', function($scope, MyChoresService) {
+.controller('MyChoresCtrl', function($scope, MyChoresService, AppService) {
     $scope.service = MyChoresService;
+    $scope.currentMember = AppService.currentMember;
     
     // populate empty array with list of passed in chores
     $scope.service.populateChores();
@@ -57,8 +60,10 @@ angular.module('taskMasterApp.controllers', [])
     console.log($scope.service.mychores);
 })
 
-.controller('ChoreDetailsCtrl', function($scope, MyChoresService, $stateParams) {
+.controller('ChoreDetailsCtrl', function($scope, MyChoresService, AppService, $stateParams, $ionicModal, $ionicHistory) {
     $scope.chore = {};
+    $scope.sponsor = AppService.sponsor;
+    $scope.currentMember = AppService.currentMember;
     console.log('here we go');
     for (var i = 0; i < MyChoresService.mychores.length; i++) {
         console.log('howdy');
@@ -68,6 +73,59 @@ angular.module('taskMasterApp.controllers', [])
             $scope.chore = record;
         }
     }
+    
+    $ionicModal.fromTemplateUrl('templates/editchore.html', {
+        scope : $scope
+    }).then(function(modal) {
+        $scope.modal = modal;
+    });
+    
+      // Triggered in the login modal to close it
+      $scope.closeEdit = function() {
+        $scope.modal.hide();
+      };
+
+      // Open the login modal
+      $scope.edit = function() {
+          $scope.tempName = $scope.chore.name;
+          $scope.tempDescription = $scope.chore.description;
+        $scope.modal.show();
+      };
+    
+    $scope.saveRecord = function() {
+//        $scope.chore.name = document.getElementById('chorename').value;
+//        $scope.chore.description = document.getElementById('description').value;
+        $scope.closeEdit();
+    };
+    
+    $scope.cancel = function() {
+        $scope.closeEdit();
+        $scope.chore.name = $scope.tempName;
+        $scope.chore.description = $scope.tempDescription;
+    };
+    $scope.returnchore = function() {
+//        $scope.closeEdit();
+        $scope.chore.assigned = 'Chore Store';
+        $ionicHistory.goBack();
+    };
+
+    $scope.markcomplete = function() {
+//        $scope.closeEdit();
+        $scope.chore.complete = true;
+        $ionicHistory.goBack();
+    };
+
+    $scope.markincomplete = function() {
+//        $scope.closeEdit();
+        $scope.chore.complete = false;
+        $ionicHistory.goBack();
+    };
+    
+//    $scope.return = function() {
+//        $scope.closeEdit();
+//        $scope.chore.assigned = 'Chore Store';
+//        console.log('trying to return this thing');
+//    };
 })
 
 .controller('PlaylistsCtrl', function($scope) {
