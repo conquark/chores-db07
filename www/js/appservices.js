@@ -1,6 +1,6 @@
 var app = angular.module('taskMasterApp.services', []);
 
-app.factory('AppService', function() {
+app.factory('AppService', function(PouchDBListener) {
 //    alert('i am here!');
     function log(x){console.log(x)}
     
@@ -122,3 +122,67 @@ console.log(self.mychores);
   return self;
 
 });
+
+
+app.factory('PouchDBListener', ['$rootScope', function($rootScope) {
+
+ localDB.changes({live: true})
+  .on('change', function(change) {
+            //alert('hi');
+            if (!change.deleted) {
+                $rootScope.$apply(function() {
+                    localDB.get(change.id, function(err, doc) {
+                        $rootScope.$apply(function() {
+                            if (err) console.log(err);
+                            $rootScope.$broadcast('add', doc);
+                        })
+                    });
+                })
+            } else {
+                $rootScope.$apply(function() {
+                    $rootScope.$broadcast('delete', change.id);
+                });
+            }
+        });
+    return true;
+     
+}]);
+
+app.factory('PersonService', function(PouchDBListener) {
+    
+    self = {
+        addFamilyMember,
+        deleteFamilyMember,
+        updateFamilyMember,
+        payFamilyMember
+    }
+    
+    self.addFamilyMember = function(familymemberobject) {
+        var idFromDate = new Date().toISOString;
+        localDB.put({
+            _id: idFromDate,
+            name: familymemberobject.name,
+            admin: familymemberobject.admin
+        })
+    }
+    
+    self.deleteFamilyMember = function(memberrecord) {
+        localDB.get(memberrecord._id).then(function(doc) {
+            doc._deleted = true;
+            return localDB.put(doc);
+        });
+    }
+    
+    self.updateFamilyMember = function(memberrecord) {
+        localDB.get(memberrecord._id).then(function(doc) {
+            // DON'T USE THIS YET
+            //// may need to individually assign fields.
+            //// also - need to check against revision number
+            ////    and handle any errors with a message:
+            ////    "there's already a newer version of this
+            ////    record that has been saved" or some such
+            doc = memberrecord;
+            localDB.put(doc);
+        });
+    }
+})
