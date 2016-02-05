@@ -20,7 +20,7 @@
         <button class="button button-balanced" ng-click="markcomplete()">Mark this chore complete</button> <br /><br />
     </div>
     <div ng-if="chore.complete === true">
-        <button class="button button-energized" ng-click="markincomplete()">Mark this chore incomplete</button> <br /><br />
+        <button class="button button-energized" ng-click="markincomplete() ">Mark this chore incomplete</button> <br /><br />
     </div>
     <div ng-if="currentMember.name === chore.assignedby && chore.complete === false">
         <button class="button button-calm button-small" ng-click="returnchore()">Return this chore to the Chore Store</button>

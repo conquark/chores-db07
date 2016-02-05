@@ -1,6 +1,8 @@
+function log(x){console.log(x)}
+
 angular.module('taskMasterApp.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, AppService, PouchDBListener) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, AppService, PouchDBListener, PersonService,  GoalService, UtilityService) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -8,13 +10,15 @@ angular.module('taskMasterApp.controllers', [])
   // listen for the $ionicView.enter event:
   //$scope.$on('$ionicView.enter', function(e) {
   //});
-    
-    console.log(this.AppService);
+  $scope.$on('add', function(event,doc) {
+      UtilityService.updateObject(doc, AppService.allrecords);
+  });
+    //console.log(this.AppService);
 //    // set all of the app services up
     AppService.setAllRecords();
-    AppService.setCurrentMember();
-    AppService.setFamily();
-    AppService.setSponsor();
+//    AppService.setCurrentMember();
+//    AppService.setFamily();
+//    AppService.setSponsor();
     
     $scope.sponsor = AppService.sponsor;
     
@@ -50,27 +54,117 @@ angular.module('taskMasterApp.controllers', [])
   };
 })
 
-.controller('MyChoresCtrl', function($scope, MyChoresService, AppService) {
-    $scope.service = MyChoresService;
+.controller('MeCtrl', function($scope, AppService) {
+    $scope.service = AppService;
     $scope.currentMember = AppService.currentMember;
-    
-    // populate empty array with list of passed in chores
-    $scope.service.populateChores();
-    console.log('chores object:');
-    console.log($scope.service.mychores);
+    $scope.currentStats = AppService.currentStats;
 })
 
-.controller('ChoreDetailsCtrl', function($scope, MyChoresService, AppService, $stateParams, $ionicModal, $ionicHistory) {
+.controller('ChoreStoreCtrl', function($scope, $ionicModal, AppService) {
+//    $scope.assignToPerson = false;
+    $scope.newChore = {
+        _id: "",
+        name: "",
+        type: "chore",
+        description: "",
+        assigned: "Chore Store",
+        assignedby: "",
+        value: "",
+        duedate: "",
+        complete: false,
+        repeats: false,
+        frequency: ""
+    };
+    $scope.service = AppService;
+    $scope.chorestore = AppService.chorestore;
+    $scope.saveNewChore = function() {
+        $scope.newChore._id = new Date().toISOString();
+        $scope.newChore.assignedby = $scope.service.currentMember.name;
+        alert('newChore.assigned value is: ' + $scope.newChore.assigned);
+        localDB.put($scope.newChore).then(function(doc, err) {
+            $scope.closeAddChore();
+        }).catch(function(err) {
+            console.log('there was an error updating the chore. Error was: ' + err);
+        });
+        
+    }
+    $scope.doRefresh = function() {
+        AppService.setAllRecords();
+//        AppService.populateChores();
+        $scope.$broadcast('scroll.refreshComplete');
+        $scope.$apply();
+    };    
+ // Form data for the login modal
+  $scope.choreData = {};
+
+  // Create the login modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/addchore.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  // Triggered in the login modal to close it
+  $scope.closeAddChore = function() {
+    $scope.modal.hide();
+  };
+
+  // Open the login modal
+  $scope.addChore = function() {
+    $scope.modal.show();
+  };
+
+  // Perform the login action when the user submits the login form
+//  $scope.doLogin = function() {
+//    console.log('Doing login', $scope.loginData);
+
+    // Simulate a login delay. Remove this and replace with your login
+    // code if using a login system
+//    $timeout(function() {
+//      $scope.closeLogin();
+//    }, 1000);
+  })
+
+.controller('MyChoresCtrl', function($scope, AppService) {
+    $scope.service = AppService;
+    $scope.currentMember = $scope.service.currentMember;
+    $scope.doRefresh = function() {
+        AppService.setAllRecords();
+//        AppService.populateChores();
+        $scope.$broadcast('scroll.refreshComplete');
+        $scope.$apply();
+    };
+    
+    // populate empty array with list of passed in chores
+    
+    $scope.service.populateChores();;
+})
+
+.controller('ChoreDetailsCtrl', function($scope,$rootScope, AppService, UtilityService, $stateParams, $ionicModal, $ionicHistory) {
+
     $scope.chore = {};
+    $scope.choreClone = {};
+    $scope.getChoreClone = function() {
+        alert('trying to get choreClone');
+        localDB.get($scope.chore._id).then(function(doc, err) {
+            $scope.choreClone = doc;
+            console.log('this is the new choreClone');
+            console.log(doc);
+        });
+    }
+    
     $scope.sponsor = AppService.sponsor;
     $scope.currentMember = AppService.currentMember;
-    console.log('here we go');
-    for (var i = 0; i < MyChoresService.mychores.length; i++) {
-        console.log('howdy');
-        console.log($stateParams.id);
-        var record = MyChoresService.mychores[i];
+//    console.log('here we go');
+    for (var i = 0; i < AppService.mychores.length; i++) {
+//        console.log('howdy');
+//        console.log($stateParams.id);
+        var record = AppService.mychores[i];
         if (record._id === $stateParams.id) {
             $scope.chore = record;
+            $scope.getChoreClone();
+            console.log('this is choreclone');  
+            console.log($scope.choreClone);
         }
     }
     
@@ -95,6 +189,7 @@ angular.module('taskMasterApp.controllers', [])
     $scope.saveRecord = function() {
 //        $scope.chore.name = document.getElementById('chorename').value;
 //        $scope.chore.description = document.getElementById('description').value;
+        ChoreService.updateChore($scope.chore);
         $scope.closeEdit();
     };
     
@@ -105,27 +200,62 @@ angular.module('taskMasterApp.controllers', [])
     };
     $scope.returnchore = function() {
 //        $scope.closeEdit();
-        $scope.chore.assigned = 'Chore Store';
-        $ionicHistory.goBack();
+        $scope.choreClone.assigned = 'Chore Store';
+        localDB.put($scope.choreClone).then(function(doc, err) {
+            $ionicHistory.goBack();
+        }).catch(function(err) {
+            console.log('there was an error updating assignment to "Chore Store" Here was the error: ' + err);
+        });
     };
 
     $scope.markcomplete = function() {
-//        $scope.closeEdit();
-        $scope.chore.complete = true;
-        $ionicHistory.goBack();
+        $ionicHistory.clearCache().then(function(err) {
+            localDB.get($scope.chore._id).then(function(doc, err) {
+                var dbChore = doc;
+                log('this is dbChore');
+                log(dbChore);
+        //        var updatedChore = UtilityService.cloneAnObject($scope.chore);
+        //        updatedChore.complete = true;
+                dbChore.complete = true;
+                $scope.chore.complete = true;
+                localDB.put(dbChore).then(function(doc, err) {
+                        $ionicHistory.goBack();
+                }).catch(function(err) {
+                    console.log('there was an error updating the chore. Error was: ' + err);
+                });            
+            }).catch(function(err) {
+                log('encountered an error GETting from database. Error: ' + err);
+            });            
+        }).catch(function(err) {
+            log('encountered an error clearing da cache. Error: ' + err);
+        });
+
+
     };
 
     $scope.markincomplete = function() {
-//        $scope.closeEdit();
-        $scope.chore.complete = false;
-        $ionicHistory.goBack();
-    };
-    
-//    $scope.return = function() {
-//        $scope.closeEdit();
-//        $scope.chore.assigned = 'Chore Store';
-//        console.log('trying to return this thing');
-//    };
+        $ionicHistory.clearCache().then(function(){
+            localDB.get($scope.chore._id).then(function(doc, err) {
+                var dbChore = doc;
+                log('this is dbChore');
+                log(dbChore);
+        //        var updatedChore = UtilityService.cloneAnObject($scope.chore);
+        //        updatedChore.complete = false;
+                dbChore.complete = false;
+                $scope.chore.complete = false;
+                    localDB.put(dbChore).then(function() {
+                            $ionicHistory.goBack();
+                    }).catch(function(err) {
+                        console.log('there was an error updating the chore. Error was: ' + err);
+                    });
+            }).catch(function(err) {
+                log('encountered an error GETting from database. Error: ' + err);
+            });            
+        }).catch(function(err) {
+            log('encountered an error clearing da cache. Error: ' + err);
+        });
+
+    };    
 })
 
 .controller('PlaylistsCtrl', function($scope) {

@@ -1,0 +1,84 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Add a new chore</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeAddChore()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="doLogin()">
+    <h1>{{newChore.name}}</h1>
+    <div class="list">
+        <label class="item item-input item-floating-label">
+            <span class="input-label">Chore Name</span>
+            <input type="text" id="chorename" ng-model="newChore.name" placeholder="Chore Name">
+        </label>
+    </div>
+    <div class="list">
+        <label class="item item-input item-floating-label">
+            <span class="input-label">Chore Description</span>
+            <input type="text" id="choredescription" ng-model="newChore.description" placeholder="Chore Description">
+        </label>
+    </div>
+    <div class="list">
+        <label class="item item-input">
+            <span class="input-label">Value</span>
+            <i class="icon ion-social-usd placeholder-icon"></i>
+            <input type="text" id="chorevalue" ng-model="newChore.value" placeholder="value">
+        </label>
+    </div>
+    <div class="list">
+
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Categories
+        </div>
+        <ion-list>
+
+          <ion-checkbox ng-model="newChore.categories.kitchen">Kitchen</ion-checkbox>
+          <ion-checkbox ng-model="newChore.categories.cleaning">Cleaning</ion-checkbox>
+          <ion-checkbox ng-model="newChore.categories.yard">Yard</ion-checkbox>
+          <ion-checkbox ng-model="newChore.categories.bedroom">Bedroom</ion-checkbox>
+          <ion-checkbox ng-model="newChore.categories.maintenance">Maintenance</ion-checkbox>
+          <ion-checkbox ng-model="newChore.categories.meals">Meals</ion-checkbox>
+          <ion-checkbox ng-model="newChore.categories.declutter">De-clutter</ion-checkbox>
+
+        </ion-list>
+      </label>
+
+    </div>
+    <div class="list">
+           <span class="label">What do you want to do with this chore?</span>
+           <ion-list>
+              <ion-radio checked="checked" ng-model="newChore.assigned" ng-value="'Jimmy'">Assign to Jimmy</ion-radio>
+              <ion-radio ng-model="newChore.assigned" ng-value="'Dad'">Assign to Dad</ion-radio>
+              <ion-radio ng-model="newChore.assigned" ng-value="'Chore Store'">Add to Chore Store</ion-radio>
+            </ion-list>                    
+    </div>
+          <button class="button button-block button-positive" ng-click="saveNewChore()">Add this chore</button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>
+
+<!--
+
+{
+    _id:            "[datetimestamp.toISOString]",
+    name:           "[chore name]",
+    type:           "chore",
+    frequency:      "[****TODO - NEED TO FIGURE THIS OUT]",
+    value:          "[a number]",
+    description:    "[paragraph description of task]",
+    category:       "[*****category - NEED TO PREDEFINE SOME]",
+    assigned:       "first name of who chore is assigned to",
+    assignedby:     "first name of who assigned the chore (if the person chose the chore him or herself, it will be their own first name)",
+    complete:       true or false (default to false),
+    completiondate: "[date]",
+    needsapproval:  true or false (default to false),
+    approved:       true or false (default to false),
+    approvaldate:   "[date]" (same as completion date if a chosen chore),
+    approvedby:     "[first name of whoever approved the chore]" (your name if you chose it),
+    duedate:        "[optional due date for chore]"
+}-->

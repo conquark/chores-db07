@@ -1,5 +1,5 @@
 var localDB = new PouchDB('tmchores');
-var remoteDB = new PouchDB('http://bturner:wallybear@127.0.0.1:5984/tmchores')
+var remoteDB = new PouchDB('https://bturner:glasgow8mysoup@bturner.cloudant.com/tmchores');
 var app = angular.module('taskMasterApp', ['ionic', 'taskMasterApp.controllers', 'taskMasterApp.services']);
 
 app.run(function($ionicPlatform) {
@@ -19,8 +19,10 @@ app.run(function($ionicPlatform) {
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
-  $stateProvider
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+    $ionicConfigProvider.views.maxCache(0);
+    
+    $stateProvider
 
     .state('app', {
     url: '/app',
@@ -40,10 +42,12 @@ app.run(function($ionicPlatform) {
 
   .state('app.mychores', {
     url: '/mychores',
+    cache: false,
     views: {
       'menuContent': {
         templateUrl: 'templates/mychores.html',
           controller: 'MyChoresCtrl'
+//          reload: true
       }
     }
   })
@@ -59,11 +63,23 @@ app.run(function($ionicPlatform) {
     }
   })
 
-  .state('app.search', {
-    url: '/search',
+  .state('app.me', {
+    url: '/me',
     views: {
       'menuContent': {
-        templateUrl: 'templates/search.html'
+        templateUrl: 'templates/me.html',
+          controller: 'MeCtrl'
+      }
+    }
+  })
+
+  .state('app.chorestore', {
+    url: '/chorestore',
+    cache: false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/chorestore.html',
+          controller: 'ChoreStoreCtrl'
       }
     }
   })
