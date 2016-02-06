@@ -14,10 +14,11 @@
 
   <ion-side-menu side="left">
     <ion-header-bar class="bar-stable">
-      <h1 class="title">Left</h1>
+      <h1 class="title">Menu</h1>
     </ion-header-bar>
-    <ion-content>
-      <ion-list>
+    <ion-content  style="background-image:url('img/background.png');">
+    <div class="card">
+              <ion-list>
         <ion-item menu-close ng-click="login()">
           Login
         </ion-item>
@@ -37,7 +38,8 @@
           Playlists
         </ion-item>
       </ion-list>
-    <div style="margin-top:15px;border:3px solid black;border-radius: 12px;padding:30px;">
+    </div>
+    <div style="margin:auto;margin-top:15px;border:0px solid white;border-radius: 12px;padding:30px;background-color:white;max-width:90%;">
         Brought to you by the good folks at <br>
         <strong>{{sponsor.name}}</strong>
     </div>

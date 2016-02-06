@@ -1,7 +1,10 @@
 <ion-view view-title="{{currentMember.name}}'s chores">
-  <ion-content>
-    <div ng-if="chore.assigned !== 'Chore Store'">
+  <ion-content style="background-image:url('img/background.png');background-position:center">
+    <div class="card">
+        <div class="item">
+                <div ng-if="chore.assigned !== 'Chore Store'">
         <h1>{{chore.name}}</h1>
+        <h2>{{chore.value}}</h2>
         {{chore.description}} <br>
         <span ng-if="chore.assigned === currentMember.name">
             You chose this chore from the Chore Store
@@ -28,7 +31,9 @@
     <div ng-if="currentMember.name !== chore.assignedby && chore.complete === false">
         <button class="button button-stable button-small" ng-disabled>(Can't return assigned chores)</button>
     </div>
-    <div style="margin-top:75px;border:3px solid black;border-radius: 12px;padding:30px;">
+        </div>
+    </div>
+    <div style="margin:auto;margin-top:75px;border:0px solid white;border-radius: 12px;padding:30px;max-width:90%;background-color:white">
         Brought to you by the good folks at <br>
         <strong>{{sponsor.name}}</strong>
     </div>

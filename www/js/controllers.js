@@ -21,10 +21,10 @@ angular.module('taskMasterApp.controllers', [])
 //    AppService.setSponsor();
     
     $scope.sponsor = AppService.sponsor;
-    
+    $scope.familyMembers = AppService.familyMembers; 
   // Form data for the login modal
   $scope.loginData = {};
-
+  
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
     scope: $scope
@@ -62,6 +62,9 @@ angular.module('taskMasterApp.controllers', [])
 
 .controller('ChoreStoreCtrl', function($scope, $ionicModal, AppService) {
 //    $scope.assignToPerson = false;
+    $scope.$on('ionicView.enter', function(e) {
+       $scope.doRefresh(); 
+    });
     $scope.newChore = {
         _id: "",
         name: "",
@@ -77,6 +80,7 @@ angular.module('taskMasterApp.controllers', [])
     };
     $scope.service = AppService;
     $scope.chorestore = AppService.chorestore;
+        $scope.service.populateChores();;
     $scope.saveNewChore = function() {
         $scope.newChore._id = new Date().toISOString();
         $scope.newChore.assignedby = $scope.service.currentMember.name;
@@ -97,23 +101,26 @@ angular.module('taskMasterApp.controllers', [])
  // Form data for the login modal
   $scope.choreData = {};
 
-  // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/addchore.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.modal = modal;
   });
 
+
   // Triggered in the login modal to close it
   $scope.closeAddChore = function() {
     $scope.modal.hide();
   };
+
 
   // Open the login modal
   $scope.addChore = function() {
     $scope.modal.show();
   };
 
+    $scope.service.populateChores();
+    $scope.service.getChoreStore();
   // Perform the login action when the user submits the login form
 //  $scope.doLogin = function() {
 //    console.log('Doing login', $scope.loginData);
@@ -128,6 +135,8 @@ angular.module('taskMasterApp.controllers', [])
 .controller('MyChoresCtrl', function($scope, AppService) {
     $scope.service = AppService;
     $scope.currentMember = $scope.service.currentMember;
+    $scope.completedchores = $scope.service.completedchores;
+    $scope.incompletechores = $scope.service.incompletechores;
     $scope.doRefresh = function() {
         AppService.setAllRecords();
 //        AppService.populateChores();
@@ -137,29 +146,42 @@ angular.module('taskMasterApp.controllers', [])
     
     // populate empty array with list of passed in chores
     
-    $scope.service.populateChores();;
+    $scope.service.populateChores();
 })
 
-.controller('ChoreDetailsCtrl', function($scope,$rootScope, AppService, UtilityService, $stateParams, $ionicModal, $ionicHistory) {
-
+.controller('ChoreDetailsCtrl', function($scope,$rootScope, AppService, UtilityService, $stateParams, $ionicModal, $ionicHistory, $state) {
+    $scope.$on('$ionicView.enter', function(e) {
+        $scope.doRefresh();
+    });
+    $scope.choreclaimed = false;
     $scope.chore = {};
     $scope.choreClone = {};
+    $scope.$on('add', function() {
+//        alert('howdy');
+    });
     $scope.getChoreClone = function() {
-        alert('trying to get choreClone');
+//        alert('trying to get choreClone');
         localDB.get($scope.chore._id).then(function(doc, err) {
             $scope.choreClone = doc;
             console.log('this is the new choreClone');
             console.log(doc);
         });
     }
+
+    $scope.doRefresh = function() {
+        AppService.setAllRecords();
+//        AppService.populateChores();
+        $scope.$broadcast('scroll.refreshComplete');
+        $scope.$apply();
+    }; 
     
     $scope.sponsor = AppService.sponsor;
     $scope.currentMember = AppService.currentMember;
 //    console.log('here we go');
-    for (var i = 0; i < AppService.mychores.length; i++) {
+    for (var i = 0; i < AppService.allrecords.length; i++) {
 //        console.log('howdy');
 //        console.log($stateParams.id);
-        var record = AppService.mychores[i];
+        var record = AppService.allrecords[i];
         if (record._id === $stateParams.id) {
             $scope.chore = record;
             $scope.getChoreClone();
@@ -171,27 +193,41 @@ angular.module('taskMasterApp.controllers', [])
     $ionicModal.fromTemplateUrl('templates/editchore.html', {
         scope : $scope
     }).then(function(modal) {
-        $scope.modal = modal;
+        $scope.editmodal = modal;
     });
     
       // Triggered in the login modal to close it
-      $scope.closeEdit = function() {
-        $scope.modal.hide();
+      $scope.closeEditChore = function() {
+        $scope.editmodal.hide();
       };
+    
+    $scope.claim = function() {
+        $scope.choreclaimed = true;
+        $scope.choreClone.assigned = $scope.currentMember.name;
+        localDB.put($scope.choreClone).then(function(doc, err) {
+            $scope.closeEditChore();
+        }).catch(function(err) {
+            console.log('there was an error updating the chore. Error was: ' + err);
+        });        
+    }
 
       // Open the login modal
       $scope.edit = function() {
           $scope.tempName = $scope.chore.name;
           $scope.tempDescription = $scope.chore.description;
-        $scope.modal.show();
+        $scope.editmodal.show();
       };
     
     $scope.saveRecord = function() {
-//        $scope.chore.name = document.getElementById('chorename').value;
-//        $scope.chore.description = document.getElementById('description').value;
-        ChoreService.updateChore($scope.chore);
-        $scope.closeEdit();
-    };
+            localDB.put($scope.choreClone).then(function(doc, err) {
+                $ionicHistory.clearCache();
+                $scope.chore = $scope.choreClone;
+                $scope.closeEditChore();
+            }).catch(function(err) {
+                console.log('there was an error updating the chore. Error was: ' + err);
+            });            
+    }
+    
     
     $scope.cancel = function() {
         $scope.closeEdit();

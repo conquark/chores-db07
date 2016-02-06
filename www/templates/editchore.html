@@ -1,19 +1,70 @@
 <ion-modal-view view-title="Edit Chore">
+  <ion-header-bar>
+    <h1 class="title">Edit chore</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeEditChore()">Close</button>
+    </div>
+  </ion-header-bar>
   <ion-content>
-    <h1>{{chore.name}}</h1>
+    <ion-item class="item-wrap-text">
+           <form>
+    <div class="item-text-wrap" style="margin-bottom:20px">
+        <h1>{{choreClone.name}}</h1>
+    </div>
     <div class="list">
         <label class="item item-input item-floating-label">
             <span class="input-label">Chore Name</span>
-            <input type="text" id="chorename" ng-model="chore.name" placeholder="Chore Name">
+            <input type="text" id="chorename" ng-model="choreClone.name" placeholder="Chore Name">
         </label>
     </div>
     <div class="list">
         <label class="item item-input item-floating-label">
             <span class="input-label">Chore Description</span>
-            <input type="text" id="choredescription" ng-model="chore.description" placeholder="Chore Description">
+            <input type="text" id="choredescription" ng-model="choreClone.description" placeholder="Chore Description">
         </label>
     </div>
-    <button ng-click="saveRecord()">Save</button>
-    <button ng-click="cancel()">Cancel</button>
+    <div class="list">
+        <label class="item item-input">
+            <span class="input-label" style="font-size: .9em">Chore value (current value: {{chore.value}})</span>
+            <i class="icon ion-social-usd placeholder-icon"></i>
+            <input type="text" id="chorevalue" ng-model="choreClone.value" placeholder="Chore Value">
+        </label>
+    </div>
+    <div class="list">
+
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Chore Categories<br/>
+          <span class="small" style="color:gray">(choose as many as apply)</span>
+        </div>
+      </label>
+        <ion-list>
+
+          <ion-checkbox ng-model="choreClone.categories.kitchen">Kitchen</ion-checkbox>
+          <ion-checkbox ng-model="choreClone.categories.cleaning">Cleaning</ion-checkbox>
+          <ion-checkbox ng-model="choreClone.categories.yard">Yard</ion-checkbox>
+          <ion-checkbox ng-model="choreClone.categories.bedroom">Bedroom</ion-checkbox>
+          <ion-checkbox ng-model="choreClone.categories.maintenance">Maintenance</ion-checkbox>
+          <ion-checkbox ng-model="choreClone.categories.meals">Meals</ion-checkbox>
+          <ion-checkbox ng-model="choreClone.categories.declutter">De-clutter</ion-checkbox>
+          <ion-checkbox ng-model="choreClone.categories.pets">Pets</ion-checkbox>
+          <ion-checkbox ng-model="choreClone.categories.shopping">Shopping</ion-checkbox>
+          
+        </ion-list>
+
+    </div>
+    <div class="list">
+           <span class="label">What do you want to do with this chore?</span>
+           <ion-list>
+              <ion-radio checked="checked" ng-model="newChore.assigned" ng-value="'Jimmy'">Assign to Jimmy</ion-radio>
+              <ion-radio ng-model="choreClone.assigned" ng-value="'Dad'">Assign to Dad</ion-radio>
+              <ion-radio ng-model="choreClone.assigned" ng-value="'Chore Store'">Keep in Chore Store</ion-radio>
+            </ion-list>                    
+    </div>
+          <button class="button button-block button-positive" ng-click="saveRecord()">Save this chore</button>
+        </label>
+      </div>
+    </form>
+    </ion-item>
   </ion-content>
 </ion-modal-view>

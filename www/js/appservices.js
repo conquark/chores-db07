@@ -15,9 +15,11 @@ app.factory('UtilityService', function() {
     };
     
     self.updateObject = function(theObject,allrecordsarray) {
+//        alert('attempting to update the in-memory database...i think');
         localDB.get(theObject._id).then(function(doc, err) {
             for (var i = 0; i < allrecordsarray.length; i++) {
                 if (allrecordsarray[i]._id === theObject._id) {
+//                    alert('splicing...');
                     allrecordsarray.splice(i, 1, doc);
                 }
             }
@@ -49,7 +51,9 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
         familyMembers: [],
         currentRecordIndex: 0,
         mychores: [],
-        chorestore: []
+        chorestore: [],
+        completedchores: 0,
+        incompletechores: 0
     };
     
     
@@ -73,6 +77,13 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
             self.getChoreStore();
             log('chorestore is:');
             log(self.chorestore);
+            self.setSponsor();
+            log('sponsor is: ');
+            log(self.sponsor);
+            log('incompletechores is: ' + self.incompletechores);
+            log('completedchores is: ' + self.completedchores);
+            log('familyMembers is: ');
+            log(self.familyMembers);
         })
     }
     
@@ -80,6 +91,7 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
         // somehow remember who was logged in. A cookie, perhaps?
         /////USE RANDOM FAMILY MEMBER FOR NOW
         var familySize = 0;
+        self.familyMembers = [];
         for (var i = 0; i < self.allrecords.length; i++) {
             record = self.allrecords[i];
             if (record.type === 'person') {
@@ -189,7 +201,9 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
 
     
     self.populateChores = function() {
-        self.mychores.length = 0;      
+        self.mychores.length = 0;
+        self.completedchores = 0;
+        self.incompletechores = 0;
         for ( var i = 0; i < self.allrecords.length; i++) {
 //            log('iterating...');
             var record = self.allrecords[i];
@@ -198,6 +212,12 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
 //            if (record.type === 'chore' && record.assigned === self.currentMemberName) {
             if (record.type === 'chore' && record.assigned === self.currentMember.name) {
                 self.mychores.push(record);
+            }
+            if (record.type === 'chore' && record.complete === true && record.assigned === self.currentMember.name) {
+                self.completedchores = self.completedchores + 1;
+            }
+            if (record.type === 'chore' && record.complete === false && record.assigned === self.currentMember.name) {
+                self.incompletechores = self.incompletechores + 1;
             }
         }
     };

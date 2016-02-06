@@ -1,17 +1,19 @@
 <ion-view cache-view="false" view-title="Chore Store">
-   <ion-content>
-    <div style="text-align:center"><span style="color:lightgray">pull to refresh</span></div>
+   <ion-content style="background-image:url('img/background.png');background-position:center">
     <ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()">
     </ion-refresher>
+    <div class="card">
+            <div style="text-align:center"><span style="color:lightgray">pull to refresh</span></div>
     <button ng-click="addChore()" class="button button-positive button-full" ng-if="service.currentMember.admin === true">
       Add a new Chore
     </button>
     <ion-list>
         <ion-item ng-repeat="chore in service.chorestore"
-               ui-sref="app.choredetails({id:chore._id})" ng-if="chore.complete !== true">
+               ui-sref="app.chorestoredetails({id:chore._id})" ng-if="chore.complete !== complete">
             {{chore.name}} <br>
             You can earn: ${{chore.value}}
         </ion-item>
     </ion-list>
+    </div>
   </ion-content>
 </ion-view>

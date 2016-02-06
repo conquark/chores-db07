@@ -1,1 +1,54 @@
 /* Empty. Add your own CSS if you like */
+body {
+    font-size: 1.2em;
+}
+.pane {
+    background-image: 'img/background.png';
+}
+
+ion-content {
+    background-image: 'img/background.png';
+}
+
+.card {
+    border-radius: 8px;
+}
+
+.card .item:first-child, .list-inset .item:first-child, .padding > .list .item:first-child {
+    background-color: beige;
+}
+
+
+.ball-center-content {
+    display: -webkit-flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	-webkit-align-items: center;
+	-webkit-box-pack: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
+	-webkit-justify-content: center;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	    -ms-flex-direction: column;
+	        flex-direction: column;
+	-webkit-flex-direction: column;
+    margin-top:5px;
+}
+
+<style>
+  .with-bg-size
+  {
+    background-image: url('../img/mom.jpg') !important;
+    width: 200px;
+    height: 100px;
+    background-position: center;
+
+    /* Make the background image cover the area of the <div>, and clip the excess */
+    background-size: cover;
+  }
+</style>

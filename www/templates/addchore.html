@@ -6,7 +6,7 @@
     </div>
   </ion-header-bar>
   <ion-content>
-    <form ng-submit="doLogin()">
+    <form>
     <h1>{{newChore.name}}</h1>
     <div class="list">
         <label class="item item-input item-floating-label">
@@ -42,7 +42,9 @@
           <ion-checkbox ng-model="newChore.categories.maintenance">Maintenance</ion-checkbox>
           <ion-checkbox ng-model="newChore.categories.meals">Meals</ion-checkbox>
           <ion-checkbox ng-model="newChore.categories.declutter">De-clutter</ion-checkbox>
-
+          <ion-checkbox ng-model="newChore.categories.pets">Pets</ion-checkbox>
+          <ion-checkbox ng-model="newChore.categories.shopping">Shopping</ion-checkbox>
+          
         </ion-list>
       </label>
 

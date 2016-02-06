@@ -62,7 +62,18 @@ app.run(function($ionicPlatform) {
       }
     }
   })
-
+    
+  .state('app.chorestoredetails', {
+    url: '/chorestore/:id',
+    cache: false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/chorestoredetails.html',
+          controller: 'ChoreDetailsCtrl'
+      }
+    }
+  })
+    
   .state('app.me', {
     url: '/me',
     views: {

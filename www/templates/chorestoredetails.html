@@ -1,0 +1,38 @@
+<ion-view cache-view="false" view-title="Chore Details">
+  <ion-content style="background-image:url('img/background.png');background-position:center">
+    <ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()">
+    </ion-refresher>
+    <div class="card">
+    <button ng-click="claim()" class="button button-energized button-full" ng-if="choreclaimed === false">
+      Add this chore to your chores
+    </button>
+    <button class="button button-positive button-full" ng-if="choreclaimed === true" style="line-height: 1em">
+        <span style="font-size: .9em">Added! This chore is now available<br />on the My Chores page.</span>
+    </button>
+    
+    <ion-item>
+    <div ng-if="chore.assigned === 'Chore Store'">
+    <div class="item-text-wrap" style="margin-bottom:20px;">
+        <span class="dark"><strong>{{chore.name}}</strong></span>
+        <div style="float:right; font-size:1.2em">${{chore.value}}</div>
+        <hr>
+        Description:<br />
+        {{chore.description}} <br>
+        <hr>
+        Categories: {{chore.category}} <span ng-if="!chore.category" style="color:gray">no categories assigned to this chore</span>
+    </div>
+    <div ng-if="currentMember.name !== chore.assignedby && chore.complete === false">
+        <button class="button button-stable button-small" ng-disabled>(Can't return assigned chores)</button>
+    </div>
+        <button ng-click="edit()" class="button button-balanced button-full" ng-if="currentMember.admin === true">
+          Edit chore
+        </button>
+    </div>
+    </ion-item>
+    </div>
+    <div style="margin:auto;margin-top:75px;border:0px solid white;border-radius: 12px;padding:30px;background-color:white;max-width:90%;">
+        Brought to you by the good folks at <br>
+        <strong>{{sponsor.name}}</strong>
+    </div>
+  </ion-content>
+</ion-view>

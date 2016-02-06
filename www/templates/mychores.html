@@ -1,20 +1,29 @@
 <ion-view cache-view="false" view-title="{{currentMember.name}}'s Chores">
-   <ion-content>
-    <div style="text-align:center"><span style="color:lightgray">pull to refresh</span></div>
+   <ion-content style="background-image:url('img/background.png');background-position:center">
     <ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()">
     </ion-refresher>
-    <h2>Incomplete Chores</h2>
+
+    <div class="card">
     <ion-list>
+      <ion-item>
+         <div style="text-align:center;margin-bottom:20px;"><span style="color:lightgray">pull to refresh</span></div>
+          My Chores
+      </ion-item>
+<!--
+       <ion-item ng-if="incompletechores === 0" class="positive">
+           You have no uncompleted chores!
+       </ion-item>
+-->
         <ion-item ng-repeat="chore in service.mychores"
-               ui-sref="app.choredetails({id:chore._id})" ng-if="chore.complete !== true">
+               ui-sref="app.choredetails({id:chore._id})" ng-if="chore.complete !== true" class="positive">
             {{chore.name}} <br>
             You can earn: ${{chore.value}}
             <h4 ng-if="chore.assignedby !== currentMember.name">Assigned by: {{chore.assignedby}}</h4>
             <h4 ng-if="chore.assignedby === currentMember.name">You chose this chore from the Chore Store</h4>
         </ion-item>
-    </ion-list>
-    <ion-list>
-       <h2>Completed chores</h2>
+       <ion-item>
+               <span class="dark">Completed Chores</span>
+       </ion-item>
         <ion-item ng-repeat="chore in service.mychores"
                ui-sref="app.choredetails({id:chore._id})" ng-if="chore.complete == true" class="balanced">
             {{chore.name}} <br>
@@ -23,5 +32,6 @@
             <h4 ng-if="chore.assignedby === currentMember.name">You chose this chore from the Chore Store</h4>
         </ion-item>
     </ion-list>
+    </div>
   </ion-content>
 </ion-view>
