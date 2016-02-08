@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="js/bootstrap-responsive.min.css">
+       <style type="text/css">
+      body {
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: #f5f5f5;
+      }
+
+      .form-signin {
+        max-width: 300px;
+        padding: 19px 29px 29px;
+        margin: 0 auto 20px;
+        background-color: #fff;
+        border: 1px solid #e5e5e5;
+        -webkit-border-radius: 5px;
+           -moz-border-radius: 5px;
+                border-radius: 5px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+           -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                box-shadow: 0 1px 2px rgba(0,0,0,.05);
+      }
+      .form-signin .form-signin-heading,
+      .form-signin .checkbox {
+        margin-bottom: 10px;
+      }
+      .form-signin input[type="text"],
+      .form-signin input[type="password"] {
+        font-size: 16px;
+        height: auto;
+        margin-bottom: 15px;
+        padding: 7px 9px;
+      }
+
+    </style>
+    <title>Document</title>
+</head>
+<body style="font-family:calibri,tahoma,verdana,sans-serif;background-image:url('img/background.png');background-position:center">
+    <div style="text-align:center;margin-bottom:15px">
+        <img src="img/taskmaster2.png" alt="">
+    </div>
+
+    <div class="container">
+
+      <div class="form-signin">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <input type="text" id="firstemail" size="25" placeholder="email you signed up with">
+        <input type="text" id="secondemail" size="25" placeholder="type your email in again">
+        <div id="emailerrordiv" style="display:none;color:rose;">Emails do not match</div>
+        <div id="emailmatchdiv" style="display:none;color:green;">Emails match! Make sure you're using the one you signed up with.</div><br/><br/>
+          <textarea id="bankcode" rows="3" placeholder="code from your financial institution" ></textarea><br/><br/>
+       
+<!--
+        <input type="text" id="firstemail" class="input-block-level" placeholder="email you signed up with">
+        <input type="text" id="secondemail" class="input-block-level" placeholder="type your email in again">
+-->
+        <div id="success" style="display:none">Code validated. Setting up app...</div>
+        <div id="fail" style="display:none">Are you sure you've got the right code? We didn't recognize that one. Try again?</div>
+<!--        <input type="text" id="bankcode" class="input-block-level" placeholder="your code">-->
+
+       <br /><button class="btn btn-large btn-primary" onclick="javascript:validate()" style="padding:12px;font-size:1.3em" type="submit">Send Code</button>
+<!--        <button class="btn btn-large btn-primary" type="submit" onclick="javascript:validate()">Validate code</button>           -->
+
+
+      </div>
+
+    </div> <!-- /container -->
+    
+    <div class="container">
+       <div class="form-signin">
+            <span style="font-size:.8em;color:gray;">I prefer to use the app wihtout a code.*</span><br /><br />
+            <button class="btn btn-large btn-primary" onclick="javascript:appnocode()" style="padding:12px;font-size:1em" type="submit">Use app without code</button>
+            <br /><br />
+            <span style="font-size:.8em;color:gray;">*note: app can be used without code, but some functions may be limited.</span>
+       </div>
+
+        
+    </div>
+<!--
+
+
+        <button onclick="javascript:validate()">Validate code</button>
+-->
+
+
+    
+    <script src="js/cookies.js"></script>
+    <script src="js/uservalidation.js"></script>
+    <script src="js/jquery-1.12.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</body>
+</html>

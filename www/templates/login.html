@@ -6,10 +6,22 @@
     </div>
   </ion-header-bar>
   <ion-content>
-  <ion-list>
-   <ion-item ng-repeat="member in familyMembers">
+  <ion-list ng-if="familySize > 0">
+   <ion-item ng-repeat="member in familyMembers" ng-click="setCurrentMember($index)">
        {{member.name}}
    </ion-item>      
   </ion-list>
+<!--
+  <div class="card">
+      <ion-list ng-if="familyMembers < 1">
+          <ion-item class="item-text-wrap">
+               Email you signed up with: <input ng-model="signupemail" type="text"><br />
+               Code given to you by your financial institution: <input ng-model="signupcode" type="text"><br />
+               <button class="button button-positive" ng-click="verifyCode()">Send code</button>              
+          </ion-item>
+      </ion-list>      
+  </div>
+-->
+
   </ion-content>
 </ion-modal-view>

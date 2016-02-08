@@ -1,7 +1,30 @@
 <ion-view view-title="Welcome!">
-  <ion-content>
-    <h1>Welcome to TaskMaster</h1>
-        <div style="margin-top:15px;border:3px solid black;border-radius: 12px;padding:30px;">
+  <ion-content style="background-image:url('img/background.png');background-position:center">
+<!--
+    <div class="overlaywelcome">
+        <div class="overlayhamburgerarrow"></div>
+    </div>
+    <div class="overlaystartbutton" ng-click=""></div>
+-->
+     <div style="text-align:center;margin-top:8px;margin-bottom:15px;">
+         <img src="img/taskmaster2.png" alt="">
+     </div>
+     <div class="card">
+      
+       <div style="padding:25px;">
+        <h2>Welcome to TaskMaster, {{currentMember.name}}</h2>
+        <div style="text-align:center">
+            <img src="img/arrow-right.png" alt=""><br />
+            <span ng-if="setupCompleteCookie">
+                Swipe right to start!
+            </span>
+            <span ng-if="setupCompleteCookie === ''" ng-click="cookiereload()">Setting up app for first use...</span>
+        </div>                  
+       </div>
+
+   </div>
+
+    <div style="margin:auto;margin-top:15px;border:0px solid white;border-radius: 12px;padding:30px;max-width:80%; background-color:white;">
         Brought to you by the good folks at <br>
         <strong>{{sponsor.name}}</strong>
     </div>

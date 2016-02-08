@@ -1,0 +1,36 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Set up TaskMaster</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeSetup()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+   <ion-item>
+    <div class="card item-text-wrap">
+        <div class="item">
+            <p>Welcome to setup! If you've already set up your family on another device, you can enter your email and code by selecting "Login" from the side menu.</p>
+        
+        <p>Otherwise, let's get you set up as the first user, so you can start creating and assigning chores!</p>
+        </div>
+    </div>
+    <form>
+    <div class="list">
+        <label class="item item-input item-floating-label">
+            <span class="input-label">What's your name? ("Mum", "Dad", etc.)</span>
+            <input type="text" id="username" ng-model="newUser.name" placeholder="Your Name">
+        </label>
+    </div>
+    <div class="list">
+        <label class="item item-input item-floating-label">
+            <span class="input-label">Choose a numerical PIN code for yourself:</span>
+            <input type="number" id="userpin" ng-model="newUser.pin" placeholder="Your PIN"><br/>
+        </label>
+    </div>
+          <button class="button button-block button-positive" ng-click="saveNewUser()">Get Started!</button>
+        </label>
+      </div>
+    </form>
+    </ion-item>
+  </ion-content>
+</ion-modal-view>

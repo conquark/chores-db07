@@ -18,25 +18,43 @@
     </ion-header-bar>
     <ion-content  style="background-image:url('img/background.png');">
     <div class="card">
-              <ion-list>
-        <ion-item menu-close ng-click="login()">
-          Login
+        <ion-list>
+        <ion-item class="beige">
+            {{currentMember.name}} is logged in.
+        </ion-item>
+
+        <ion-item menu-close ng-click="login()" href="#/app/welcome">
+<!--          <span ng-if="familySize < 1">Enter Premium Code</span><span ng-if="familySize > 0">Switch user</span>-->
+              <span ng-if="familySize > 0">Log in a different user</span>
+        </ion-item>
+        <ion-item ng-if="familySize > 0" menu-close href="#/app/chorestore">
+          Chore Store<span ng-if="currentMember.admin === true">:<br /><i style="color:gray">Add and assign chores</i></span>
+        </ion-item>
+        <ion-item ng-if="familySize > 0 && currentMember.admin == true" menu-close href="#/app/dashboard">
+             <div class="item-text-wrap">
+              App Dashboard<span ng-if="currentMember.admin === true">:<br /><span style="color:gray">Add additional family members, manage payments, link to online banking.</span></span>      
+            </div>
         </ion-item>
         <ion-item menu-close href="#/app/welcome">
-          Welcome
+          Home Screen
         </ion-item>
-       <ion-item menu-close href="#/app/mychores">
-          My Chores
-        </ion-item>
-        <ion-item menu-close href="#/app/me">
+        <ion-item ng-if="familySize < 1" menu-close ng-click="setup()">
+          Setup - [start here]
+        </ion-item>        
+        <ion-item ng-if="familySize > 0 && currentMember.admin !== true" menu-close href="#/app/me">
           Me
         </ion-item>
-        <ion-item menu-close href="#/app/chorestore">
-          Browse the Chore Store
+       <ion-item ng-if="familySize > 0 && currentMember.admin !== true" menu-close href="#/app/mychores">
+          My Chores
         </ion-item>
+       <ion-item ng-if="familySize > 0 && currentMember.admin !== true" menu-close href="#/app/mygoals">
+          My Goals
+        </ion-item>
+<!--
         <ion-item menu-close href="#/app/playlists">
           Playlists
         </ion-item>
+-->
       </ion-list>
     </div>
     <div style="margin:auto;margin-top:15px;border:0px solid white;border-radius: 12px;padding:30px;background-color:white;max-width:90%;">

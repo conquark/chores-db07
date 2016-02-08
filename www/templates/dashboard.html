@@ -1,0 +1,35 @@
+<ion-view cache-view="false" view-title="Parent Dashboard">
+   <ion-content style="background-image:url('img/background.png');background-position:center">
+    <ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()">
+    </ion-refresher>
+    <div class="card">
+        <div class="row">
+            <div class="col">
+                Dashboard
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-50">
+                <span class="dark">Chore information for our family:</span>
+            </div>
+            <div class="col col-50">
+                Chore payments
+            </div>
+        </div>
+                <div class="button button-full button-balanced" ng-click="addUser()">
+                    Add another family member
+                </div>
+    </div>
+    <div class="card dark" style="padding: 30px;padding-top:10px;">
+               <div style="float:left"><i class="ion-information-circled calm" style="font-size:2em;padding:12px;"></i></div>
+                This is the <strong class="calm">Parent Dashboard</strong>. Here is where you can add additional family members to the app, as well as:<br /><br />
+                
+                <ul>
+                    <li>...record payments to family members for chores done</li>
+                    <li>...navigate to online banking for [sponsor]</li>
+                    <li>...see how many chores have been done in the last seven days</li>
+                    <li>...see how many uncompleted chores are left for each family member</li>
+                </ul>
+    </div>
+  </ion-content>
+</ion-view>

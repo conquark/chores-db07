@@ -1,10 +1,31 @@
-var localDB = new PouchDB('tmchores');
-var remoteDB = new PouchDB('https://bturner:glasgow8mysoup@bturner.cloudant.com/tmchores');
+
+function log(x){console.log(x)}
+function info(x){console.info(x)}
+
+if (getCookie('dbname')) {
+        var dbname =  getCookie('dbname');       
+    } else {
+        location.href = 'index2.html';
+    }
+
+var localDB;
+var remoteDB;
+
+var setupDatabases = function(dbname) {
+    info('STEP (1) START');
+    localDB = new PouchDB('dbname');
+    remoteDB = new PouchDB('https://bturner:glasgow8mysoup@bturner.cloudant.com/' + dbname);
+}
+
+setupDatabases(dbname);
+//
+//var localDB = new PouchDB('tmchores10');
+//var remoteDB = new PouchDB('https://bturner:glasgow8mysoup@bturner.cloudant.com/tmchores10');
 var app = angular.module('taskMasterApp', ['ionic', 'taskMasterApp.controllers', 'taskMasterApp.services']);
 
 app.run(function($ionicPlatform) {
   localDB.sync(remoteDB, {live: true, retry: true});
-  $ionicPlatform.ready(function() {
+   $ionicPlatform.ready(function() {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -33,6 +54,7 @@ app.run(function($ionicPlatform) {
 
   .state('app.welcome', {
     url: '/welcome',
+    cache: false,
     views: {
       'menuContent': {
         templateUrl: 'templates/welcome.html'
@@ -40,6 +62,38 @@ app.run(function($ionicPlatform) {
     }
   })
 
+  .state('app.dashboard', {
+    url: '/dashboard',
+    cache: false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/dashboard.html'
+      }
+    }
+  })
+
+  .state('app.mygoals', {
+        url: '/mygoals',
+        cache: false,
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/mygoals.html',
+                controller: 'MyGoalsCtrl'
+            }
+        }
+    })
+
+  .state('app.goaldetails', {
+        url: '/mygoals/:id',
+        cache: false,
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/goaldetails.html',
+                controller: 'GoalDetailsCtrl'
+            }
+        }
+    })
+    
   .state('app.mychores', {
     url: '/mychores',
     cache: false,
@@ -76,6 +130,7 @@ app.run(function($ionicPlatform) {
     
   .state('app.me', {
     url: '/me',
+    cache: false,
     views: {
       'menuContent': {
         templateUrl: 'templates/me.html',
@@ -123,5 +178,5 @@ app.run(function($ionicPlatform) {
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
+  $urlRouterProvider.otherwise('/app/welcome');
 });

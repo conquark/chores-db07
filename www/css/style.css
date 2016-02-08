@@ -14,7 +14,7 @@ ion-content {
     border-radius: 8px;
 }
 
-.card .item:first-child, .list-inset .item:first-child, .padding > .list .item:first-child {
+.beige {
     background-color: beige;
 }
 

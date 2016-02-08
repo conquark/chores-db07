@@ -35,6 +35,7 @@ goal structure:
     _id:            "[datetimestamp.toISOString]",
     name:           "[name chosen by child]",
     type:           "goal",
+    owner:         "[a family member]",
     cost:           "[a number]",
     allocated:      "[a number]",
     complete:       true or false (default to false),

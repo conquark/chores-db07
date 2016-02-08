@@ -1,5 +1,6 @@
 {
     "jscodehints.detectedExclusions": [
-        "/Users/billturner/Desktop/2016-01-04-chores-db07/www/js/appservices.js"
+        "/Users/billturner/Desktop/2016-01-04-chores-db07/www/js/appservices.js",
+        "/Users/billturner/Desktop/2016-01-04-chores-db07/www/js/controllers.js"
     ]
 }

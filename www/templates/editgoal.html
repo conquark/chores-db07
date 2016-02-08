@@ -1,0 +1,50 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Edit Goal</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeEditGoal()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form>
+    <h1>{{goalClone.name}}</h1>
+    <div class="list">
+        <label class="item item-input item-floating-label">
+            <span class="input-label">Goal Name</span>
+            <input type="text" id="goalname" ng-model="goalClone.name" placeholder="Goal name">
+        </label>
+    </div>
+    <div class="list">
+        <label class="item item-input item-floating-label">
+            <span class="input-label">Goal Description</span>
+            <input type="text" id="goaldescription" ng-model="goalClone.description" placeholder="Describe your goal">
+        </label>
+    </div>
+    <div class="list">
+        <label class="item item-input">
+            <span class="input-label">Cost</span>
+            <i class="icon ion-social-usd placeholder-icon"></i>
+            <input type="text" id="goalcost" ng-model="goalClone.cost" placeholder="How much does this goal cost?">
+        </label>
+    </div>
+
+          <button class="button button-block button-positive" ng-click="saveGoalRecord()">Save this goal</button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>
+
+<!--
+{
+    _id:            "[datetimestamp.toISOString]",
+    name:           "[name chosen by child]",
+    type:           "goal",
+    owner:         "[a family member]",
+    cost:           "[a number]",
+    allocated:      "[a number]",
+    complete:       true or false (default to false),
+    picture:        "[*****TODO - NEED TO MAKE PICTURE FUNCTIONALITY]",
+    description:    "[paragraph text]",
+    duedate:        "[optional date]"
+}-->

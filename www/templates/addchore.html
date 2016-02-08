@@ -6,6 +6,7 @@
     </div>
   </ion-header-bar>
   <ion-content>
+   <ion-item>
     <form>
     <h1>{{newChore.name}}</h1>
     <div class="list">
@@ -24,15 +25,14 @@
         <label class="item item-input">
             <span class="input-label">Value</span>
             <i class="icon ion-social-usd placeholder-icon"></i>
-            <input type="text" id="chorevalue" ng-model="newChore.value" placeholder="value">
+            <input type="number" id="chorevalue" ng-model="newChore.value" placeholder="value">
         </label>
     </div>
     <div class="list">
-
-      <label class="item item-input item-select">
-        <div class="input-label">
-          Categories
+        <div>
+          Categories - select any that apply
         </div>
+        <div>
         <ion-list>
 
           <ion-checkbox ng-model="newChore.categories.kitchen">Kitchen</ion-checkbox>
@@ -45,15 +45,16 @@
           <ion-checkbox ng-model="newChore.categories.pets">Pets</ion-checkbox>
           <ion-checkbox ng-model="newChore.categories.shopping">Shopping</ion-checkbox>
           
-        </ion-list>
+        </ion-list>            
+        </div>
+
       </label>
 
     </div>
     <div class="list">
            <span class="label">What do you want to do with this chore?</span>
            <ion-list>
-              <ion-radio checked="checked" ng-model="newChore.assigned" ng-value="'Jimmy'">Assign to Jimmy</ion-radio>
-              <ion-radio ng-model="newChore.assigned" ng-value="'Dad'">Assign to Dad</ion-radio>
+              <ion-radio checked="checked" ng-model="newChore.assigned" ng-repeat="member in familyMembers" ng-value="'{{member.name}}'" ng-if="member.admin !== true">Assign to {{member.name}}</ion-radio>
               <ion-radio ng-model="newChore.assigned" ng-value="'Chore Store'">Add to Chore Store</ion-radio>
             </ion-list>                    
     </div>
@@ -61,6 +62,7 @@
         </label>
       </div>
     </form>
+    </ion-item>
   </ion-content>
 </ion-modal-view>
 

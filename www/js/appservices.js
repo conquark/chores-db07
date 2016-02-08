@@ -35,6 +35,27 @@ app.factory('UtilityService', function() {
             return true;
         }
     }
+
+    self.getCookie = function(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1);
+            if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+
+    self.setCookie = function(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    log('setting new cookie');
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+//    var theCookie = self.getCookie(cname);
+    log('cookie set: ' + document.cookie);
+}
     
     return self;
 });
@@ -42,6 +63,7 @@ app.factory('UtilityService', function() {
 app.factory('AppService', function(PouchDBListener, UtilityService) {
     
     function log(x){console.log(x)}
+    function info(x){console.info(x)}
     
     var self = {
         allrecords : [],
@@ -49,23 +71,30 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
         family : {},
         sponsor : {},
         familyMembers: [],
+        familySize: 0,
         currentRecordIndex: 0,
         mychores: [],
         chorestore: [],
+        chorestoresize: 0,
         completedchores: 0,
-        incompletechores: 0
+        incompletechores: 0,
+        mygoals: []
     };
     
     
-    self.setAllRecords = function() {
+    self.setAllRecords = function(currentMemberName) {
+        info('STEP (2) START');
         // get all the records from the database [TEMPORARILY FROM STATIC JS FILE]
 //        self.allrecords = tempRecordsList;
         self.allrecords = [];
         localDB.allDocs({include_docs:true}).then(function(result){
             for (var i = 0; i < result.rows.length; i++) {
                 self.allrecords.push(result.rows[i].doc);
-            } 
+            }
+            log('allrecords size is: ' + self.allrecords.length);
+            info('STEP (2) END');
             self.setCurrentMember();
+            self.setFamilyMembers();
             console.log('OK - HERE IS THE CURRENT ALLRECORDS ARRAY');
             console.log(self.allrecords);
             self.populateChores();
@@ -84,30 +113,94 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
             log('completedchores is: ' + self.completedchores);
             log('familyMembers is: ');
             log(self.familyMembers);
+            self.getGoals();
+            log('mygoals is: ');
+            log(self.mygoals);
         })
     }
     
-    self.setCurrentMember = function() {
+    self.setCurrentMember = function(indexname) {
         // somehow remember who was logged in. A cookie, perhaps?
-        /////USE RANDOM FAMILY MEMBER FOR NOW
-        var familySize = 0;
+        info('STEP (3) START')
+
+        var cookieMember = UtilityService.getCookie('currentMemberName');
+        
+        if (indexname) {
+//            alert('got an indexname: ' + indexname);
+            for (var i = 0; i < self.allrecords.length; i++) {
+                var record = self.allrecords[i];
+                if (record.name === indexname) {
+                    self.currentMember = record;
+                    log('current member is: ' + self.currentMember.name);
+                    UtilityService.setCookie('currentMemberName', self.currentMember.name, 7000);
+                }
+            }        
+        } else if (cookieMember !== ""){
+            for (var i = 0; i < self.allrecords.length; i++) {
+                var record = self.allrecords[i];
+                if (record.name === cookieMember) {
+                    self.currentMember = record;
+                    log('current member is: ' + self.currentMember.name);
+                }
+            }
+        } else {
+            info('unable to set currentMember from cookie. Starting with OG user.')
+            for (var i = 0; i < self.allrecords.length; i++) {
+                var record = allrecords[i];
+                if (record.type === 'person') {
+                    self.currentMember = record;
+                    UtilityService.setCookie('currentMemberName', self.currentMember.name);
+                    log('current member is: ' + self.currentMember.name);
+                    log('member cookie is: ' + UtilityService.getCookie('currentMemberName'));
+                    info('STEP (3) END');
+                    return;
+                }
+            }
+        }
+        info('STEP (3) END');
+        
+        return self.currentMember;
+
+    }
+
+    self.setFamilyMembers = function() {
+        info('STEP (3F) START');
         self.familyMembers = [];
         for (var i = 0; i < self.allrecords.length; i++) {
             record = self.allrecords[i];
             if (record.type === 'person') {
                 self.familyMembers.push(record);
-                familySize++;
+                self.familySize = self.familySize + 1;
             }
         }
-//        var randomFamilyMember = Math.floor(Math.random() * familySize);
-        self.currentMember = self.familyMembers[0];
-        log('the currentMember\'s name is ' + self.currentMember.name);
-//        var tempNameHolder = self.currentMember.name;
-//        log(self.currentMember.name + '\'s _id is ' + self.currentMember._id);
-//        self.currentMember.name = 'Crabby Malone';
-//        log('Uh oh! ' + tempNameHolder + '\'s name is now ' + self.currentMember.name + '!');
+        log('familySize: ' + self.familySize);
+        log('familyMembers structure: ' + self.familyMembers);
+        info('STEP (3F) END');
     }
-    
+
+    self.populateChores = function() {
+        self.mychores.length = 0;
+        /// completed chores should have a cutoff of 7 days or so (i.e. these are the chores I've completed this week.) Then there should be an option to show "all time chores" somewhere in the app.
+        self.completedchores = 0;
+        self.incompletechores = 0;
+        for ( var i = 0; i < self.allrecords.length; i++) {
+//            log('iterating...');
+            var record = self.allrecords[i];
+//            log('this is the record');
+//            log(record);
+//            if (record.type === 'chore' && record.assigned === self.currentMemberName) {
+            if (record.type === 'chore' && record.assigned === self.currentMember.name) {
+                self.mychores.push(record);
+            }
+            if (record.type === 'chore' && record.complete === true && record.assigned === self.currentMember.name) {
+                self.completedchores = self.completedchores + 1;
+            }
+            if (record.type === 'chore' && record.complete === false && record.assigned === self.currentMember.name) {
+                self.incompletechores = self.incompletechores + 1;
+            }
+        }
+    };
+
     self.setFamily = function() {
         // set the family info
         for (var i = 0; i < self.allrecords.length; i++) {
@@ -119,7 +212,6 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
         log('the family\'s email is: ' + self.family.name);
         log('this is the family:');
         log(self.family);
-        
     }
     
     self.setSponsor = function() {
@@ -154,8 +246,8 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
         for (var i = 0; i < self.allrecords.length; i++) {
             console.log('howdy');
             var record = self.allrecords[i];
-            log('current record is:');
-            log(record);
+//            log('current record is:');
+//            log(record);
             if ( record.type === 'chore' && record.complete === false ) {
                 self.currentStats.incompleteChores  = self.currentStats.incompleteChores + 1;
             }
@@ -167,60 +259,29 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
     }
     
     self.getChoreStore = function() {
+        chorestoresize = 0;
         self.chorestore = [];
         for (var i = 0; i < self.allrecords.length; i++) {
             record = self.allrecords[i];
             if ( record.type === 'chore' && record.assigned === 'Chore Store' ) {
                 var record = self.allrecords[i];
                 self.chorestore.push(record);
+                self.chorestoresize = self.chorestoresize + 1;
             }
         }
     }
     
-//    self.getCurrentStats = function(){
-////        alert('calculating...');
-//        for (var i = 0; i < self.allrecords.length; i++) {
-//            alert('howdy');
-//        }
-//            alert('hi');
-//            var record = self.allrecords[i];
-//            log('current record is:');
-//            log(record);
-//            if ( record.type === 'chore' && record.complete === false ) {
-//                self.currentStats.incompleteChores  = self.currentStats.incompleteChores + 1;
-//            }
-//            if ( record.type === 'chore' && record.complete === true ) {
-//                self.currentStats.alltimechores = self.currentStats.alltimechores + 1;
-//                self.currentStats.alltimeearings = self.currentStats.alltimeearnings + record.value;
-//            }
-        
-//            alert('everything calculated');
-            // TODO: calculate balance
-//    };
-    
-
-    
-    self.populateChores = function() {
-        self.mychores.length = 0;
-        self.completedchores = 0;
-        self.incompletechores = 0;
-        for ( var i = 0; i < self.allrecords.length; i++) {
-//            log('iterating...');
-            var record = self.allrecords[i];
-//            log('this is the record');
-//            log(record);
-//            if (record.type === 'chore' && record.assigned === self.currentMemberName) {
-            if (record.type === 'chore' && record.assigned === self.currentMember.name) {
-                self.mychores.push(record);
-            }
-            if (record.type === 'chore' && record.complete === true && record.assigned === self.currentMember.name) {
-                self.completedchores = self.completedchores + 1;
-            }
-            if (record.type === 'chore' && record.complete === false && record.assigned === self.currentMember.name) {
-                self.incompletechores = self.incompletechores + 1;
+    self.getGoals = function() {
+        self.mygoals = [];
+        for (var i = 0; i < self.allrecords.length; i++) {
+            record = self.allrecords[i];
+            if ( record.type === 'goal' && record.owner === self.currentMember.name) {
+                self.mygoals.push(record);
             }
         }
-    };
+    }
+    
+
     
     self.addChore = function(choreobject) {
         var idFromDate = new Date().toISOString();
@@ -230,7 +291,7 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
             console.log('tried to add a chore');
 //            AppService.allrecords.push(doc);
         }).catch(function(err) {
-            alert('Sorry - unable to add chore.');
+            // do something
         });
     }
     
@@ -243,13 +304,13 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                 var choreIndex = self.findIndexOfRecord(doc);
                 console.log('this is "doc":');
                 console.log(doc);
-                alert('the choreIndex is: ' + choreIndex);
+//                alert('the choreIndex is: ' + choreIndex);
             }).catch(function(err) {
-                alert('unable to update chore :(  | the error was: ' + err);
+//                alert('unable to update chore :(  | the error was: ' + err);
             })
         }).catch(function(err) {
-            console.log('there was a problem with the get, apparently. Line 265.');
-            console.log('the error was ' + err);
+//            console.log('there was a problem with the get, apparently. Line 265.');
+//            console.log('the error was ' + err);
         })
     }
     
@@ -270,12 +331,12 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
         localDB.get(chorerecord._id).then(function(doc, err) {
             doc._deleted = true;
             localDB.put(doc).then(function(doc, err) {
-                alert('record successfully deleted!');
+//                alert('record successfully deleted!');
             }).catch(function(doc, err) {
-                alert('bummer! record was not deleted.');
+//                alert('bummer! record was not deleted.');
             });
         }).catch(function(doc, err) {
-            alert('pity - we were unable to fetch the document for deletion.');
+//            alert('pity - we were unable to fetch the document for deletion.');
         });
     }
     
@@ -293,7 +354,7 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
         var theRecordIndex = 'sad trombone';
         for (i = 0; i < self.allrecords.length; i++) {
             if (update._id === self.allrecords[i]) {
-                alert('found it!');
+//                alert('found it!');
                 theRecordIndex = i;
             }
         }
@@ -494,86 +555,86 @@ app.factory('PersonService', function(PouchDBListener) {
 //    return self;
 //})
 
-.factory('GoalService', function(PouchDBListener) {
-    self = {}
-  
-    self.addGoal = function(goalobject) {
-        var idFromDate = new Date().toISOString();
-        goalobject._id = idFromDate;
-        
-        localDB.put(goalobject).then(function() {
-            console.log('tried to add a goal');
-        }).catch(function(err) {
-            alert('Sorry - unable to add goal.');
-        });
-    }
-    
-//    addGoalTest = function() {
-//        var newGoal = {
-//            _id :       "just an empty string, so forlorn",
-//            name:       "Get an awesome dinosaur!",
-//            whosegoal:  "Jimmy",
-//            cost:       140,
-//            allocated:  22,
-//            complete:   false,
-//            picture:    "need to remember to add pictures"
-//        }
+//.factory('GoalService', function(PouchDBListener) {
+//    self = {}
+//  
+//    self.addGoal = function(goalobject) {
+//        var idFromDate = new Date().toISOString();
+//        goalobject._id = idFromDate;
 //        
-//        self.addGoal(newGoal);
-//    }
-//    
-//    addGoalTest();
-    
-    self.updateGoal = function(goalrecord) {
-        localDB.get(goalrecord._id).then(function(goalrecord){
-            localDB.put(goalecord).then(function(doc,err){
-                console.log('goal updated!');
-            }).catch(function(err) {
-                alert('unable to update goal :(');
-            })
-        })
-    }
-    
-//    updateGoalTest = function() {
-//        localDB.get("2016-02-03T20:15:53.439Z").then(function(doc) {
-//            doc.name = "Forget dinos. I want a pet rock!";
-//            localDB.put(doc).then(function(doc, err) {
-//                alert('hooray! successfully updated!');
-//            }).catch(function(err) {
-//                alert('boo! not successfully updated!')
-//            });
-//        });
-//    }
-//    
-//    updateGoalTest();
-    
-    self.deleteGoal = function(goalrecord) {
-        localDB.get(goalrecord._id).then(function(doc, err) {
-            doc._deleted = true;
-            localDB.put(doc).then(function(doc, err) {
-                alert('record successfully deleted!');
-            }).catch(function(doc, err) {
-                alert('bummer! record was not deleted.');
-            });
-        }).catch(function(doc, err) {
-            alert('pity - we were unable to fetch the document for deletion.');
-        });
-    }
-    
-//    testDeleteGoal = function() {
-//        localDB.get("2016-02-03T20:15:53.439Z").then(function(doc, err) {
-//            self.deleteGoal(doc);
+//        localDB.put(goalobject).then(function() {
+//            console.log('tried to add a goal');
 //        }).catch(function(err) {
-//            alert('something went wrong with the test');
+//            alert('Sorry - unable to add goal.');
 //        });
 //    }
 //    
-//    testDeleteGoal();
-    
-    
-    
-    return self;
-})
+////    addGoalTest = function() {
+////        var newGoal = {
+////            _id :       "just an empty string, so forlorn",
+////            name:       "Get an awesome dinosaur!",
+////            whosegoal:  "Jimmy",
+////            cost:       140,
+////            allocated:  22,
+////            complete:   false,
+////            picture:    "need to remember to add pictures"
+////        }
+////        
+////        self.addGoal(newGoal);
+////    }
+////    
+////    addGoalTest();
+//    
+//    self.updateGoal = function(goalrecord) {
+//        localDB.get(goalrecord._id).then(function(goalrecord){
+//            localDB.put(goalecord).then(function(doc,err){
+//                console.log('goal updated!');
+//            }).catch(function(err) {
+//                alert('unable to update goal :(');
+//            })
+//        })
+//    }
+//    
+////    updateGoalTest = function() {
+////        localDB.get("2016-02-03T20:15:53.439Z").then(function(doc) {
+////            doc.name = "Forget dinos. I want a pet rock!";
+////            localDB.put(doc).then(function(doc, err) {
+////                alert('hooray! successfully updated!');
+////            }).catch(function(err) {
+////                alert('boo! not successfully updated!')
+////            });
+////        });
+////    }
+////    
+////    updateGoalTest();
+//    
+//    self.deleteGoal = function(goalrecord) {
+//        localDB.get(goalrecord._id).then(function(doc, err) {
+//            doc._deleted = true;
+//            localDB.put(doc).then(function(doc, err) {
+//                alert('record successfully deleted!');
+//            }).catch(function(doc, err) {
+//                alert('bummer! record was not deleted.');
+//            });
+//        }).catch(function(doc, err) {
+//            alert('pity - we were unable to fetch the document for deletion.');
+//        });
+//    }
+//    
+////    testDeleteGoal = function() {
+////        localDB.get("2016-02-03T20:15:53.439Z").then(function(doc, err) {
+////            self.deleteGoal(doc);
+////        }).catch(function(err) {
+////            alert('something went wrong with the test');
+////        });
+////    }
+////    
+////    testDeleteGoal();
+//    
+//    
+//    
+//    return self;
+//})
 
 .factory('CurrentMemberService', function(AppService,PersonService) {
     self = {

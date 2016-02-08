@@ -1,0 +1,39 @@
+<ion-view cache-view="false" view-title="{{currentMember.name}}'s Goals">
+   <ion-content style="background-image:url('img/background.png');background-position:center">
+    <ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()">
+    </ion-refresher>
+
+    <div class="card">
+        <ion-list>
+        <button ng-click="addGoal()" class="button button-positive button-full">
+          Add a new Goal
+        </button>
+          <ion-item>
+             <div style="text-align:center;margin-bottom:20px;"><span style="color:lightgray">pull to refresh</span></div>
+              My Goals
+          </ion-item>
+            <ion-item ng-repeat="goal in service.mygoals" ui-sref="app.goaldetails({id:goal._id})">
+               {{goal.name}}<br/>
+               ${{goal.cost}}
+            </ion-item>
+        </ion-list>
+    </div>
+  </ion-content>
+</ion-view>
+
+
+
+
+<!--
+{
+    _id:            "[datetimestamp.toISOString]",
+    name:           "[name chosen by child]",
+    type:           "goal",
+    owner:         "[a family member]",
+    cost:           "[a number]",
+    allocated:      "[a number]",
+    complete:       true or false (default to false),
+    picture:        "[*****TODO - NEED TO MAKE PICTURE FUNCTIONALITY]",
+    description:    "[paragraph text]",
+    duedate:        "[optional date]"
+}-->
