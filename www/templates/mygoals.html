@@ -12,7 +12,8 @@
              <div style="text-align:center;margin-bottom:20px;"><span style="color:lightgray">pull to refresh</span></div>
               My Goals
           </ion-item>
-            <ion-item ng-repeat="goal in service.mygoals" ui-sref="app.goaldetails({id:goal._id})">
+            <ion-item class="item item-avatar" ng-repeat="goal in service.mygoals" ui-sref="app.goaldetails({id:goal._id})">
+              <img src="https://res.cloudinary.com/ntcapps/image/upload/w_100,h_100,c_thumb,r_max/{{goal.goalimageurl}}" ng-if="goal.goalimageurl.length > 0">
                {{goal.name}}<br/>
                ${{goal.cost}}
             </ion-item>

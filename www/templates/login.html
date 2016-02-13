@@ -1,16 +1,20 @@
 <ion-modal-view>
   <ion-header-bar>
-    <h1 class="title">Login</h1>
+    <h1 class="title">Choose a user</h1>
     <div class="buttons">
       <button class="button button-clear" ng-click="closeLogin()">Close</button>
     </div>
   </ion-header-bar>
   <ion-content>
-  <ion-list ng-if="familySize > 0">
-   <ion-item ng-repeat="member in familyMembers" ng-click="setCurrentMember($index)">
+    <div class="card">
+          <ion-list ng-if="familySize > 0">
+   <ion-item ng-repeat="member in familyMembers" ng-hide="member._deleted" ng-click="setCurrentMember($index)">
+        <img src="https://res.cloudinary.com/ntcapps/image/upload/w_100,h_100,c_thumb,r_max/{{member.personImageUrl}}" alt="">
        {{member.name}}
+       
    </ion-item>      
   </ion-list>
+    </div>
 <!--
   <div class="card">
       <ion-list ng-if="familyMembers < 1">

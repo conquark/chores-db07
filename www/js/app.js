@@ -67,7 +67,30 @@ app.run(function($ionicPlatform) {
     cache: false,
     views: {
       'menuContent': {
-        templateUrl: 'templates/dashboard.html'
+        templateUrl: 'templates/dashboard.html',
+          controller: 'DashCtrl'
+      }
+    }
+  })
+    
+  .state('app.persondetails', {
+    url: '/dashboard/:id',
+    cache: false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/persondetails.html',
+        controller: 'PersonCtrl'
+      }
+    }
+  })
+    
+  .state('app.personchores', {
+    url: '/app/dashboard/nothing/:id',
+    cache: false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/personchores.html',
+        controller: 'PersonChoresCtrl'
       }
     }
   })

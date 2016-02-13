@@ -8,7 +8,7 @@
       Add a new Chore
     </button>
     <ion-list>
-        <ion-item ng-repeat="chore in service.chorestore"
+        <ion-item class="item-text-wrap" ng-repeat="chore in service.chorestore"
                ui-sref="app.chorestoredetails({id:chore._id})" ng-if="chore.complete !== complete && chore._deleted !== true">
             Chore:<br />
             {{chore.name}} <br>

@@ -48,11 +48,11 @@
 
       <div class="form-signin">
         <h2 class="form-signin-heading">Please sign in</h2>
-        <input type="text" id="firstemail" size="25" placeholder="email you signed up with">
-        <input type="text" id="secondemail" size="25" placeholder="type your email in again">
+        <input type="text" id="firstemail" placeholder="email">
+        <input type="text" id="secondemail" placeholder="type your email in again">
         <div id="emailerrordiv" style="display:none;color:rose;">Emails do not match</div>
         <div id="emailmatchdiv" style="display:none;color:green;">Emails match! Make sure you're using the one you signed up with.</div><br/><br/>
-          <textarea id="bankcode" rows="3" placeholder="code from your financial institution" ></textarea><br/><br/>
+          <textarea id="bankcode" rows="3" style="font-size: 1.2em" placeholder="code from your financial institution" ></textarea><br/><br/>
        
 <!--
         <input type="text" id="firstemail" class="input-block-level" placeholder="email you signed up with">
@@ -75,6 +75,7 @@
             <span style="font-size:.8em;color:gray;">I prefer to use the app wihtout a code.*</span><br /><br />
             <button class="btn btn-large btn-primary" onclick="javascript:appnocode()" style="padding:12px;font-size:1em" type="submit">Use app without code</button>
             <br /><br />
+            <div id="nocodesuccess" style="display:none">Setting up app...</div>
             <span style="font-size:.8em;color:gray;">*note: app can be used without code, but some functions may be limited.</span>
        </div>
 

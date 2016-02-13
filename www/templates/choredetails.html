@@ -3,16 +3,19 @@
     <div class="card">
         <div class="item">
                 <div ng-if="chore.assigned !== 'Chore Store'">
-        <h1>{{chore.name}}</h1>
-        <h2>{{chore.value}}</h2>
-        {{chore.description}} <br>
-        <span ng-if="chore.assigned === currentMember.name">
-            You chose this chore from the Chore Store
-        </span>
-        <br>
-        <br>
-        <br>
-    </div>
+                    <div class="item-text-wrap">
+                        <h2>{{chore.name}}</h2>
+                    </div>
+                    <h1>${{chore.value}}</h1>
+                    {{chore.description}} <br>
+                    Due: {{chore.dueDate | date: MM}} <br>
+                    <span class="item-text-wrap" ng-if="chore.assigned === currentMember.name">
+                        You chose this chore from the Chore Store
+                    </span>
+                    <br>
+                    <br>
+                    <br>
+                </div>
     <div ng-if="chore.assigned === 'Chore Store'">
         Chore returned!
     </div>
@@ -28,9 +31,11 @@
     <div ng-if="currentMember.name === chore.assignedby && chore.complete === false">
         <button class="button button-calm button-small" ng-click="returnchore()">Return this chore to the Chore Store</button>
     </div>
+<!--
     <div ng-if="currentMember.name !== chore.assignedby && chore.complete === false">
         <button class="button button-stable button-small" ng-disabled>(Can't return assigned chores)</button>
     </div>
+-->
         </div>
     </div>
     <div style="margin:auto;margin-top:75px;border:0px solid white;border-radius: 12px;padding:30px;max-width:90%;background-color:white">

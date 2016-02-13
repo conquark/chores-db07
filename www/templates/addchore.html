@@ -8,7 +8,7 @@
   <ion-content>
    <ion-item>
     <form>
-    <h1>{{newChore.name}}</h1>
+    <h2 class="item-text-wrap autofocus">{{newChore.name}}</h2>
     <div class="list">
         <label class="item item-input item-floating-label">
             <span class="input-label">Chore Name</span>
@@ -28,6 +28,37 @@
             <input type="number" id="chorevalue" ng-model="newChore.value" placeholder="value">
         </label>
     </div>
+    <div class="list">
+        <label class="item item-input">
+            <span class="input-label">Does this chore repeat?</span>
+        </label>
+            <ion-list>
+              <ion-radio checked="checked" ng-model="newChore.repeat" ng-value="true" >Yes</ion-radio>
+              <ion-radio ng-model="newChore.repeat" ng-value="false">No</ion-radio>
+            </ion-list>
+    </div>
+    <div class="list" ng-if="newChore.repeat === true">
+        <label class="item item-input">
+            <span class="item-text-wrap">What day(s) should the chore repeat on?</span>
+        </label>
+            <ion-list>
+              <ion-checkbox ng-model="newChore.repeatdays.Sunday">Sunday</ion-checkbox>
+              <ion-checkbox ng-model="newChore.repeatdays.Monday">Monday</ion-checkbox>
+              <ion-checkbox ng-model="newChore.repeatdays.Tuesday">Tuesday</ion-checkbox>
+              <ion-checkbox ng-model="newChore.repeatdays.Wednesday">Wednesday</ion-checkbox>
+              <ion-checkbox ng-model="newChore.repeatdays.Thursday">Thursday</ion-checkbox>
+              <ion-checkbox ng-model="newChore.repeatdays.Friday">Friday</ion-checkbox>
+              <ion-checkbox ng-model="newChore.repeatdays.Saturday">Saturday</ion-checkbox>
+            </ion-list>
+    </div>
+    <div class="list" ng-if="newChore.repeat !== true">
+        <label class="item item-input">
+            <span class="item-text-wrap">Due date:</span>
+            <input type="date" ng-model="newChore.dueDate">
+        </label>
+
+    </div>
+    
     <div class="list">
         <div>
           Categories - select any that apply

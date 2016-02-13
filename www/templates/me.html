@@ -1,15 +1,16 @@
-<ion-view cache-view="false" view-title="About {{currentMember.name}}">
+<ion-view cache-view="false" view-title="My Info">
   <ion-content style="background-image:url('img/background.png');background-position:center;">
-    <h2>{{AppService.currentMember.name}}</h2>
-    <div class="card">
+     <div class="card">
         <div class="item">
+        <h2 style="font-size:1.3em;font-weight:bold">{{currentMember.name}}</h2><br>
+        <img src="https://res.cloudinary.com/ntcapps/image/upload/w_100,h_100,c_thumb,r_max/{{currentMember.personImageUrl}}" alt=""><br><br>
             <!--        {{currentMember.picture}}-->
         <h3>Incomplete Chores: {{currentStats.incompleteChores}} </h3>
-        <h3>All-time chore total: {{currentStats.alltimechores}} </h3>
-        <h3>Current Balance: TODO </h3>
-        <h3>Current owed: TODO </h3>
+        <h3>All-time completed chores: {{currentStats.alltimechores}} </h3>
+        <h3>Current Savings: TODO </h3>
+        <h3>Earnings so far this week: TODO </h3>
         <h3>All-time earnings: ${{currentStats.alltimeearnings}} </h3>
-        <h3>Number of goals: {{service.currentgoals}} </h3>
+        <h3>Number of goals: {{currentStats.currentgoals}} </h3>
         </div>
     </div>
   </ion-content>

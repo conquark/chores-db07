@@ -17,7 +17,15 @@
         <div style="float:right; font-size:1.2em">${{chore.value}}</div>
         <hr>
         Description:<br />
-        {{chore.description}} <br>
+        {{chore.description}} <br><br>
+        <span ng-if="chore.repeat">Repeats on</span><br>
+        <button class="button button-small button-calm" ng-if="chore.repeatdays.Sunday">Sundays</button>
+        <button class="button button-small button-calm" ng-if="chore.repeatdays.Monday">Mondays</button>
+        <button class="button button-small button-calm" ng-if="chore.repeatdays.Tuesday">Tuesdays</button>
+        <button class="button button-small button-calm" ng-if="chore.repeatdays.Wednesday">Wednesdays</button>
+        <button class="button button-small button-calm" ng-if="chore.repeatdays.Thursday">Thursdays</button>
+        <button class="button button-small button-calm" ng-if="chore.repeatdays.Friday">Fridays</button>
+        <button class="button button-small button-calm" ng-if="chore.repeatdays.Saturday">Saturdays</button>        
         <hr>
         Categories: {{chore.category}} <span ng-if="!chore.category" style="color:gray">no categories assigned to this chore</span>
     </div>

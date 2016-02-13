@@ -6,27 +6,35 @@
     </div>
     <div class="overlaystartbutton" ng-click=""></div>
 -->
-     <div style="text-align:center;margin-top:8px;margin-bottom:15px;">
-         <img src="img/taskmaster2.png" alt="">
+     <div style="text-align:center;margin-top:8px;margin-bottom:15px;position:relative;">
+         <img src="img/taskmaster2.png" alt="" height="50">
      </div>
-     <div class="card">
+     <div class="card beige">
       
-       <div style="padding:25px;">
-        <h2>Welcome to TaskMaster, {{currentMember.name}}</h2>
-        <div style="text-align:center">
-            <img src="img/arrow-right.png" alt=""><br />
+       <div style="padding:25px;text-align:center">
+        <img src="https://res.cloudinary.com/ntcapps/image/upload/w_100,h_100,c_thumb,r_max/{{currentMember.personImageUrl}}" alt="">
+        <h2>Welcome<span ng-if="currentMember.name.length > 0">, </span>{{currentMember.name}}!</h2>
+        <div style="text-align:center; margin-bottom:0">
+<!--            <img src="img/arrow-right.png" alt=""><br />-->
+           <img src="img/1455078132_touch-gesture-swipe-right-alternate.png" alt="" height="70"><br>
             <span ng-if="setupCompleteCookie">
                 Swipe right to start!
             </span>
             <span ng-if="setupCompleteCookie === ''" ng-click="cookiereload()">Setting up app for first use...</span>
         </div>                  
        </div>
+       
+        <div style="margin:auto;margin-bottom:5px;border:0px solid white;border-radius: 12px;padding:20px;max-width:95%; background-color:white;text-align:center;">
+            <strong>{{sponsor.name}}</strong>
+        </div>
 
    </div>
 
+<!--
     <div style="margin:auto;margin-top:15px;border:0px solid white;border-radius: 12px;padding:30px;max-width:80%; background-color:white;">
         Brought to you by the good folks at <br>
         <strong>{{sponsor.name}}</strong>
     </div>
+-->
   </ion-content>
 </ion-view>

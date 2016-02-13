@@ -1,0 +1,29 @@
+<ion-view view-title="{{person.name}}">
+  <ion-content style="background-image:url('img/background.png');background-position:center">
+    <div class="card">
+        <item-list>
+            <ion-item>
+               <img src="https://res.cloudinary.com/ntcapps/image/upload/w_100,h_100,c_thumb,r_max/{{person.personImageUrl}}" alt="">
+                {{person.name}}
+            </ion-item>
+<!--
+            <ion-item>
+                <button class="button button-full button-calm" ng-click="gotopersonchores()">{{person.name}}'s chores</button>
+            </ion-item>            
+            <ion-item>
+                <button class="button button-full button-balanced" ng-click="editPerson()">Edit {{person.name}}'s info</button>
+            </ion-item>
+-->
+            <ion-item>
+                <button class="button button-full button-positive" ng-click="startPersonWidget()">{{person.name}}'s picture</button>
+                <button ng-if="person.name !== currentMember.name" class="button button-full button-assertive" ng-click="showConfirm()">Remove {{person.name}} from app</button>
+                <button ng-if="person.name === currentMember.name" class="button button-full button-assertive" ng-click="showNoDeleteSelf()">Remove {{person.name}} from app</button>
+            </ion-item>
+        </item-list>
+    </div>
+    <div style="margin:auto;margin-top:75px;border:0px solid white;border-radius: 12px;padding:30px;max-width:90%;background-color:white">
+        Brought to you by the good folks at <br>
+        <strong>{{sponsor.name}}</strong>
+    </div>
+  </ion-content>
+</ion-view>

@@ -66,3 +66,14 @@ var validate = function() {
    }
 
 }
+
+var appnocode = function() {
+    var randomNumber = Math.floor(Math.random() * 400000);
+    var dateStamp = new Date().toISOString();
+    var uniqueDB = dateStamp + randomNumber;
+    setCookie('dbname', dbname);
+    setTimeout(function() {
+                location.href = 'index.html';
+            }, 2000);
+    document.getElementById('nocodesuccess').style.display = "block";
+}

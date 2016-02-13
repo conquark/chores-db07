@@ -40,6 +40,16 @@ ion-content {
     margin-top:5px;
 }
 
+.tm-person-block {
+    width:           250px;
+    max-width:       90%;
+    font-weight:     bold;
+    float:           left;
+    padding:         25px;
+    text-align:      center;
+}
+
+
 <style>
   .with-bg-size
   {

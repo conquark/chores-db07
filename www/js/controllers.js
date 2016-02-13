@@ -2,13 +2,31 @@ function log(x){console.log(x)}
 
 angular.module('taskMasterApp.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $http, $window, $ionicSideMenuDelegate, $state, AppService, PouchDBListener, PersonService, UtilityService) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $http, $window, $ionicSideMenuDelegate, $state, PouchDBListener, PersonService, UtilityService, AppService) {
 
     $scope.service = AppService;
     $scope.utility = UtilityService;
+    
+    $timeout(function() {
+        $scope.service.setFamilyMembers();
+        $scope.familyMembers = AppService.familyMembers;
+        $scope.currentMember = AppService.currentMember;
+        $scope.currentStats = AppService.getCurrentStats();         
+    }, 1300);
+
 window.dollarscope = $scope;
 window.AppService = AppService;    
 
+//    $scope.$on('ionicView.enter', function(e) {
+//       $scope.doRefresh(); 
+//    });    
+    
+    $scope.doRefresh = function() {
+//        $window.location.reload();
+        AppService.setAllRecords();
+        $scope.$broadcast('scroll.refreshComplete');
+        $scope.$apply();
+    };
     
   $scope.currentMemberCookie = $scope.utility.getCookie('currentMemberName');
  
@@ -141,6 +159,7 @@ window.AppService = AppService;
 
   // Open the login modal
   $scope.login = function() {
+    $scope.doRefresh();
     $scope.modal.show();
   };
 
@@ -187,13 +206,55 @@ window.AppService = AppService;
   };
 })
 
-.controller('MeCtrl', function($scope, AppService) {
+.controller('DashCtrl', function($scope, $ionicModal, $timeout, $http, $window, $ionicSideMenuDelegate, $state, AppService, PouchDBListener, PersonService, UtilityService) {
+//alert('hi');
     $scope.service = AppService;
-    $scope.currentMember = AppService.currentMember;
-    $scope.currentStats = AppService.currentStats;
+    $scope.utility = UtilityService;
+    
+    $timeout(function() {
+        $scope.currentMember = AppService.currentMember;
+        $scope.currentStats = AppService.getCurrentStats();
+        $scope.familyMembers = AppService.familyMembers;
+    }, 1300);
+
+window.dashscope = $scope;
+
+    $scope.$on('ionicView.enter', function(e) {
+       $scope.doRefresh(); 
+    });    
+    
+    $scope.doRefresh = function() {
+//        $window.location.reload();
+        AppService.setAllRecords();
+        $scope.$broadcast('scroll.refreshComplete');
+        $scope.$apply();
+    };
 })
 
-.controller('ChoreStoreCtrl', function($scope, $ionicModal, $window, AppService) {
+
+.controller('MeCtrl', function($scope, $timeout, AppService) {
+    window.mescope = $scope;
+    
+    $scope.service = AppService;
+    
+    $timeout(function() {
+        $scope.currentMember = AppService.currentMember;
+        $scope.currentStats = AppService.getCurrentStats();        
+    }, 300);
+
+
+    $scope.$on('ionicView.enter', function(e) {
+       $scope.doRefresh(); 
+    });    
+    
+    $scope.doRefresh = function() {
+        AppService.setAllRecords();
+        $scope.$broadcast('scroll.refreshComplete');
+        $scope.$apply();
+    };    
+})
+
+.controller('ChoreStoreCtrl', function($scope, $ionicModal, $window, AppService, UtilityService) {
     $scope.service = AppService;
     $scope.chorestore = AppService.chorestore;
 //    $scope.assignToPerson = false;
@@ -201,45 +262,62 @@ window.AppService = AppService;
        $scope.doRefresh(); 
     });
     
-//    $scope.$watch(AppService.allrecords, function() {
-//        alert('all records changed');
-//    });
-//    
-//    $scope.$watch(AppService.chorestoresize, function() {
-//        alert('chorestoresize changed');
-//    });
+    $scope.newChore = UtilityService.newChoreFactory();
     
-    $scope.newChore = {
-        _id: "",
-        name: "",
-        type: "chore",
-        description: "",
-        assigned: "Chore Store",
-        assignedby: "",
-        value: "",
-        duedate: "",
-        complete: false,
-        repeats: false,
-        frequency: ""
-    };
         $scope.service.populateChores();
-    $scope.saveNewChore = function() {
-        $scope.newChore._id = new Date().toISOString();
-        $scope.newChore.assignedby = $scope.service.currentMember.name;
-//        alert('newChore.assigned value is: ' + $scope.newChore.assigned);
-        $scope.chorestore.push($scope.newChore);
-        localDB.put($scope.newChore).then(function(doc, err) {
-            $scope.newChore = {};
-            $scope.service.populateChores();
-            $scope.service.getChoreStore();
-            $scope.doRefresh();
-            $scope.closeAddChore();
-//            $window.location.reload();
-        }).catch(function(err) {
-            console.log('there was an error updating the chore. Error was: ' + err);
-        });
+        $scope.saveNewChore = function() {
+          if ($scope.newChore.repeat) {
+              // set temporary due date for chore as today
+              $scope.newChore.dueDate = new Date();
+              var actualDueDate = UtilityService.calculateNextChoreRepeatDate($scope.newChore);
+              $scope.newChore.dueDate = actualDueDate;
+          } else {
+              console.log('NEW CHORE DOES NOT REPEAT');
+          }
+            $scope.newChore._id = new Date().toISOString();
+            $scope.newChore.assignedby = $scope.service.currentMember.name;
+    //        alert('newChore.assigned value is: ' + $scope.newChore.assigned);
+            $scope.chorestore.push($scope.newChore);
+            localDB.put($scope.newChore).then(function(doc, err) {
+                $scope.newChore = UtilityService.newChoreFactory();
+                $scope.service.populateChores();
+                $scope.service.getChoreStore();
+                $scope.doRefresh();
+                $scope.closeAddChore();
+    //            $window.location.reload();
+            }).catch(function(err) {
+                console.log('there was an error updating the chore. Error was: ' + err);
+            });
         
     }
+    
+/////// DATEPICKER PLUGIN - SEE: https://github.com/rajeshwarpatlolla/ionic-datepicker
+//        $scope.datepickerObject = {
+//      titleLabel: 'Title',  //Optional
+//      todayLabel: 'Today',  //Optional
+//      closeLabel: 'Close',  //Optional
+//      setLabel: 'Set',  //Optional
+//      setButtonType : 'button-assertive',  //Optional
+//      todayButtonType : 'button-assertive',  //Optional
+//      closeButtonType : 'button-assertive',  //Optional
+//      inputDate: new Date(),  //Optional
+////      mondayFirst: true,  //Optional
+////      disabledDates: disabledDates, //Optional
+//      weekDaysList: weekDaysList, //Optional
+//      monthList: monthList, //Optional
+//      templateType: 'popup', //Optional
+//      showTodayButton: 'true', //Optional
+//      modalHeaderColor: 'bar-positive', //Optional
+//      modalFooterColor: 'bar-positive', //Optional
+//      from: new Date(2012, 8, 2), //Optional
+//      to: new Date(2018, 8, 25),  //Optional
+//      callback: function (val) {  //Mandatory
+//        datePickerCallback(val);
+//      },
+//      dateFormat: 'dd-MM-yyyy', //Optional
+//      closeOnSelect: false, //Optional
+//    };
+//        
     
     $scope.doRefresh = function() {
         AppService.setAllRecords();
@@ -252,7 +330,8 @@ window.AppService = AppService;
   $scope.choreData = {};
 
   $ionicModal.fromTemplateUrl('templates/addchore.html', {
-    scope: $scope
+    scope: $scope,
+      focusFirstInput: true
   }).then(function(modal) {
     $scope.modal = modal;
   });
@@ -295,6 +374,7 @@ window.AppService = AppService;
     
     $scope.newGoal.owner = $scope.currentMember.name;
     
+    
     //    $scope.service = AppService;
 //    $scope.currentMember = $scope.service.currentMember;
 //    $scope.mygoals = $scope.service.mygoals;
@@ -323,7 +403,8 @@ window.AppService = AppService;
         };
     
         $ionicModal.fromTemplateUrl('templates/addgoal.html', {
-            scope: $scope
+            scope: $scope,
+            focusFirstInput: true
         }).then(function(modal) {
             $scope.addmodal = modal;
         });
@@ -340,6 +421,8 @@ window.AppService = AppService;
           $scope.newGoal._id = new Date().toISOString();
             localDB.put($scope.newGoal).then(function(doc,err) {
                 $ionicHistory.clearCache();
+                $scope.newGoal = UtilityService.newGoalFactory();
+                $scope.newGoal.owner = $scope.currentMember.name;
                 $scope.closeAddGoal();
                 $scope.mygoals = $scope.service.mygoals;
                 $scope.doRefresh();
@@ -347,6 +430,8 @@ window.AppService = AppService;
                 console.log('there was an error creating the goal. Erro was: ' + err);
             });
         ;}
+        
+        
         
         $scope.service.getGoals();
 //        $scope.mygoals = $scope.service.mygoals;
@@ -395,6 +480,136 @@ window.AppService = AppService;
 //    AppService.getGoals();
 })
 
+.controller('PersonCtrl', function($scope, $ionicPopup, AppService,UtilityService, $stateParams, $ionicModal, $ionicHistory, $state) {
+    window.personscope = $scope;
+    
+    $scope.$on('$ionicView.enter', function(e) {
+        $scope.doRefresh();
+    });
+    $scope.service = AppService;
+    $scope.person = {};
+    $scope.personName = '';
+    $scope.personClone = {};
+    $scope.currentMember = AppService.currentMember;
+    $scope.sponsor == AppService.sponsor;
+
+    $scope.getPersonClone = function() {
+        localDB.get($scope.person._id).then(function(doc, err) {
+            $scope.personClone = doc;
+            console.log('this is the new personClone');
+            console.log(doc);
+        });
+    };
+    
+    for (var i = 0; i < AppService.allrecords.length; i++) {
+        var record = AppService.allrecords[i];
+        if (record._id === $stateParams.id) {
+            $scope.person = record;
+            $scope.personName = record.name;
+            $scope.getPersonClone();
+            console.log('this is personClone');  
+            console.log($scope.personClone);
+        }
+    }
+    
+    $scope.doRefresh = function() {
+        AppService.setAllRecords();
+        $scope.$broadcast('scroll.refreshComplete');
+        $scope.$apply();
+    };
+    
+    $ionicModal.fromTemplateUrl('templates/editperson.html', {
+        scope : $scope,
+        focusFirstInput: true
+    }).then(function(modal) {
+        $scope.editPersonModal = modal;
+    });
+    
+      // Triggered in the login modal to close it
+    $scope.closeEditPerson = function() {
+        $scope.editPersonModal.hide();
+    };
+
+    
+    $scope.editPerson = function() {
+        $scope.editPersonModal.show();
+    };
+    
+    $scope.savePersonRecord = function() {
+            localDB.put($scope.personClone).then(function(doc, err) {
+                $ionicHistory.clearCache();
+                $scope.doRefresh();
+                $scope.person = $scope.personClone;
+                $scope.closeEditPerson();
+//                $state.go('app.dashboard/' + $scope.personClone.name);
+            }).catch(function(err) {
+                console.log('there was an error updating the person. Error was: ' + err);
+            });            
+    };
+    
+    $scope.deletePerson = function() {
+        $scope.personClone._deleted = true;
+        AppService.spliceFamilyMember($scope.person._id);
+        AppService.spliceRecord($scope.person._id);
+        localDB.put($scope.personClone).then(function(doc, err) {
+            $ionicHistory.clearCache();
+            $scope.doRefresh();
+            $scope.person = $scope.personClone;
+            $ionicHistory.goBack();
+        }).catch(function(err) {
+            console.log('unable to delete record. error was: ' + err);
+        });
+    };
+    
+     $scope.showConfirm = function() {
+       var confirmPopup = $ionicPopup.confirm({
+        title: 'Delete this user',
+        template: 'Are you sure you want to remove ' + $scope.person.name + ' from the App? This will delete all of ' + $scope.person.name + '\'s chores, chore history, stats and goals, and cannot be undone!',
+        buttons: [
+            { text: 'Cancel' },
+            {
+                text: '<b>Yes, delete from app.</b>',
+                type: 'button-assertive',
+                onTap: function() {
+                  $scope.deletePerson()
+                }
+            }
+        ]
+        });
+     }
+         
+    $scope.showNoDeleteSelf = function() {
+        var cannotDeleteSelfPopup = $ionicPopup.alert({
+            title: 'Can\'t Delete Yourself',
+            template: 'Sorry, you can\'t delete yourself. If you would like to delete yourself, log in as a different admin user, and delete your user account from there.'
+        });
+    }
+    
+    
+    $scope.startPersonWidget = function() {
+        var d = new Date();
+        var timestamp = d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate()+ '-' + d.getHours() + d.getMinutes() + d.getSeconds();
+        cloudinary.openUploadWidget({upload_preset: 'xisr5ror', 
+                                     cropping:true, multiple:false,
+                                      public_id: $scope.personClone.name + timestamp}, 
+                                        function(error, result) {
+                                console.log(error, result);
+                                theresult = result;
+                                $scope.personClone.personImageUrl = result[0].path;
+                                $scope.savePersonRecord();
+                                $scope.person.personImageUrl = result[0].path;
+                                for (var i = 0; i < AppService.allrecords.length; i++) {
+                                    var record = AppService.allrecords[i];
+                                    if (record.name === $scope.person.name) {
+                                        record.personImageUrl = $scope.personClone.personImageUrl;
+                                    }
+                                }
+                                $scope.doRefresh();
+                        });
+    }
+
+})
+
 .controller('GoalDetailsCtrl', function($scope,AppService, UtilityService, $stateParams, $ionicModal, $ionicHistory, $state) {
     $scope.$on('$ionicView.enter', function(e) {
         $scope.doRefresh();
@@ -423,6 +638,16 @@ window.AppService = AppService;
         }
     }
     
+    $scope.startGoalWidget = function() {
+        cloudinary.openUploadWidget({upload_preset: 'xisr5ror', 
+                                     cropping:true, multiple:false}, 
+                                        function(error, result) {
+                                console.log(error, result);
+                                theresult = result;
+                                $scope.goalClone.goalimageurl = result[0].path;
+                                $scope.saveGoalRecord();
+                        });
+    }
     
     $scope.doRefresh = function() {
         AppService.setAllRecords();
@@ -431,7 +656,8 @@ window.AppService = AppService;
     };
     
     $ionicModal.fromTemplateUrl('templates/editgoal.html', {
-        scope : $scope
+        scope : $scope,
+        focusFirstInput: true
     }).then(function(modal) {
         $scope.editmodal = modal;
     });
@@ -450,6 +676,7 @@ window.AppService = AppService;
             localDB.put($scope.goalClone).then(function(doc, err) {
                 $ionicHistory.clearCache();
                 $scope.goal = $scope.goalClone;
+                $scope.doRefresh();
                 $scope.closeEditGoal();
             }).catch(function(err) {
                 console.log('there was an error updating the goal. Error was: ' + err);
@@ -473,11 +700,18 @@ window.AppService = AppService;
 .controller('MyChoresCtrl', function($scope, AppService) {
     window.chorescope = $scope;
     $scope.service = AppService;
+    $scope.chores = AppService.mychores;
     $scope.currentMember = AppService.currentMember;
     $scope.completedchores =  AppService.completedchores;
     $scope.incompletechores = AppService.incompletechores;
     $scope.doRefresh = function() {
         AppService.setAllRecords();
+        $scope.completedchores =  AppService.completedchores;
+        $scope.incompletechores = AppService.incompletechores;
+//        $timeout(function(){
+//            $scope.completedchores =  AppService.completedchores;
+//            $scope.incompletechores = AppService.incompletechores;
+//        }, 1000);
         $scope.$broadcast('scroll.refreshComplete');
         $scope.$apply();
     };
@@ -490,7 +724,34 @@ window.AppService = AppService;
     $scope.service.populateChores();
 })
 
-.controller('ChoreDetailsCtrl', function($scope,$rootScope, $window, AppService, UtilityService, $stateParams, $ionicModal, $ionicHistory, $state) {
+.controller('PersonChoresCtrl', function($scope, $state, $stateParams, AppService, UtilityService) {
+    window.personchorescope = $scope;
+    $scope.id = $stateParams.id;
+    $scope.service = AppService;
+    $scope.gotopersonchores = function() {
+        $state.$go('app.personchores')
+    }
+    $scope.chores = UtilityService.makePersonChoresArray($scope.id, AppService.allrecords);
+    $scope.currentMember = AppService.currentMember;
+    console.log('these are the PersonChores');
+    $scope.doRefresh = function() {
+        AppService.setAllRecords();
+        $scope.completedchores =  AppService.completedchores;
+        $scope.incompletechores = AppService.incompletechores;
+        $scope.$broadcast('scroll.refreshComplete');
+        $scope.$apply();
+    };
+    
+    $scope.$on('$ionicView.enter', function(e) {
+        $scope.doRefresh();
+    });
+    // populate empty array with list of passed in chores
+    
+    $scope.service.populateChores();
+})
+
+
+.controller('ChoreDetailsCtrl', function($scope,$rootScope, $window, $timeout, AppService, UtilityService, $stateParams, $ionicModal, $ionicHistory, $state) {
     $scope.$on('$ionicView.enter', function(e) {
         $scope.doRefresh();
     });
@@ -510,9 +771,19 @@ window.AppService = AppService;
             console.log(doc);
         });
     }
+    
+    $scope.returnChoreClone = function(thechore) {
+        localDB.get(thechore._id).then(function(doc, err) {
+            var theClone = doc;
+            console.log('this is the new clone of the passed in chore');
+            console.log(doc);
+            return theClone;
+        });
+    }
 
     $scope.doRefresh = function() {
         AppService.setAllRecords();
+        
 //        AppService.populateChores();
         $scope.$broadcast('scroll.refreshComplete');
         $scope.$apply();
@@ -566,7 +837,8 @@ window.AppService = AppService;
     $scope.saveRecord = function() {
             localDB.put($scope.choreClone).then(function(doc, err) {
                 $ionicHistory.clearCache();
-                $scope.chore = $scope.choreClone;
+//                $scope.chore = $scope.choreClone;
+                $scope.doRefresh;
                 $scope.closeEditChore();
             }).catch(function(err) {
                 console.log('there was an error updating the chore. Error was: ' + err);
@@ -588,6 +860,25 @@ window.AppService = AppService;
             console.log('there was an error updating assignment to "Chore Store" Here was the error: ' + err);
         });
     };
+    
+    $scope.createNextRepeatingChore = function(choreobject) {
+        var clonedChore = $scope.returnChoreClone(choreobject);
+          if (clonedChore.repeat && clonedChore.assigned !== 'Chore Store') {
+              var nextDueDate = UtilityService.calculateNextChoreRepeatDate(clonedChore);
+              clonedChore.dueDate = nextDueDate;
+              clonedChore.complete = false; // duh!
+              clonedChore._id = new Date().toISOString();
+                localDB.put(clonedChore).then(function(doc, err) {
+                        $timeout(function(){
+                            $scope.doRefresh();
+                            $ionicHistory.goBack();                            
+                        },1550);              
+                }); 
+          }
+              else {
+              console.log('NEW CHORE DOES NOT REPEAT *or* chore is currently in the chore store');
+          }
+    }
 
     $scope.markcomplete = function() {
         $ionicHistory.clearCache().then(function(err) {
@@ -599,8 +890,15 @@ window.AppService = AppService;
         //        updatedChore.complete = true;
                 dbChore.complete = true;
                 $scope.chore.complete = true;
+                if(dbChore.repeat && dbChore.markedCompleteCount < 1) {
+                    dbChore.markedCompleteCount = 1;
+                    $scope.createNextRepeatingChore(dbChore);
+                }
                 localDB.put(dbChore).then(function(doc, err) {
-                        $ionicHistory.goBack();
+                        $timeout(function(){
+                            $scope.doRefresh();
+                            $ionicHistory.goBack();                            
+                        },250);
                 }).catch(function(err) {
                     console.log('there was an error updating the chore. Error was: ' + err);
                 });            
@@ -625,7 +923,12 @@ window.AppService = AppService;
                 dbChore.complete = false;
                 $scope.chore.complete = false;
                     localDB.put(dbChore).then(function() {
-                            $ionicHistory.goBack();
+                        $timeout(function(){
+                            $scope.doRefresh();
+                            $ionicHistory.goBack();                            
+                        },250);
+//                            $scope.doRefresh();
+//                            $ionicHistory.goBack();
                     }).catch(function(err) {
                         console.log('there was an error updating the chore. Error was: ' + err);
                     });
@@ -647,8 +950,10 @@ window.AppService = AppService;
                 dbChore._deleted = true;
                 chore = dbChore;
                 localDB.put(dbChore).then(function() {
-                    $ionicHistory.goBack();
-                    $window.location.reload();
+                        $timeout(function(){
+                            $scope.doRefresh();
+                            $ionicHistory.goBack();                            
+                        },250);
                 }).catch(function(err) {
                     console.log('unable to delete chore. Error was: ' + err);
                 });
