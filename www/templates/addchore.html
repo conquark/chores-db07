@@ -29,15 +29,11 @@
         </label>
     </div>
     <div class="list">
-        <label class="item item-input">
-            <span class="input-label">Does this chore repeat?</span>
-        </label>
             <ion-list>
-              <ion-radio checked="checked" ng-model="newChore.repeat" ng-value="true" >Yes</ion-radio>
-              <ion-radio ng-model="newChore.repeat" ng-value="false">No</ion-radio>
+              <ion-checkbox ng-model="newChore.repeats" >Does this chore repeat?</ion-checkbox>
             </ion-list>
     </div>
-    <div class="list" ng-if="newChore.repeat === true">
+    <div class="list" ng-if="newChore.repeats === true">
         <label class="item item-input">
             <span class="item-text-wrap">What day(s) should the chore repeat on?</span>
         </label>
@@ -51,7 +47,7 @@
               <ion-checkbox ng-model="newChore.repeatdays.Saturday">Saturday</ion-checkbox>
             </ion-list>
     </div>
-    <div class="list" ng-if="newChore.repeat !== true">
+    <div class="list" ng-if="newChore.repeats !== true">
         <label class="item item-input">
             <span class="item-text-wrap">Due date:</span>
             <input type="date" ng-model="newChore.dueDate">

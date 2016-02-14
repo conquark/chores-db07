@@ -24,10 +24,15 @@ app.factory('UtilityService', function() {
             assigned: "Chore Store",
             assignedby: "",
             value: "",
+            valuecategory: "",
             duedate: "",
             complete: false,
             repeats: false,
-            frequency: ""
+            frequency: "",
+            markedCompleteCount: 0,
+            completiondate: '',
+            createddate: '',
+            assigneddate: ''
             };
         return newChore;
     }
@@ -163,8 +168,12 @@ app.factory('UtilityService', function() {
         
         
         log('STARTING TO CALCULATE NEXT DATE////////');
+        log('VALUE OF THE repeatingchoreobject.dueDate is: ');
+        log(repeatingchoreobject.dueDate);
         // get the current duedate of the chore object
-        var currentDueDate = repeatingchoreobject.dueDate;
+        var currentDueDate = new Date();
+        currentDueDate.setTime(Date.parse(repeatingchoreobject.dueDate));
+//        var currentDueDate = repeatingchoreobject.dueDate;
         var currentDay = currentDueDate.getDay();
 //        var currentDayNumber = getDayNumberFromDay(currentDay);
         log('currentDueDate is: ' + currentDueDate);
@@ -235,7 +244,7 @@ app.factory('UtilityService', function() {
             log('this is the index of the currentDay');
             log(theIndex);
             var theNextDayIndex;            
-            if (theIndex !== -1) {
+            if (theIndex !== -1 && repeatingchoreobject.complete === false && false) {
                 log('repeating tasks start today. i.e. the "next day" is today. (this will only happen when creating new tasks)');
                 return currentDueDate;
             } else {
@@ -277,6 +286,8 @@ app.factory('UtilityService', function() {
             log('daysFromOriginal has been calculated to be: ' + daysFromOriginal);
             
             var dateToReturn = addDays(currentDueDate, daysFromOriginal);
+            log('the date we are returning for clonatizing is: ' );
+            log(dateToReturn);
             
             return dateToReturn;
             
@@ -309,7 +320,8 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
         chorestoresize: 0,
         completedchores: 0,
         incompletechores: 0,
-        mygoals: []
+        mygoals: [],
+        thisweek: []
     };
     
     
@@ -328,6 +340,9 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
             self.setFamilyMembers();
             console.log('OK - HERE IS THE CURRENT ALLRECORDS ARRAY');
             console.log(self.allrecords);
+            self.thisweek = self.setThisWeek();
+            log('This week is week');
+            log(self.thisweek);
             self.populateChores();
             log('HERE IS THE MYCHORES ARRAY');
             log(self.mychores);
@@ -443,16 +458,37 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
 //            log('iterating...');
 //            info('----loop' + i);
             var record = self.allrecords[i];
+            var recordisthisweekornext = false;
+            var duedate, duedatestring, duedateweek;
+
+            if (record.type === 'chore' && record.dueDate) {
+                duedatestring = record.dueDate;
+                duedate = new Date();
+                duedate.setTime(Date.parse(duedatestring));
+                duedateweek = duedate.getWeekNumber();
+                log('GOT DUEDATE WEEK - IT IS: ');
+                log(duedateweek);
+            }
+            
+            if (duedateweek >= self.thisweek && duedateweek < self.thisweek + 2) {
+                recordisthisweekornext = true
+            }
+
 //            log('this is the record');
 //            log(record);
 //            if (record.type === 'chore' && record.assigned === self.currentMemberName) {
-            if (record.type === 'chore' && record.assigned === self.currentMember.name) {
+            if (record.type === 'chore' && record.assigned === self.currentMember.name && recordisthisweekornext) {
                 self.mychores.push(record);
             }
+
+//            if (record.type === 'chore' && record.assigned === self.currentMember.name) {
+//                self.mychores.push(record);
+//            }
             if (record.type === 'chore' && record.complete === true && record.assigned === self.currentMember.name) {
                 self.completedchores = self.completedchores + 1;
             }
-            if (record.type === 'chore' && record.complete === false && record.assigned === self.currentMember.name) {
+            
+            if (record.type === 'chore' && record.complete === false && record.assigned === self.currentMember.name && recordisthisweekornext) {
                 self.incompletechores = self.incompletechores + 1;
             }
         }
@@ -473,27 +509,30 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
         return self.mygoals;
     }
     
-//    self.getGoals = function() {
-//        self.mygoals = [];
-//        for (var i = 0; i < self.allrecords.length; i++) {
-//            record = self.allrecords[i];
-//            if ( record.type === 'goal' && record.owner === self.currentMember.name) {
-//                self.mygoals.push(record);
-//            }
-//        }
-//        
-//        log('STEP (4) END');
-//        
-//        return self.mygoals;
-//    }
+    
+    // the following was used verbatim from accepted answer here:
+    // http://stackoverflow.com/questions/6117814/get-week-of-year-in-javascript-like-in-php?answertab=active#tab-top
+    Date.prototype.getWeekNumber = function(){
+        var d = new Date(+this);
+        d.setHours(0,0,0);
+        d.setMilliseconds(0);
+        d.setDate(d.getDate()+4-(d.getDay()||7));
+        return Math.ceil((((d-new Date(d.getFullYear(),0,1))/8.64e7)+1)/7);
+    };
+    
+    self.setThisWeek = function() {
+        var thisDay = new Date();
+        var thisWeekNumber = thisDay.getWeekNumber();
+        return thisWeekNumber;
+    }
 
     self.getCurrentStats = function() {
-//        alert('hi');
         log('STEP (5) START');
         self.currentStats = {
             incompleteChores: 0,
             alltimechores: 0,
             alltimeearnings: 0,
+            currentgoalname: '',
             currentgoals: 0,
             currentgoalscosttotal: 0,
             completedgoals: 0,
@@ -504,6 +543,27 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
         for (var i = 0; i < self.allrecords.length; i++) {
 //            console.log('howdy');
             var record = self.allrecords[i];
+            var recordisthisweekornext = false;
+            var duedate, duedatestring, duedateweek;
+            var completiondate, completiondatestring, completiondateweek;
+
+            if (record.type === 'chore' && record.dueDate) {
+                duedatestring = record.dueDate;
+                duedate = new Date();
+                duedate.setTime(Date.parse(duedatestring));
+                duedateweek = duedate.getWeekNumber();
+                log('GOT DUEDATE WEEK - IT IS: ');
+                log(duedateweek);
+            }
+            
+            if (record.type === 'chore' && record.completiondate) {
+                completiondatestring = record.completiondate;
+                completiondate = new Date();
+                completiondate.setTime(Date.parse(completiondatestring));
+                completiondateweek = completiondate.getWeekNumber();
+                log('GOT COMPLETIONDATE WEEK - IT IS: ');
+                log(completiondateweek);
+            }
 
             //// SET INCOMPLTE CHORES NUMBER
             if ( record.type === 'chore' && record.complete === false && record.assigned === self.currentMember.name ) {
@@ -511,6 +571,13 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                 self.currentStats.incompleteChores  = self.currentStats.incompleteChores + 1;
                 info('done calculating incomplete chores. total is: ' + self.currentStats.incompleteChores);
             }
+            
+            //// SET EARNEDTHISWEEK NUMBER
+            if (record.type === 'chore' && record.complete === true && record.assigned === self.currentMember.name && completiondateweek === self.thisweek) {
+                self.currentStats.earnedthisweek = self.currentStats.earnedthisweek + record.value;
+            }
+
+            
             ///// SET ALLTIME CHORES AND ALLTIME EARNINGS
             if ( record.type === 'chore' && record.complete === true && record.assigned === self.currentMember.name ) {
                 info('calculating alltimechores')
@@ -519,12 +586,14 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                 info('done calculating alltimechores. total is: ' + self.alltimechores);
                 info('also done calculating alltime earnings. total is: ' + self.alltimeearnings);
             }
-            ///// SET NUMBER OF CURRENT GOALS and COST
+            ///// SET  NOPE- NUMBER OF CURRENT GOALS and COST
+            ///// CHANGED TO SET NAME OF CURRENT GOAL AND ITS COST PER WARD 2016-02-10
             if ( record.type === 'goal' && record.complete === false && record.owner === self.currentMember.name ) {
-                info('setting number of current goals and their cost');
-                self.currentStats.currentgoals = self.currentStats.currentgoals + 1;
-                self.currentStats.currentgoalscosttotal = self.currentStats.currentgoalscosttotal + Number(record.value);
-                info('done setting number of current goals. total is: ' + self.currentStats.currentgoals);
+                info('setting name of current goal and its cost');
+//                self.currentStats.currentgoals = self.currentStats.currentgoals + 1;
+                self.currentStats.currentgoalname = record.name;
+                self.currentStats.currentgoalscosttotal = self.currentStats.currentgoalscosttotal + Number(record.cost);
+                info('done setting name of current goal. it is: ' + self.currentStats.currentgoalname);
                 info('also done setting total current goal cost. total is: ' + self.currentStats.currentgoalscosttotal);
             }
             ////// SET NUMBER OF COMPLETE GOALS AND THEIR VALUE
@@ -771,25 +840,25 @@ app.factory('PersonService', function(PouchDBListener) {
      
     return self;
 
-})
+});
 
 
 
-.factory('CurrentMemberService', function(AppService,PersonService) {
-    self = {
-        incompleteChores: 0,
-        currentGoals: 0,
-        allTimeChoreTotal: 0,
-        currentBalance: 0,
-        currentOwed: 0,
-        
-    }
-    
-    self.allMyChores = AppService.mychores;
-    
-    self.setIncompleteChoreTotal = function() {
-        for (i = 0; i < self.allMyChores.length; i++) {
-            
-        }
-    }
-})
+//.factory('CurrentMemberService', function(AppService,PersonService) {
+//    self = {
+//        incompleteChores: 0,
+//        currentGoals: 0,
+//        allTimeChoreTotal: 0,
+//        currentBalance: 0,
+//        currentOwed: 0,
+//        
+//    }
+//    
+//    self.allMyChores = AppService.mychores;
+//    
+//    self.setIncompleteChoreTotal = function() {
+//        for (i = 0; i < self.allMyChores.length; i++) {
+//            
+//        }
+//    }
+//})

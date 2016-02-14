@@ -29,9 +29,11 @@
         <hr>
         Categories: {{chore.category}} <span ng-if="!chore.category" style="color:gray">no categories assigned to this chore</span>
     </div>
+<!--
     <div ng-if="currentMember.name !== chore.assignedby && chore.complete === false">
         <button class="button button-stable button-small" ng-disabled>(Can't return assigned chores)</button>
     </div>
+-->
         <button ng-click="edit()" class="button button-balanced button-full" ng-if="currentMember.admin === true">
           Edit chore
         </button>

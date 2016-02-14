@@ -33,6 +33,7 @@
                ui-sref="app.choredetails({id:chore._id})" ng-if="chore.complete == true" class="balanced animate">
             {{chore.name}} <br>
             You've earnt: ${{chore.value}}!
+            <h4>Chore completed on: {{chore.completiondate | date: 'short'}}</h4>
             <h4 ng-if="chore.assignedby !== currentMember.name">Assigned by: {{chore.assignedby}}</h4>
             <h4 ng-if="chore.assignedby === currentMember.name">You chose this chore from the Chore Store</h4>
         </ion-item>

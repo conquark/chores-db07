@@ -129,6 +129,9 @@ window.AppService = AppService;
             if($scope.newUser.admin === true) {
                 $scope.newUser.pin = $scope.currentMember.pin;                
             }
+            $scope.newUser.savings = 0;
+            $scope.newUser.spendingmoneyalltime = 0;
+            $scope.newUser.earningsalltime = 0;
             localDB.put($scope.newUser).then(function() {
                 AppService.setAllRecords();
                 $scope.closeAddUser();
@@ -136,6 +139,7 @@ window.AppService = AppService;
             });
         }
     /////////END add user/////////
+
         
     ////////SET CURRENT MEMBER (LOGIN)//////
         
@@ -266,7 +270,7 @@ window.dashscope = $scope;
     
         $scope.service.populateChores();
         $scope.saveNewChore = function() {
-          if ($scope.newChore.repeat) {
+          if ($scope.newChore.repeats) {
               // set temporary due date for chore as today
               $scope.newChore.dueDate = new Date();
               var actualDueDate = UtilityService.calculateNextChoreRepeatDate($scope.newChore);
@@ -532,6 +536,7 @@ window.dashscope = $scope;
 
     
     $scope.editPerson = function() {
+        alert('hi');
         $scope.editPersonModal.show();
     };
     
@@ -581,7 +586,7 @@ window.dashscope = $scope;
     $scope.showNoDeleteSelf = function() {
         var cannotDeleteSelfPopup = $ionicPopup.alert({
             title: 'Can\'t Delete Yourself',
-            template: 'Sorry, you can\'t delete yourself. If you would like to delete yourself, log in as a different admin user, and delete your user account from there.'
+            template: 'Sorry, you can\'t delete yourself. If you would like to delete your user account, log in as a different admin user, and delete your user account from there. (There always needs to be at least one admin user, and this prevents locking your family out of the app :)  )'
         });
     }
     
@@ -602,6 +607,7 @@ window.dashscope = $scope;
                                     var record = AppService.allrecords[i];
                                     if (record.name === $scope.person.name) {
                                         record.personImageUrl = $scope.personClone.personImageUrl;
+                                        allrecords.splice(i,1);
                                     }
                                 }
                                 $scope.doRefresh();
@@ -764,7 +770,8 @@ window.dashscope = $scope;
 //        alert('howdy');
     });
     $scope.getChoreClone = function() {
-//        alert('trying to get choreClone');
+        log('trying to get choreClone of this chore:');
+        log($scope.chore);
         localDB.get($scope.chore._id).then(function(doc, err) {
             $scope.choreClone = doc;
             console.log('this is the new choreClone');
@@ -862,13 +869,21 @@ window.dashscope = $scope;
     };
     
     $scope.createNextRepeatingChore = function(choreobject) {
-        var clonedChore = $scope.returnChoreClone(choreobject);
-          if (clonedChore.repeat && clonedChore.assigned !== 'Chore Store') {
+        log('CREATING NEXT REPEATING CHORE USING THIS CHORE OBJECT');
+        log(choreobject);
+        log('the _id of the passed choreobject is: ' + choreobject._id);
+        var clonedChore = $scope.choreClone;//$scope.returnChoreClone(choreobject);
+          if (clonedChore.repeats && clonedChore.assigned !== 'Chore Store') {
               var nextDueDate = UtilityService.calculateNextChoreRepeatDate(clonedChore);
               clonedChore.dueDate = nextDueDate;
               clonedChore.complete = false; // duh!
+              clonedChore.completiondate = '';
               clonedChore._id = new Date().toISOString();
+              clonedChore._rev = '';
+              log('the new _id of the new choreobject is: ' + clonedChore._id);
+              log('ABOUT TO PUT NEW REPEATING CHORE IN');
                 localDB.put(clonedChore).then(function(doc, err) {
+                    log('PUTTING REPEATING CHORE IS COMPLETE!');
                         $timeout(function(){
                             $scope.doRefresh();
                             $ionicHistory.goBack();                            
@@ -889,8 +904,10 @@ window.dashscope = $scope;
         //        var updatedChore = UtilityService.cloneAnObject($scope.chore);
         //        updatedChore.complete = true;
                 dbChore.complete = true;
+                dbChore.completiondate = new Date().toISOString();
                 $scope.chore.complete = true;
-                if(dbChore.repeat && dbChore.markedCompleteCount < 1) {
+                $scope.chore.completiondate = new Date().toISOString();
+                if(dbChore.repeats && dbChore.markedCompleteCount < 1) {
                     dbChore.markedCompleteCount = 1;
                     $scope.createNextRepeatingChore(dbChore);
                 }

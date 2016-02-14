@@ -1,0 +1,36 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Pay {{member.name}}</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeAddUser()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+   <ion-item>
+        {{member.name}} has ${{member.unpaidearnings}} in earnings that have not yet been paid out. Choose how much should go to spending money, and how much you will deposit in ${{member.name}}'s savings account.<br>
+        [note TODO: show how allocation affects the amount to be paid out in real time. also offer to do it by a percentage split. ]
+    <form>
+    <div class="list">
+        <label class="item item-input item-floating-label">
+            <span class="input-label">New user's name</span>
+            <input type="text" id="username" ng-model="newUser.name" placeholder="Name">
+        </label>
+    </div>
+    <div class="list">
+        <label class="item item-input item-floating-label">
+            <span class="item-text-wrap">You can set a user as an "admin" user. Admin users can create and delete chores, add other users, and manage payments in the app.</span><br /><br />
+            <span>Will this user be an admin?</span>
+            <ion-radio ng-model="newUser.admin" ng-value="true">Yes</ion-radio>
+            <ion-radio ng-model="newUser.admin" ng-value="false">No</ion-radio>
+        </label>
+    </div>
+    <div class="list item-text-wrap" ng-if="newUser.admin === true">
+        <strong>All admins use the same pin.</strong> The current pin is <strong>{{currentMember.pin}}</strong>.
+    </div>
+          <button class="button button-block button-positive" ng-click="saveNewSecondaryUser()">Add user</button>
+        </label>
+      </div>
+    </form>
+    </ion-item>
+  </ion-content>
+</ion-modal-view>

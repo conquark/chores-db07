@@ -105,7 +105,7 @@ app.run(function($ionicPlatform) {
             }
         }
     })
-
+    
   .state('app.goaldetails', {
         url: '/mygoals/:id',
         cache: false,
@@ -157,7 +157,7 @@ app.run(function($ionicPlatform) {
     views: {
       'menuContent': {
         templateUrl: 'templates/me.html',
-          controller: 'MeCtrl'
+          controller: 'AppCtrl'
       }
     }
   })
