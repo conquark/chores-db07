@@ -25,7 +25,8 @@ app.factory('UtilityService', function() {
             assignedby: "",
             value: "",
             valuecategory: "",
-            duedate: "",
+            dueDate: "",
+            dueDateMilliseconds: 0,
             complete: false,
             repeats: false,
             frequency: "",
@@ -171,8 +172,16 @@ app.factory('UtilityService', function() {
         log('VALUE OF THE repeatingchoreobject.dueDate is: ');
         log(repeatingchoreobject.dueDate);
         // get the current duedate of the chore object
-        var currentDueDate = new Date();
-        currentDueDate.setTime(Date.parse(repeatingchoreobject.dueDate));
+        
+        var currentDueDate;
+        log('REPEATINGCHOREOBJECT.dueDate is: ');
+        log(repeatingchoreobject.dueDate);
+        
+        if (repeatingchoreobject.dueDate) {
+            currentDueDate = new Date();
+            currentDueDate.setTime(Date.parse(repeatingchoreobject.dueDate));            
+        }
+
 //        var currentDueDate = repeatingchoreobject.dueDate;
         var currentDay = currentDueDate.getDay();
 //        var currentDayNumber = getDayNumberFromDay(currentDay);
@@ -187,7 +196,7 @@ app.factory('UtilityService', function() {
         log(repeatingchoreobject);
         
         // if it's just once a week, just get the date seven days from now
-        if (numberofrepeatingdays === 1) {
+        if (numberofrepeatingdays === 1 && false) {
             oneWeekFromNow = addDays(currentDueDate, 7);
             return oneWeekFromNow;
         } else {
@@ -477,7 +486,11 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
 //            log('this is the record');
 //            log(record);
 //            if (record.type === 'chore' && record.assigned === self.currentMemberName) {
-            if (record.type === 'chore' && record.assigned === self.currentMember.name && recordisthisweekornext) {
+            if (record.type === 'chore' && record.assigned === self.currentMember.name && record.dueDate && (recordisthisweekornext || duedate < new Date())) {
+                self.mychores.push(record);
+            }
+            
+            if (record.type === 'chore' && record.assigned === self.currentMember.name && !record.dueDate) {
                 self.mychores.push(record);
             }
 
@@ -535,6 +548,7 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
             currentgoalname: '',
             currentgoals: 0,
             currentgoalscosttotal: 0,
+            currentgoalimageurl: '',
             completedgoals: 0,
             completedgoalsvalue: 0,
             savings: 0,
@@ -565,8 +579,9 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                 log(completiondateweek);
             }
 
-            //// SET INCOMPLTE CHORES NUMBER
-            if ( record.type === 'chore' && record.complete === false && record.assigned === self.currentMember.name ) {
+            //// SET INCOMPLETE CHORES NUMBER
+            if ( record.type === 'chore' && record.complete === false && record.assigned === self.currentMember.name) {
+//                self.currentStats.incompleteChores = 0;
                 info('calculating incomplete chores');
                 self.currentStats.incompleteChores  = self.currentStats.incompleteChores + 1;
                 info('done calculating incomplete chores. total is: ' + self.currentStats.incompleteChores);
@@ -586,12 +601,13 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                 info('done calculating alltimechores. total is: ' + self.alltimechores);
                 info('also done calculating alltime earnings. total is: ' + self.alltimeearnings);
             }
-            ///// SET  NOPE- NUMBER OF CURRENT GOALS and COST
+            ///// SET  NOPE- NUMBER OF CURRENT GOALS and COST and image
             ///// CHANGED TO SET NAME OF CURRENT GOAL AND ITS COST PER WARD 2016-02-10
             if ( record.type === 'goal' && record.complete === false && record.owner === self.currentMember.name ) {
                 info('setting name of current goal and its cost');
 //                self.currentStats.currentgoals = self.currentStats.currentgoals + 1;
                 self.currentStats.currentgoalname = record.name;
+                self.currentStats.currentgoalimageurl = record.goalimageurl;
                 self.currentStats.currentgoalscosttotal = self.currentStats.currentgoalscosttotal + Number(record.cost);
                 info('done setting name of current goal. it is: ' + self.currentStats.currentgoalname);
                 info('also done setting total current goal cost. total is: ' + self.currentStats.currentgoalscosttotal);

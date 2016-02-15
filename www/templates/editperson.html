@@ -10,32 +10,21 @@
         <ion-item>
                         <form>
     <h2 class="item-text-wrap" style="font-size:1.3em;font-weight:bold;">{{person.name}}</h2>
-    <ion-item>
-        <div class="list">
-            <label class="item item-input item-floating-label">
-                <span class="input-label">Name</span>
-                <input type="text" id="goalname" ng-model="personClone.name" placeholder="Name">
-            </label>
-        </div>
-<!--
-        <div class="list">
-            <label class="item item-input item-floating-label">
-                <span class="input-label">Goal Description</span>
-                <input type="text" id="goaldescription" ng-model="goalClone.description" placeholder="Describe your goal">
-            </label>
-        </div>
-        <div class="list">
-            <label class="item item-input">
-                <span class="input-label">Cost</span>
-                <i class="icon ion-social-usd placeholder-icon"></i>
-                <input type="text" id="goalcost" ng-model="goalClone.cost" placeholder="How much does this goal cost?">
-            </label>
-        </div>        
--->
-    </ion-item>
+    unpaid earnings: <strong style="color:red">${{personEarningsUnpaid}}</strong> <br>
+        <h2>Pay {{person.name}}?</h2>
+        <div class="list item-text-wrap">
+              {{person.name}} has earned ${{personEarningsUnpaid}}.
+               How much should go toward spending money (cash)?
+                <input type="text" id="addtospendingmoney" ng-keyup="setTotalPercentage()" ng-model="addToSpendingMoney" placeholder="enter amount for spending money">
+               How much should go toward savings?
+                <input type="text" id="addtosavings" ng-keyup="setTotalPercentage()" ng-model="addToSavings" placeholder="enter amount for savings">
 
-
-          <button class="button button-block button-positive" ng-click="savePersonRecord()">Save {{person.name}}'s information</button>
+                <h2>Spending Money: {{addToSpendingMoney/personEarningsUnpaid*100}}%</h2>
+                <h2>Savings: {{addToSavings/personEarningsUnpaid*100}}%</h2>
+                <h2>Total: <strong>{{totalPercentage}}%</strong> </h2>
+        </div>           
+          <button ng-disabled="totalPercentage !== 100" class="button button-block button-positive" ng-click="payPerson()">Pay  {{person.name}}</button>
+          <div style="color:gray;text-align:center;text-size:.8em" class="item-text-wrap">(total of Spending Money and Savings must be 100%)</div>
         </label>
       </div>
     </form>

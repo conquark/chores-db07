@@ -15,10 +15,10 @@
             </ion-item>
 -->
             <ion-item>
+                <button ng-if="personEarningsUnpaid > 0" class="button button-full button-balanced" ng-click="editPerson()">{{person.name}} has earned some money!</button>
                 <button class="button button-full button-positive" ng-click="startPersonWidget()">{{person.name}}'s picture</button>
-                <button class="button button-full button-balanced" ng-click="editPerson()">Edit {{person.name}}'s information</button>
-                <button ng-if="person.name !== currentMember.name" class="button button-full button-assertive" ng-click="showConfirm()">Remove {{person.name}} from app</button>
-                <button ng-if="person.name === currentMember.name" class="button button-full button-assertive" ng-click="showNoDeleteSelf()">Remove {{person.name}} from app</button>
+                <button ng-if="person.name === currentMember.name" class="button button-full button-stable button-small" style="color:lightgray" ng-click="showNoDeleteSelf()">Remove {{person.name}} from app</button>
+                <button ng-if="person.name !== currentMember.name" class="button button-full button-stable button-small" style="color:lightgray" ng-click="showConfirm()">Remove {{person.name}} from app</button>
             </ion-item>
         </item-list>
     </div>

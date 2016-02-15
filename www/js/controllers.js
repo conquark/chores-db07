@@ -125,7 +125,8 @@ window.AppService = AppService;
         }
         
         $scope.saveNewSecondaryUser = function() {
-            $scope.newUser._id = $scope.newUser.name;
+            $scope.newUser._id = new Date().toISOString();
+//            $scope.newUser._id = $scope.newUser.name;
             if($scope.newUser.admin === true) {
                 $scope.newUser.pin = $scope.currentMember.pin;                
             }
@@ -270,28 +271,30 @@ window.dashscope = $scope;
     
         $scope.service.populateChores();
         $scope.saveNewChore = function() {
-          if ($scope.newChore.repeats) {
-              // set temporary due date for chore as today
-              $scope.newChore.dueDate = new Date();
-              var actualDueDate = UtilityService.calculateNextChoreRepeatDate($scope.newChore);
-              $scope.newChore.dueDate = actualDueDate;
-          } else {
-              console.log('NEW CHORE DOES NOT REPEAT');
-          }
-            $scope.newChore._id = new Date().toISOString();
-            $scope.newChore.assignedby = $scope.service.currentMember.name;
-    //        alert('newChore.assigned value is: ' + $scope.newChore.assigned);
-            $scope.chorestore.push($scope.newChore);
-            localDB.put($scope.newChore).then(function(doc, err) {
-                $scope.newChore = UtilityService.newChoreFactory();
-                $scope.service.populateChores();
-                $scope.service.getChoreStore();
-                $scope.doRefresh();
-                $scope.closeAddChore();
-    //            $window.location.reload();
-            }).catch(function(err) {
-                console.log('there was an error updating the chore. Error was: ' + err);
-            });
+            if ($scope.newChore.repeats) {
+                  // set temporary due date for chore as today
+                  $scope.newChore.dueDate = new Date();
+                  var actualDueDate = UtilityService.calculateNextChoreRepeatDate($scope.newChore);
+                  $scope.newChore.dueDate = actualDueDate;
+                  $scope.newChore.dueDateMilliseconds = actualDueDate.valueOf();
+              } else {
+                  console.log('NEW CHORE DOES NOT REPEAT');
+              }
+                $scope.newChore._id = new Date().toISOString();
+                $scope.newChore.assignedby = $scope.service.currentMember.name;
+        //        alert('newChore.assigned value is: ' + $scope.newChore.assigned);
+                $scope.newChore.dueDateMilliseconds = $scope.newChore.dueDate.valueOf();
+                $scope.chorestore.push($scope.newChore);
+                localDB.put($scope.newChore).then(function(doc, err) {
+                    $scope.newChore = UtilityService.newChoreFactory();
+                    $scope.service.populateChores();
+                    $scope.service.getChoreStore();
+                    $scope.doRefresh();
+                    $scope.closeAddChore();
+        //            $window.location.reload();
+                }).catch(function(err) {
+                    console.log('there was an error updating the chore. Error was: ' + err);
+                });
         
     }
     
@@ -343,7 +346,13 @@ window.dashscope = $scope;
 
   // Triggered in the login modal to close it
   $scope.closeAddChore = function() {
-    $scope.modal.hide();
+    $scope.modal.remove();
+     $ionicModal.fromTemplateUrl('templates/addchore.html', {
+        scope: $scope,
+          focusFirstInput: true
+      }).then(function(modal) {
+        $scope.modal = modal;
+      });
   };
 
 
@@ -496,12 +505,39 @@ window.dashscope = $scope;
     $scope.personClone = {};
     $scope.currentMember = AppService.currentMember;
     $scope.sponsor == AppService.sponsor;
+    $scope.personEarningsTotal = 0;
+    $scope.personEarningsUnpaid = 0;
+    $scope.addToSavings;
+    $scope.addToSpendingMoney;
+    $scope.totalPercentage = 0;
+    $scope.savingsNumber = 0;
+    $scope.spendingNumber = 0;
+    $scope.numberTotal = 0;
+
+    $scope.setTotalPercentage = function() {
+//        alert('hi');
+//        $scope.totalPercentage = $scope.personEarningsUnpaid;
+        var spending = Number(document.getElementById("addtospendingmoney").value);
+        var savings = Number(document.getElementById("addtosavings").value);
+//        var spending = Number($scope.addToSpendingMoney);
+        var unpaid = $scope.personEarningsUnpaid;
+        
+        $scope.totalPercentage = (savings + spending)/unpaid*100;
+        $scope.savingsNumber = savings;
+        $scope.spendingNumber = spending;
+        $scope.numberTotal = savings + spending;
+//        return (savings + spending)/unpaid*100;
+    }
 
     $scope.getPersonClone = function() {
         localDB.get($scope.person._id).then(function(doc, err) {
             $scope.personClone = doc;
             console.log('this is the new personClone');
             console.log(doc);
+//            alert('personClone savings is: ');
+//            alert(personClone.savings);
+//            alert('personClone savings plus 1 is');
+//            alert(personClone.savings + 1);
         });
     };
     
@@ -514,7 +550,32 @@ window.dashscope = $scope;
             console.log('this is personClone');  
             console.log($scope.personClone);
         }
+    }    
+    
+    for (var i = 0; i < AppService.allrecords.length; i++) {
+        var record = AppService.allrecords[i];
+        if (record.type = 'chore' && record.complete === true && record.assigned === $scope.person.name) {
+            $scope.personEarningsTotal = $scope.personEarningsTotal + record.value;
+        }
     }
+    
+//    for (var i = 0; i < AppService.allrecords.length; i++) {
+//        var record = AppService.allrecords[i];
+//        var completiondate, completiondatestring, completiondateweek;        
+//            if (record.type === 'chore' && record.completiondate) {
+//                completiondatestring = record.completiondate;
+//                completiondate = new Date();
+//                completiondate.setTime(Date.parse(completiondatestring));
+//                completiondateweek = completiondate.getWeekNumber();
+//                log('GOT COMPLETIONDATE WEEK - IT IS: ');
+//                log(completiondateweek);
+//            }
+//        if (record.type = 'chore' && record.complete === true && record.assigned === $scope.person.name ) {
+//            $scope.personEarningsTotal = $scope.personEarningsTotal + record.value;
+//        }
+//    }
+    
+    $scope.personEarningsUnpaid = $scope.personEarningsTotal - $scope.person.earningsalltime;
     
     $scope.doRefresh = function() {
         AppService.setAllRecords();
@@ -536,7 +597,7 @@ window.dashscope = $scope;
 
     
     $scope.editPerson = function() {
-        alert('hi');
+//        alert('hi');
         $scope.editPersonModal.show();
     };
     
@@ -550,6 +611,33 @@ window.dashscope = $scope;
             }).catch(function(err) {
                 console.log('there was an error updating the person. Error was: ' + err);
             });            
+    };
+    
+    $scope.payPerson = function() {
+        alert('personClone.savings is currently: ' + $scope.personClone.savings);
+        alert('savingsNumber is: ');
+        alert($scope.savingsNumber);
+        $scope.personClone.savings = $scope.personClone.savings + $scope.savingsNumber;
+        alert('personClone.savings is now: ' + $scope.personClone.savings);
+        alert('personClone.spendingmoneyalltime is: ' + $scope.personClone.spendingmoneyalltime);
+        alert('spendingNumber is: ');
+        alert($scope.spendingNumber);
+        $scope.personClone.spendingmoneyalltime = $scope.personClone.spendingmoneyalltime + $scope.spendingNumber;
+        alert('personClone.spendingmoneyalltime is now: ' + $scope.personClone.spendingmoneyalltime);
+        alert('personClone.earningsalltime is currently: ');
+        alert($scope.personClone.earningsalltime);
+        $scope.personClone.earningsalltime = $scope.personClone.earningsalltime + $scope.numberTotal;
+        alert('personClone.earningsalltime is now: ');
+        alert($scope.personClone.earningsalltime);
+        localDB.put($scope.personClone).then(function(doc, err) {
+//            alert('tried to do the thing');
+            $ionicHistory.clearCache();
+            $scope.doRefresh();
+            $scope.person = $scope.personClone;
+            $scope.closeEditPerson();
+        }).catch(function(err) {
+            console.log('there was an error paying the person. Error was: ' + err);
+        });
     };
     
     $scope.deletePerson = function() {
@@ -710,6 +798,7 @@ window.dashscope = $scope;
     $scope.currentMember = AppService.currentMember;
     $scope.completedchores =  AppService.completedchores;
     $scope.incompletechores = AppService.incompletechores;
+    $scope.todaysDate = new Date().valueOf();
     $scope.doRefresh = function() {
         AppService.setAllRecords();
         $scope.completedchores =  AppService.completedchores;
@@ -766,6 +855,7 @@ window.dashscope = $scope;
     $scope.choredeleted = false;
     $scope.chore = {};
     $scope.choreClone = {};
+    $scope.todaysDate = new Date();
     $scope.$on('add', function() {
 //        alert('howdy');
     });
