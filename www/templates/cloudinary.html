@@ -1,0 +1,75 @@
+
+<ion-modal-view>
+    <script>
+      //<![CDATA[
+        window["dictionary"] = {"powered_by_cloudinary":"Powered by Cloudinary - Image management in the cloud","sources.local.title":"My files","sources.local.drop_file":"Drop file here","sources.local.drop_files":"Drop files here","sources.local.drop_or":"Or","sources.local.select_file":"Select File","sources.local.select_files":"Select Files","sources.url.title":"Web Address","sources.url.note":"Public URL of an image file:","sources.url.upload":"Upload","sources.url.error":"Please type a valid HTTP URL.","sources.camera.title":"Camera","sources.camera.note":"Make sure your browser allows camera capture, position yourself and click Capture:","sources.camera.capture":"Capture","progress.uploading":"Uploading...","progress.upload_cropped":"Upload","progress.processing":"Processing...","progress.retry_upload":"Try again","progress.use_succeeded":"OK","progress.failed_note":"Some of your images failed uploading."};
+      //]]>
+    </script>
+
+    <script src="https://widget.cloudinary.com/v/ntcapps/b461e618bfe70c2cbadbbbfbba8920c2/all.js" type="text/javascript"></script>
+    <link href="https://widget.cloudinary.com/v/ntcapps/b461e618bfe70c2cbadbbbfbba8920c2/all.css" media="screen" rel="stylesheet" type="text/css" />
+    <div class='widget slider' data-cloudinary-cors='/cloudinary_cors.html' data-premium='0' data-secure-distribution='res.cloudinary.com' id='cloudinary-widget'>
+    <a href="http://cloudinary.com" class="powered_by_cloudinary" data-text-key="powered_by_cloudinary" target="_blank"></a>
+    <div class='header' id='cloudinary-navbar'>
+    <ul class='sources clear'>
+    <li class='source local' data-source='local'>
+    <span class='label' data-text-key='sources.local.title'></span>
+    <span class='icon'></span>
+    </li>
+    <li class='source url' data-source='url'>
+    <span class='label' data-text-key='sources.url.title'></span>
+    <span class='icon'></span>
+    </li>
+    <li class='source camera' data-source='camera'>
+    <span class='label' data-text-key='sources.camera.title'></span>
+    <span class='icon'></span>
+    </li>
+    </ul>
+    <a class='close' href='#'>×</a>
+    </div>
+    <div class='panel local'>
+    <div class='drag_area'>
+    <div class='drag_content'>
+    <span class='label label_single' data-text-key='sources.local.drop_file'></span>
+    <span class='label label_multiple' data-text-key='sources.local.drop_files'></span>
+    <span class='or' data-text-key='sources.local.drop_or'></span>
+    <div class='upload_button_holder'>
+    <a href="#" class="button select_file select_single" data-text-key="sources.local.select_file"></a>
+    <a href="#" class="button select_file select_multiple" data-text-key="sources.local.select_files"></a>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class='panel url'>
+    <div class='note' data-text-key='sources.url.note'></div>
+    <div class='form'>
+    <input class="remote_url" id="remote_url" name="remote_url" placeholder="http://remote-site.example.com/images/remote-image.jpg" type="text" value="" />
+    <div class='validation_error'></div>
+    <div class='button_holder'>
+    <a href="#" class="button upload_url" data-text-key="sources.url.upload"></a>
+    </div>
+    </div>
+    </div>
+    <div class='panel camera'>
+    <div class='note' data-text-key='sources.camera.note'></div>
+    <div class='form camera_form'>
+    <div class='video_holder'></div>
+    <div class='canvas_holder'></div>
+    <div class='button_holder'>
+    <a href="#" class="button capture_camera" data-text-key="sources.camera.capture"></a>
+    </div>
+    </div>
+    </div>
+    <div class='panel progress'>
+    <ul class='thumbnails clear'></ul>
+    <div class='upload_cropped_holder'>
+    <a href="#" class="button upload_cropped" data-text-key="progress.upload_cropped"></a>
+    </div>
+    <div class='retry_upload_holder'>
+    <span class='note' data-text-key='progress.failed_note'></span>
+    <a href="#" class="button small_button use_succeeded" data-text-key="progress.use_succeeded"></a>
+    <a href="#" class="button small_button retry_upload" data-text-key="progress.retry_upload"></a>
+    </div>
+    </div>
+    </div>
+</ion-modal-view>

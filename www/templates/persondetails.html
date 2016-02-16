@@ -15,6 +15,11 @@
             </ion-item>
 -->
             <ion-item>
+               <a href="http://google.com">google http</a>
+               <a href="https://google.com">google https</a>
+                <a class="item" href="#" onclick="window.open('http://cloudinary.com', '_system', 'location=yes'); return false;">
+                                Open cloudinary
+                </a>
                 <button ng-if="personEarningsUnpaid > 0" class="button button-full button-balanced" ng-click="editPerson()">{{person.name}} has earned some money!</button>
                 <button class="button button-full button-positive" ng-click="startPersonWidget()">{{person.name}}'s picture</button>
                 <button ng-if="person.name === currentMember.name" class="button button-full button-stable button-small" style="color:lightgray" ng-click="showNoDeleteSelf()">Remove {{person.name}} from app</button>
