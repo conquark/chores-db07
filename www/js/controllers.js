@@ -3,9 +3,52 @@ function log(x){console.log(x)}
 angular.module('taskMasterApp.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, $http, $window, $ionicSideMenuDelegate, $state, PouchDBListener, PersonService, UtilityService, AppService) {
-
+    
+//    (function() {
+//        AppService.setInfoRecords();
+//        $timeout(function() {
+//            
+//        }, 750);
+//    }())
+//    
+//        $scope.destroy = function() {
+//        familyDB.destroy().then(function() {
+//            alert('destroyed! Mwahahahahaha!!!!');
+//        }).catch(function(err) {
+//            alert('Mwahahah...wait a second. there was a problem: ' + err);
+//        });
+//    }
+    
+//    $scope.info = AppService.allinforecords;
+//    
+//    $timeout(function() {
+//        $scope.crabbyPants = AppService.crabbyPants;
+//    },250);
+//    
+//    $timeout(function() {
+//        if ($scope.info.length < 1) {
+//            alert('First time here? Let\'s get you set up!');
+//            var rando = Math.floor(Math.random() * 150);
+//            var thename = 'CrabbyPants' + rando;
+//            var the_id = new Date().toISOString();
+//            var newbogusrecord = {};
+//            newbogusrecord._id = the_id;
+//            newbogusrecord.name = thename;
+//            alert('I dub thee: ' + newbogusrecord.name);
+//            familyDB.put(newbogusrecord).then(function() {
+//                AppService.setInfoRecords();
+//                alert('Ok - I think you\'re all set up!');
+//            }).catch(function(err) {
+//                alert('hrrrrm. was not able to insert the record. error was ' + err);
+//            });
+//        } else {
+//            alert('Welcome, back, ' + $scope.crabbyPants + '!');
+//        }        
+//    }, 750);
+    
     $scope.service = AppService;
     $scope.utility = UtilityService;
+    $scope.dbname = dbname;
     
     $timeout(function() {
         $scope.service.setFamilyMembers();
@@ -13,6 +56,7 @@ angular.module('taskMasterApp.controllers', [])
         $scope.currentMember = AppService.currentMember;
         $scope.currentStats = AppService.getCurrentStats();         
     }, 1300);
+    
 
 window.dollarscope = $scope;
 window.AppService = AppService;    
@@ -24,6 +68,12 @@ window.AppService = AppService;
     $scope.doRefresh = function() {
 //        $window.location.reload();
         AppService.setAllRecords();
+        $timeout(function() {
+            $scope.service.setFamilyMembers();
+            $scope.familyMembers = AppService.familyMembers;
+            $scope.currentMember = AppService.currentMember;
+            $scope.currentStats = AppService.getCurrentStats();         
+        }, 800);
         $scope.$broadcast('scroll.refreshComplete');
         $scope.$apply();
     };
@@ -165,7 +215,14 @@ window.AppService = AppService;
   // Open the login modal
   $scope.login = function() {
     $scope.doRefresh();
-    $scope.modal.show();
+      $timeout(function() {
+        $scope.service.setFamilyMembers();
+        $scope.familyMembers = AppService.familyMembers;
+        $scope.currentMember = AppService.currentMember;
+        $scope.currentStats = AppService.getCurrentStats();
+              $scope.modal.show();
+    }, 800);
+
   };
 
   // Perform the login action when the user submits the login form
@@ -589,6 +646,13 @@ window.dashscope = $scope;
     }).then(function(modal) {
         $scope.editPersonModal = modal;
     });
+
+    $ionicModal.fromTemplateUrl('templates/bankreminder.html', {
+        scope : $scope,
+        focusFirstInput: true
+    }).then(function(modal) {
+        $scope.bankReminderModal = modal;
+    });
     
       // Triggered in the login modal to close it
     $scope.closeEditPerson = function() {
@@ -600,6 +664,14 @@ window.dashscope = $scope;
 //        alert('hi');
         $scope.editPersonModal.show();
     };
+    
+    $scope.openBankReminder = function() {
+        $scope.bankReminderModal.show();
+    }
+    
+    $scope.closeBankReminder = function() {
+        $scope.bankReminderModal.hide();
+    }
     
     $scope.savePersonRecord = function() {
             localDB.put($scope.personClone).then(function(doc, err) {
@@ -614,27 +686,29 @@ window.dashscope = $scope;
     };
     
     $scope.payPerson = function() {
-        alert('personClone.savings is currently: ' + $scope.personClone.savings);
-        alert('savingsNumber is: ');
-        alert($scope.savingsNumber);
+//        alert('personClone.savings is currently: ' + $scope.personClone.savings);
+//        alert('savingsNumber is: ');
+//        alert($scope.savingsNumber);
         $scope.personClone.savings = $scope.personClone.savings + $scope.savingsNumber;
-        alert('personClone.savings is now: ' + $scope.personClone.savings);
-        alert('personClone.spendingmoneyalltime is: ' + $scope.personClone.spendingmoneyalltime);
-        alert('spendingNumber is: ');
-        alert($scope.spendingNumber);
+//        alert('personClone.savings is now: ' + $scope.personClone.savings);
+//        alert('personClone.spendingmoneyalltime is: ' + $scope.personClone.spendingmoneyalltime);
+//        alert('spendingNumber is: ');
+//        alert($scope.spendingNumber);
         $scope.personClone.spendingmoneyalltime = $scope.personClone.spendingmoneyalltime + $scope.spendingNumber;
-        alert('personClone.spendingmoneyalltime is now: ' + $scope.personClone.spendingmoneyalltime);
-        alert('personClone.earningsalltime is currently: ');
-        alert($scope.personClone.earningsalltime);
+//        alert('personClone.spendingmoneyalltime is now: ' + $scope.personClone.spendingmoneyalltime);
+//        alert('personClone.earningsalltime is currently: ');
+//        alert($scope.personClone.earningsalltime);
         $scope.personClone.earningsalltime = $scope.personClone.earningsalltime + $scope.numberTotal;
-        alert('personClone.earningsalltime is now: ');
-        alert($scope.personClone.earningsalltime);
+//        alert('personClone.earningsalltime is now: ');
+//        alert($scope.personClone.earningsalltime);
         localDB.put($scope.personClone).then(function(doc, err) {
 //            alert('tried to do the thing');
             $ionicHistory.clearCache();
             $scope.doRefresh();
             $scope.person = $scope.personClone;
+            $scope.personEarningsUnpaid = 0;
             $scope.closeEditPerson();
+            $scope.openBankReminder();
         }).catch(function(err) {
             console.log('there was an error paying the person. Error was: ' + err);
         });
@@ -680,11 +754,12 @@ window.dashscope = $scope;
     
     
     $scope.startPersonWidget = function() {
+        var shortname = $scope.personClone.name.substr(0,5);
         var d = new Date();
         var timestamp = d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate()+ '-' + d.getHours() + d.getMinutes() + d.getSeconds();
         cloudinary.openUploadWidget({upload_preset: 'xisr5ror', 
                                      cropping:true, multiple:false,
-                                      public_id: $scope.personClone.name + timestamp}, 
+                                      public_id: shortname + timestamp}, 
                                         function(error, result) {
                                 console.log(error, result);
                                 theresult = result;
@@ -776,6 +851,18 @@ window.dashscope = $scope;
                 console.log('there was an error updating the goal. Error was: ' + err);
             });            
     };
+    
+    $scope.markGoalComplete = function() {
+        $scope.goalClone.complete = true;
+        $scope.goalClone.completiondate = new Date().toISOString();
+        localDB.put($scope.goalClone).then(function(doc, err) {
+            $ionicHistory.clearCache();
+            $scope.goal = $scope.goalClone;
+            $ionicHistory.goBack();
+        }).catch(function(err) {
+            console.log('unable to mark goal complete. error was: ' + err);
+        });
+    }
     
     $scope.deleteGoal = function() {
         $scope.goalClone._deleted = true;
@@ -888,6 +975,7 @@ window.dashscope = $scope;
     
     $scope.sponsor = AppService.sponsor;
     $scope.currentMember = AppService.currentMember;
+    $scope.currentStats = AppService.currentStats;
 //    console.log('here we go');
     for (var i = 0; i < AppService.allrecords.length; i++) {
 //        console.log('howdy');
@@ -919,6 +1007,9 @@ window.dashscope = $scope;
             $scope.currentMember.name;
         localDB.put($scope.choreClone).then(function(doc, err) {
             $scope.closeEditChore();
+            $timeout(function(){
+                $ionicHistory.goBack();
+            },1000);
         }).catch(function(err) {
             console.log('there was an error updating the chore. Error was: ' + err);
         });        

@@ -6,15 +6,18 @@
                 <h2 class="item-text-wrap" style="font-size:1.5em">{{goal.name}}</h2>
                 <h1>${{goal.cost}}</h1>
                 {{goal.description}} <br><br>
-                <img src="https://res.cloudinary.com/ntcapps/image/upload/w_100,h_100,c_thumb,r_max/{{goal.goalimageurl}}" alt="">
+                <img src="https://res.cloudinary.com/ntcapps/image/upload/w_100,h_100,c_thumb,r_12/{{goal.goalimageurl}}" alt="">
                 <br>
 
             </div>
-            <div class="list">
-                <button class="button button-block button-positive" ng-click="startGoalWidget()">Add an image to this goal</button>
+            <div class="list" ng-if="goal.complete === false">
+                <button class="button button-block button-positive" ng-click="startGoalWidget()">Set an image for this goal</button>
             </div>
-            <div>
+            <div ng-if="goal.complete === false">
                 <button class="button button-balanced button-full" ng-click="editGoal()">Edit</button>
+            </div>
+            <div ng-if="goal.complete === false">
+                <button class="button button-calm button-full" ng-click="markGoalComplete()">Mark this goal as complete!</button>
             </div>
             <div>
                 <button class="button button-assertive button-full" ng-click="deleteGoal()">Delete</button>

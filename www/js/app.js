@@ -1,23 +1,38 @@
-
 function log(x){console.log(x)}
 function info(x){console.info(x)}
 
+
+// The family database is used to save info about the family's chore database, and whether anyone has logged into the app previousy (if not, then we do setup).
+//var familyDB = new PouchDB('family');
+//familyDB.allDocs({include_docs:true}).then(function(result){
+//    for (var i = 0; i < result.rows.length; i++) {
+//        self.allinforecords.push(result.rows[i].doc);
+//    }
+//    self.crabbyPants = self.allinforecords[0].name;
+//}).catch(function(err) {
+//    log('there was an error getting allDocs. error was: ' + err + '\n\nThis is the expected behavior for the first time app is opened. We\'re specifically trying to figure out if there is a family database created. If so, things are already set up, continue as usual. If not, set things up!');
+//});
+
+var dbname = 'dbname';
 if (getCookie('dbname')) {
-        var dbname =  getCookie('dbname');       
+        dbname =  getCookie('dbname');       
     } else {
         location.href = 'index2.html';
     }
-
+var sponsorDB;
 var localDB;
 var remoteDB;
 
 var setupDatabases = function(dbname) {
     info('STEP (1) START');
-    localDB = new PouchDB('dbname');
+    localDB = new PouchDB(dbname);
     remoteDB = new PouchDB('https://bturner:glasgow8mysoup@bturner.cloudant.com/' + dbname);
 }
 
 setupDatabases(dbname);
+setTimeout(function() {
+//    location.reload();
+}, 3000);
 //
 //var localDB = new PouchDB('tmchores10');
 //var remoteDB = new PouchDB('https://bturner:glasgow8mysoup@bturner.cloudant.com/tmchores10');

@@ -8,12 +8,19 @@
       Add a new Chore
     </button>
     <ion-list>
+       <ion-item ng-if="service.chorestore.length < 1" class="item-text-wrap item-icon-left">
+          <i class="icon ion-ios-cart-outline"></i>
+           #empty <br>
+           All Chore Store chores have been claimed!
+           <span ng-if="currentMember.admin === false">Check again later to see if more have been added.</span>
+           <span ng-if="currentMember.admin === true"><br><br>Tap the blue button above to add more chores to the store.</span>
+       </ion-item>
         <ion-item class="item-text-wrap" ng-repeat="chore in service.chorestore"
                ui-sref="app.chorestoredetails({id:chore._id})" ng-if="chore.complete !== complete && chore._deleted !== true">
             Chore:<br />
             {{chore.name}} <br>
             You can earn: ${{chore.value}} <br>
-            <span style="font-weight:bold;font-size: .8em" ng-if-"chore.dueDate">Next due date: {{chore.dueDate | date : short}}</span>
+            <span style="font-weight:bold;font-size: .8em" ng-if="chore.dueDate">Next due date: {{chore.dueDate | date : short}}</span>
         </ion-item>
     </ion-list>
     </div>

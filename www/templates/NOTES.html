@@ -8,5 +8,20 @@
     <div>
         Remember: must add whitelisted domains to config.xml in the xcode project, and then <strong>rebuild it inside Xcode</strong>, otherwise it won't make it to the build and the device.
     </div>
+    <div>
+        Person signs up the first time at the website.
+           This gives them a username and password and a user account in our system.
+           Their *cloud* database name is just a millisecond number time and date stamp (but turned into an integer).
+           
+           The first time they log into the app:
+               The app initializes a family database, and tries to get primary user. 
+               
+               If successful, brings up the login modal showing all users for the family.
+               
+               If not successful, asks for the user's email.
+               
+               
+           
+    </div>
 </body>
 </html>

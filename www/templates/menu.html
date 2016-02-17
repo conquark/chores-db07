@@ -22,17 +22,30 @@
     <div class="card">
         <ion-list>
         <ion-item class="beige item-text-wrap" ng-if="currentMember.name.length > 0">
-             <img src="https://res.cloudinary.com/ntcapps/image/upload/w_100,h_100,c_thumb,r_max/{{currentMember.personImageUrl}}" alt=""><br>
-            {{currentMember.name}} is logged in.<br/>
+            <div class="row">
+                <div class="col col-40">
+                     <img src="https://res.cloudinary.com/ntcapps/image/upload/w_90,h_90,c_thumb,r_max/{{currentMember.personImageUrl}}" alt="" width="70"><br>
+                 </div>
+                 <div class="col col-bottom col-offset-45 col-30" style="font-size:.6em;line-height:1em">
+                    <span ng-if="!currentMember.admin">Goals: {{currentStats.currentgoals}} <br></span>
+                    Chores to do: {{currentStats.incompleteChores}} <br>
+                    Earnings this week: ${{currentStats.earnedthisweek}}
+                 </div>
+            </div>
+            <div class="row">
+                {{currentMember.name}} is logged in.<br/>                 
+            </div>
         </ion-item>
         <ion-item ng-if="familySize > 0 && currentMember.admin !== true" menu-close href="#/app/me">
           My Info
         </ion-item>
 
-        <ion-item ng-if="familySize > 0" menu-close href="#/app/chorestore">
-          Chore Store<span ng-if="currentMember.admin === true">:<br /><i style="color:gray;font-size:.8em">Add and assign chores</i></span>
+        <ion-item ng-if="familySize > 0" menu-close href="#/app/chorestore" class="item-icon-right">
+          <i class="icon ion-android-cart"></i>
+          Chore Store<span ng-if="currentMember.admin === true">:<br /><span style="color:gray;font-size:.8em;" class="item-text-wrap"><div style="line-height: 1.1em;margin-top:5px">Add and assign chores to your kids...or yourself!</div></span></span>
         </ion-item>
-        <ion-item ng-if="familySize > 0 && currentMember.admin == true" menu-close href="#/app/dashboard">
+        <ion-item ng-if="familySize > 0 && currentMember.admin == true" menu-close href="#/app/dashboard" class="item-icon-right">
+            <i class="icon ion-clipboard"></i>
              <div class="item-text-wrap">
               Parent Dashboard
 <!--
@@ -44,26 +57,35 @@
         <ion-item ng-if="familySize < 1" menu-close ng-click="setup()">
           <button class="button button-positive">Setup - [start here]</button>
         </ion-item>        
-       <ion-item ng-if="familySize > 0" menu-close href="#/app/mychores">
-          My Chores
+       <ion-item ng-if="familySize > 0" menu-close href="#/app/mychores" class="item-icon-right item-avatar">
+         <img ng-if="currentMember.personImageUrl" src="https://res.cloudinary.com/ntcapps/image/upload/w_90,h_90,c_thumb,r_max/{{currentMember.personImageUrl}}" alt="">
+         <img src="img/image-placeholder.png" ng-if="!currentMember.personImageUrl" alt="">
+         <i class="icon ion-android-done-all"></i>
+          My Chores <br>
+          <span ng-if="currentStats.incompleteChores > 1">{{currentStats.incompleteChores}} chores to do</span>
+          <span ng-if="currentStats.incompleteChores > 0 && currentStats.incompleteChores < 2">{{currentStats.incompleteChores}} chore to do</span>
         </ion-item>
-       <ion-item ng-if="familySize > 0 && currentMember.admin !== true" menu-close href="#/app/mygoals">
-          My Goals
+       <ion-item ng-if="familySize > 0 && currentMember.admin !== true" menu-close href="#/app/mygoals" class="item-icon-right">
+         <i class="icon ion-paper-airplane"></i>
+          My Goals <span ng-if="currentStats.currentgoals > 0">({{currentStats.currentgoals}})</span>
         </ion-item>
         <ion-item menu-close href="#/app/welcome">
           Home Screen
         </ion-item>
         <ion-item menu-close ng-click="login()" href="#/app/welcome">
 <!--          <span ng-if="familySize < 1">Enter Premium Code</span><span ng-if="familySize > 0">Switch user</span>-->
-              <span ng-if="familySize > 0">Log in as a different user</span>
+              <span ng-if="familySize > 0" style="color:gray;">Log in as a different user</span>
         </ion-item>
 <!--
         <ion-item menu-close href="#/app/playlists">
           Playlists
         </ion-item>
--->
+-->           <ion-item>
+                    <div style="font-size:.8em;color:gray">{{dbname}}</div>
+            </ion-item>
       </ion-list>
     </div>
+
 <!--
     <div style="margin:auto;margin-top:3px;border:0px solid white;border-radius: 8px;padding:5px;background-color:white;max-width:90%;">
         Brought to you by <strong>{{sponsor.name}}</strong>

@@ -1,0 +1,21 @@
+<ion-modal-view>
+  <ion-header-bar> 
+    <h1 class="title">You've paid {{person.name}}!</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeBankReminder()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <div class="card">
+        <ion-item class="item-text-wrap">
+           <h2>Payment Recorded</h2>
+            You've recorded a payment to {{person.name}}. Don't forget to pay them for real! You allocated {{addToSpendingMoney | currency: "$"}} to give to them in spending money, and {{addToSavings | currency: "$"}} to put into savings. <br> <br>
+            
+            Would you like to visit online banking to deposit their savings now? This will open in your default browser on your device. <br>
+                       
+            <button class="button button-calm" onclick="window.open('http://nationaltheatre.com','_system', 'location=yes'); return false;">Yes</button> <br>
+            <button class="button button-stable" ng-click="closeBankReminder()">No, I'll deposit the money later.</button>
+        </ion-item>
+    </div>
+  </ion-content>
+</ion-modal-view>

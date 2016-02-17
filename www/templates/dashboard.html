@@ -3,7 +3,7 @@
     <ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()">
     </ion-refresher>
     <div style="background:transparent;">
-        <ion-item style="color: white;background:transparent;background-image:url('img/bg-transparent-nogradient.png')">
+        <ion-item style="color: white;background:transparent;background-image:url('img/bg-transparent-nogradient.png');border-bottom:none;border-top:none">
                <div style="max-width:90%;margin:auto;">
                     <div class="item-balanced tm-person-block" ng-repeat="member in familyMembers" ui-sref="app.persondetails({id:member._id})" ng-hide="member.name === '*DELETED*'" style="text-align:center">
                            <div ng-if="member.personImageUrl" style="position:relative;background-image:url('https://res.cloudinary.com/ntcapps/image/upload/w_250,h_250,c_thumb,r_max/{{member.personImageUrl}}'); background-repeat: no-repeat; background-position:1px 1px;background-size:contain">
@@ -12,11 +12,25 @@
                            <div ng-if="!member.personImageUrl" style="position:relative;background-image:url('img/click-to-add-picture.png'); background-repeat: no-repeat; background-position:1px 1px;background-size:contain">
                                <img src="img/personcircle-100x84-2.png" alt=""  width="100%">
                            </div>
-                           <div style="position:relative;top:-25px;height:60px;background-image:url('img/banner.png');background-size:contain;background-repeat:no-repeat;padding-top:10px;text-align:center">
+                           <div ng-if="member.name.length < 17" style="position:relative;top:-25px;height:70px;background-image:url('img/banner.png');background-size:100% 100%;background-repeat:no-repeat;padding-top:10px;text-align:center">
     <!--                           <img src="img/banner.png" alt="" style="width:150px;height:60px;">-->
     <!--                           <div style="position:absolute;top:15px;text-align;center;font-size:1.4em;font-weight: bold">{{member.name}}</div>-->
-                          {{member.name}}
-                           </div>                       
+                              <div style="text-align:center;margin-top:5px">{{member.name}}</div>
+                           </div>
+                           <div ng-if="member.name.length > 16"
+                              style="position:relative;top:-45px;height:120px;background-image:url('img/banner.png');background-size:100% 100%;background-repeat:no-repeat;padding-top:10px;text-align:center">
+                               <div class="item-text-wrap" style="width:150px;margin:auto;margin-top:15px">
+                                   {{member.name | limitTo:32}}
+                               </div>
+                           </div>                     
+<!--
+                           <div ng-if="member.name.length > 31"
+                              style="position:relative;top:-45px;height:120px;background-image:url('img/banner.png');background-size:100% 100%;background-repeat:no-repeat;padding-top:10px;text-align:center">
+                               <div style="width:150px;margin:auto;margin-top:15px">
+                                   {{member.name}}
+                               </div>
+                           </div>                     
+-->
 
                     </div>                      
                </div>

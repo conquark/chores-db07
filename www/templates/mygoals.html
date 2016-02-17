@@ -5,17 +5,32 @@
 
     <div class="card">
         <ion-list>
-        <button ng-click="addGoal()" class="button button-positive button-full">
+        <button ng-if="currentStats.currentgoals < 1" ng-click="addGoal()" class="button button-positive button-full">
           Add a new Goal
         </button>
+<!--
           <ion-item>
              <div style="text-align:center;margin-bottom:20px;"><span style="color:lightgray">pull to refresh</span></div>
               My Goals
           </ion-item>
-            <ion-item class="item item-avatar" ng-repeat="goal in service.mygoals" ui-sref="app.goaldetails({id:goal._id})">
-              <img src="https://res.cloudinary.com/ntcapps/image/upload/w_100,h_100,c_thumb,r_max/{{goal.goalimageurl}}" ng-if="goal.goalimageurl.length > 0">
-               {{goal.name}}<br/>
-               ${{goal.cost}}
+-->
+            <ion-item ng-if="currentStats.currentgoals < 1">
+                Current goal: No current goal
+            </ion-item>
+            <ion-item ng-if="goal.complete === false" class="item item-thumbnail-left item-text-wrap" ng-repeat="goal in service.mygoals" ui-sref="app.goaldetails({id:goal._id})">
+              <img src="https://res.cloudinary.com/ntcapps/image/upload/w_100,h_100,c_thumb,r_06/{{goal.goalimageurl}}" ng-if="goal.goalimageurl.length > 0">
+               Current goal: {{goal.name}}<br/> <br>
+               Cost: ${{goal.cost}}
+            </ion-item>
+        </ion-list>
+        <hr>
+        <ion-list>
+            <ion-item>Completed Goals</ion-item>
+            <ion-item class="item item-thumbnail-left item-text-wrap" ng-if="goal.complete === true" ng-repeat="goal in service.mygoals" ui-sref="app.goaldetails({id:goal._id})">
+                <img src="https://res.cloudinary.com/ntcapps/image/upload/w_100,h_100,c_thumb,r_06/{{goal.goalimageurl}}" ng-if="goal.goalimageurl.length > 0">
+                {{goal.name}}<br><br>
+                Cost: ${{goal.cost}}
+                <h2 class="balanced">Complete</h2>                
             </ion-item>
         </ion-list>
     </div>

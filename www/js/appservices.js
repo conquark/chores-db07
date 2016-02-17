@@ -315,8 +315,9 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
     
     function log(x){console.log(x)}
     function info(x){console.info(x)}
-    
+
     var self = {
+//        allinforecords: [],
         allrecords : [],
         currentMember : {},
         family : {},
@@ -333,6 +334,18 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
         thisweek: []
     };
     
+
+//    self.setInfoRecords = function() {
+//        self.allinforecords = [];
+//        familyDB.allDocs({include_docs:true}).then(function(result){
+//            for (var i = 0; i < result.rows.length; i++) {
+//                self.allinforecords.push(result.rows[i].doc);
+//            }
+//            self.crabbyPants = self.allinforecords[0].name;
+//        }).catch(function(err) {
+//            log('there was an error getting allDocs. error was: ' + err + '\n\nThis is the expected behavior for the first time app is opened. We\'re specifically trying to figure out if there is a family database created. If so, things are already set up, continue as usual. If not, set things up!');
+//        });
+//    }
     
     self.setAllRecords = function(currentMemberName) {
         info('STEP (2) START');
@@ -605,7 +618,7 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
             ///// CHANGED TO SET NAME OF CURRENT GOAL AND ITS COST PER WARD 2016-02-10
             if ( record.type === 'goal' && record.complete === false && record.owner === self.currentMember.name ) {
                 info('setting name of current goal and its cost');
-//                self.currentStats.currentgoals = self.currentStats.currentgoals + 1;
+                self.currentStats.currentgoals = self.currentStats.currentgoals + 1;
                 self.currentStats.currentgoalname = record.name;
                 self.currentStats.currentgoalimageurl = record.goalimageurl;
                 self.currentStats.currentgoalscosttotal = self.currentStats.currentgoalscosttotal + Number(record.cost);

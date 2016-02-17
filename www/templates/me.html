@@ -57,7 +57,7 @@
                         <strong>No current goal!</strong> <br>
                     </span> <br>
                         <img ng-if="currentStats.currentgoalimageurl.length > 0" src="https://res.cloudinary.com/ntcapps/image/upload/w_50,h_50,c_thumb,r_max/{{currentStats.currentgoalimageurl}}" alt=""> <br>
-                    <span ng-if="currentStats.currentgoalscosttotal > 0">Cost: <strong>${{currentStats.currentgoalscosttotal}}</strong> <br></span>
+                    <span ng-if="currentStats.currentgoalscosttotal > 0">Cost: <strong>{{currentStats.currentgoalscosttotal | currency:"$"}}</strong> <br></span>
                 </ion-item>
             </div>
             </ion-item>

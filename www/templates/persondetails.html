@@ -2,9 +2,14 @@
   <ion-content style="background-image:url('img/background.png');background-position:center">
     <div class="card">
         <item-list>
-            <ion-item>
+            <ion-item class="item-text-wrap">
+              <div class="row">
                <img src="https://res.cloudinary.com/ntcapps/image/upload/w_100,h_100,c_thumb,r_max/{{person.personImageUrl}}" alt="">
-                {{person.name}}
+              </div>
+              <div class="row">
+                 <br>
+                  {{person.name}}
+              </div>
             </ion-item>
 <!--
             <ion-item>
@@ -15,21 +20,25 @@
             </ion-item>
 -->
             <ion-item>
-               <a href="http://google.com">google http</a>
-               <a href="https://google.com">google https</a>
+
+<!--
                 <a class="item" href="#" onclick="window.open('http://cloudinary.com', '_system', 'location=yes'); return false;">
                                 Open cloudinary
                 </a>
-                <button ng-if="personEarningsUnpaid > 0" class="button button-full button-balanced" ng-click="editPerson()">{{person.name}} has earned some money!</button>
-                <button class="button button-full button-positive" ng-click="startPersonWidget()">{{person.name}}'s picture</button>
+-->
+               <span ng-if="personEarningsUnpaid > 0" class="item-text-wrap">{{person.name}} has earned some money!</span>
+                <button ng-if="personEarningsUnpaid > 0" class="button button-full button-balanced" ng-click="editPerson()">Pay</button>
+                <button class="button button-full button-positive item-icon-right" ng-click="startPersonWidget()"><i class="icon ion-image"></i>Set Picture</button>
                 <button ng-if="person.name === currentMember.name" class="button button-full button-stable button-small" style="color:lightgray" ng-click="showNoDeleteSelf()">Remove {{person.name}} from app</button>
                 <button ng-if="person.name !== currentMember.name" class="button button-full button-stable button-small" style="color:lightgray" ng-click="showConfirm()">Remove {{person.name}} from app</button>
             </ion-item>
         </item-list>
     </div>
-    <div style="margin:auto;margin-top:75px;border:0px solid white;border-radius: 12px;padding:30px;max-width:90%;background-color:white">
+    <div ng-if="currentMember.admin === true" style="margin:auto;margin-top:75px;border:0px solid white;border-radius: 12px;padding:30px;max-width:90%;background-color:white" onclick="window.open('http://nationaltheatre.com','_system', 'location=yes'); return false;">
         Brought to you by the good folks at <br>
-        <strong>{{sponsor.name}}</strong>
+        <strong>{{sponsor.name}}</strong> <br>
+        <div style="position:absolute;bottom:5px;text-align:center;font-size:.6em;color:gray">Click to open in browser</div>
     </div>
+  </ion-content>
   </ion-content>
 </ion-view>
