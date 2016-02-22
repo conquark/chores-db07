@@ -23,18 +23,18 @@
             <div class="card">
                 <ion-item>
                     Earnings this week:<br>
-                    <strong>${{currentStats.earnedthisweek}}</strong>
+                    <strong>{{currentStats.earnedthisweek | currency}}</strong>
                 </ion-item>
                 <ion-item ng-if="currentMember.savings">
                     Savings:<br>
-                    <strong>${{currentMember.savings}}</strong> </ion-item>
+                    <strong>{{currentMember.savings | currency}}</strong> </ion-item>
                 <ion-item ng-if="!currentMember.savings">
                    Savings:<br>
                    <strong>no information yet</strong>
                 </ion-item>
                 <ion-item ng-if="currentMember.spendingmoneyalltime">
                     Spending money earned (all-time): <br>
-                    <strong>${{currentMember.spendingmoneyalltime}}</strong>     
+                    <strong>{{currentMember.spendingmoneyalltime | currency}}</strong>     
                 </ion-item>
                 <ion-item class="item item-text-wrap" ng-if="!currentMember.spendingmoneyalltime">
                     Spending money earned (all-time):<br>
@@ -42,7 +42,7 @@
                 </ion-item>
                 <ion-item>
                     All-time earnings:<br>
-                    <strong>${{currentStats.alltimeearnings}}</strong>
+                    <strong>{{currentStats.alltimeearnings | currency}}</strong>
                 </ion-item>
             </div>
             

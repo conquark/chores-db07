@@ -76,6 +76,9 @@
 <!--          <span ng-if="familySize < 1">Enter Premium Code</span><span ng-if="familySize > 0">Switch user</span>-->
               <span ng-if="familySize > 0" style="color:gray;">Log in as a different user</span>
         </ion-item>
+        <ion-item onclick="localStorage.clear()">
+            [clear localstorage]
+        </ion-item>
 <!--
         <ion-item menu-close href="#/app/playlists">
           Playlists

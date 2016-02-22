@@ -1162,6 +1162,47 @@ window.dashscope = $scope;
     }
 })
 
+.controller('LoginCtrl', function($scope, $ionicModal, $timeout, $http, $window, $ionicSideMenuDelegate, $state, PouchDBListener, PersonService, UtilityService, AppService) {
+    
+    $scope.info = AppService.allinforecords;
+    
+    AppService.setInfoRecords();
+    
+    $timeout(function() {
+        $scope.crabbyPants = AppService.crabbyPants;
+    },250);
+    
+    $scope.destroy = function() {
+        familyDB.destroy().then(function() {
+            alert('destroyed! Mwahahahahaha!!!!');
+        }).catch(function(err) {
+            alert('Mwahahah...wait a second. there was a problem: ' + err);
+        });
+    }
+    
+    $timeout(function() {
+        if ($scope.info.length < 1) {
+            alert('First time here? Let\'s get you set up!');
+            var rando = Math.floor(Math.random() * 150);
+            var thename = 'CrabbyPants' + rando;
+            var the_id = new Date().toISOString();
+            var newbogusrecord = {};
+            newbogusrecord._id = the_id;
+            newbogusrecord.name = thename;
+            alert('I dub thee: ' + newbogusrecord.name);
+            familyDB.put(newbogusrecord).then(function() {
+                AppService.setInfoRecords();
+                alert('Ok - I think you\'re all set up!');
+            }).catch(function(err) {
+                alert('hrrrrm. was not able to insert the record. error was ' + err);
+            });
+        } else {
+            alert('Welcome, back, ' + $scope.crabbyPants + '!');
+        }        
+    }, 750);
+    
+})
+
 .controller('PlaylistsCtrl', function($scope) {
   $scope.playlists = [
     { title: 'Reggae', id: 1 },

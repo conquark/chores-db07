@@ -14,11 +14,24 @@ function info(x){console.info(x)}
 //});
 
 var dbname = 'dbname';
-if (getCookie('dbname')) {
-        dbname =  getCookie('dbname');       
-    } else {
-        location.href = 'index2.html';
-    }
+if (window.localStorage.getItem('cloudDBName')) {
+    dbname = window.localStorage.getItem('cloudDBName');
+} else {
+    location.href = 'templates/index4.html';
+}
+
+
+//if (getCookie('dbname')) {
+//        dbname =  getCookie('dbname');       
+//    } else {
+//        location.href = 'index2.html';
+//    }
+
+//if (window.localStorage) {
+//    alert('hooray - there is localStorage! It\'s a Christmas miracle!');
+//} else {
+//    alert('no Christmas miracle this year, kids. Have another bowl of dirt.');
+//}
 var sponsorDB;
 var localDB;
 var remoteDB;

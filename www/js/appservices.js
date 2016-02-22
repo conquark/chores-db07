@@ -317,7 +317,7 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
     function info(x){console.info(x)}
 
     var self = {
-//        allinforecords: [],
+        allinforecords: [],
         allrecords : [],
         currentMember : {},
         family : {},
@@ -335,17 +335,17 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
     };
     
 
-//    self.setInfoRecords = function() {
-//        self.allinforecords = [];
-//        familyDB.allDocs({include_docs:true}).then(function(result){
-//            for (var i = 0; i < result.rows.length; i++) {
-//                self.allinforecords.push(result.rows[i].doc);
-//            }
-//            self.crabbyPants = self.allinforecords[0].name;
-//        }).catch(function(err) {
-//            log('there was an error getting allDocs. error was: ' + err + '\n\nThis is the expected behavior for the first time app is opened. We\'re specifically trying to figure out if there is a family database created. If so, things are already set up, continue as usual. If not, set things up!');
-//        });
-//    }
+    self.setInfoRecords = function() {
+        self.allinforecords = [];
+        familyDB.allDocs({include_docs:true}).then(function(result){
+            for (var i = 0; i < result.rows.length; i++) {
+                self.allinforecords.push(result.rows[i].doc);
+            }
+            self.crabbyPants = self.allinforecords[0].name;
+        }).catch(function(err) {
+            log('there was an error getting allDocs. error was: ' + err + '\n\nThis is the expected behavior for the first time app is opened. We\'re specifically trying to figure out if there is a family database created. If so, things are already set up, continue as usual. If not, set things up!');
+        });
+    }
     
     self.setAllRecords = function(currentMemberName) {
         info('STEP (2) START');
@@ -392,6 +392,7 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
         info('STEP (3) START')
 
         var cookieMember = UtilityService.getCookie('currentMemberName');
+        var localStorageMember = localStorage.getItem("currentMemberName");
         
         if (indexname) {
 //            alert('got an indexname: ' + indexname);
@@ -401,12 +402,13 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                     self.currentMember = record;
                     log('current member is: ' + self.currentMember.name);
                     UtilityService.setCookie('currentMemberName', self.currentMember.name, 7000);
+                    localStorage.setItem("currentMemberName", self.currentMember.name);
                 }
             }        
-        } else if (cookieMember !== ""){
+        } else if (localStorage.getItem("currentMemberName")){
             for (var i = 0; i < self.allrecords.length; i++) {
                 var record = self.allrecords[i];
-                if (record.name === cookieMember) {
+                if (record.name === localStorageMember) {
                     self.currentMember = record;
                     log('current member is: ' + self.currentMember.name);
                 }
@@ -418,8 +420,10 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                 if (record.type === 'person') {
                     self.currentMember = record;
                     UtilityService.setCookie('currentMemberName', self.currentMember.name);
+                    localStorage.setItem("currentMemberName", self.currentMember.name);
                     log('current member is: ' + self.currentMember.name);
                     log('member cookie is: ' + UtilityService.getCookie('currentMemberName'));
+                    log('localStorage currentMemberName is: ' + localStorage.getItem("currentMemberName"));
                     info('STEP (3) END');
                     return;
                 }
