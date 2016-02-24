@@ -7,16 +7,16 @@
     <div class="overlaystartbutton" ng-click=""></div>
 -->
      <div style="text-align:center;margin-top:8px;margin-bottom:15px;position:relative;">
-         <img src="img/taskmaster2.png" alt="" height="50">
+         <img id="a" src="img/taskmaster2.png" alt="" height="50">
      </div>
      <div class="card beige">
 <!--      <button class="button button-full button-aggressive" ng-click="destroy()">Destroy!!!</button>-->
        <div style="padding:25px;text-align:center">
-        <img src="https://res.cloudinary.com/ntcapps/image/upload/w_100,h_100,c_thumb,r_max/{{currentMember.personImageUrl}}" alt="">
-        <h2>Welcome<span ng-if="currentMember.name.length > 0">, </span>{{currentMember.name}}!</h2>
+        <img id="up" src="https://res.cloudinary.com/ntcapps/image/upload/w_100,h_100,c_thumb,r_max/{{currentMember.personImageUrl}}" alt="">
+        <h2><span id="left">Welcome</span> <span ng-if="currentMember.name.length > 0">, </span><span id="right">{{currentMember.name}}!</span></h2>
         <div style="text-align:center; margin-bottom:0">
 <!--            <img src="img/arrow-right.png" alt=""><br />-->
-           <img src="img/1455078132_touch-gesture-swipe-right-alternate.png" alt="" height="70"><br>
+           <img id="down" src="img/1455078132_touch-gesture-swipe-right-alternate.png" alt="" height="70"><br>
             <span ng-if="setupCompleteCookie">
                 Swipe right to start!
             </span>
@@ -24,8 +24,8 @@
         </div>                  
        </div>
        
-        <div style="margin:auto;margin-bottom:5px;border:0px solid white;border-radius: 12px;padding:20px;max-width:95%; background-color:white;text-align:center;">
-            <strong>{{sponsor.name}}</strong>
+        <div id="b" style="margin:auto;margin-bottom:5px;border:0px solid white;border-radius: 12px;padding:20px;max-width:95%; background-color:white;text-align:center;font-weight:bold;">
+            {{sponsor.name}}
         </div>
 
    </div>

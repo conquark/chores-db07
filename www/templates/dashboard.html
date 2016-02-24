@@ -1,16 +1,16 @@
 <ion-view cache-view="false" view-title="Parent Dashboard">
-   <ion-content style="background-image:url('img/background.png');background-position:center">
+   <ion-content style="background-image:url('img/background.png');background-position:48%">
     <ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()">
     </ion-refresher>
     <div style="background:transparent;">
-        <ion-item style="color: white;background:transparent;background-image:url('img/bg-transparent-nogradient.png');border-bottom:none;border-top:none">
-               <div style="max-width:90%;margin:auto;">
+        <ion-item style="color: white;background:transparent;background-image:url('img/bg-transparent-nogradient.png');border-bottom:none;border-top:none" class="center">
+               <div class="center" style="max-width:90%;margin:auto;">
                     <div class="item-balanced tm-person-block" ng-repeat="member in familyMembers" ui-sref="app.persondetails({id:member._id})" ng-hide="member.name === '*DELETED*'" style="text-align:center">
-                           <div ng-if="member.personImageUrl" style="position:relative;background-image:url('https://res.cloudinary.com/ntcapps/image/upload/w_250,h_250,c_thumb,r_max/{{member.personImageUrl}}'); background-repeat: no-repeat; background-position:1px 1px;background-size:contain">
-                               <img src="img/personcircle-100x84-2.png" alt=""  width="100%">
+                           <div ng-if="member.personImageUrl" style="position:relative;background-image:url('https://res.cloudinary.com/ntcapps/image/upload/w_250,h_250,c_thumb,r_max/{{member.personImageUrl}}'); background-repeat: no-repeat; background-position:0px 0px;background-size:98%">
+                               <img src="img/personcircle5.png" alt=""  width="100%">
                            </div>
-                           <div ng-if="!member.personImageUrl" style="position:relative;background-image:url('img/click-to-add-picture.png'); background-repeat: no-repeat; background-position:1px 1px;background-size:contain">
-                               <img src="img/personcircle-100x84-2.png" alt=""  width="100%">
+                           <div ng-if="!member.personImageUrl" style="position:relative;background-image:url('img/click-to-add-picture.png'); background-repeat: no-repeat; background-position:0px 0px;background-size:98%">
+                               <img src="img/personcircle5.png" alt=""  width="100%">
                            </div>
                            <div ng-if="member.name.length < 17" style="position:relative;top:-25px;height:70px;background-image:url('img/banner.png');background-size:100% 100%;background-repeat:no-repeat;padding-top:10px;text-align:center">
     <!--                           <img src="img/banner.png" alt="" style="width:150px;height:60px;">-->

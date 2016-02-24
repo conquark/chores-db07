@@ -14,7 +14,7 @@
 
   <ion-side-menu side="left">
     <ion-header-bar class="bar-balanced">
-      <h1 class="title">Menu</h1>
+      <h1 class="title" id="menutext" onclick="incrementAdminCounter()">Menu</h1>
     </ion-header-bar>
     <ion-content  style="background-image:url('img/background.png');">
        <button class="button button-full button-light" style="font-size:.6em;padding-top:3px !important;padding-bottom:3px !important">Brought to you by <strong>{{sponsor.name}}</strong></button>
@@ -76,14 +76,21 @@
 <!--          <span ng-if="familySize < 1">Enter Premium Code</span><span ng-if="familySize > 0">Switch user</span>-->
               <span ng-if="familySize > 0" style="color:gray;">Log in as a different user</span>
         </ion-item>
-        <ion-item onclick="localStorage.clear()">
+        <button class="button button-primary button-block " ng-click="checkForUpdates()">
+          Check for updates
+        </button>
+
+        <button class="button button-stable button-block button-pulse" ng-if="hasUpdate" ng-click="doUpdate()">
+          Download update
+        </button>
+        <ion-item ng-if="adminMode" onclick="localStorage.clear()">
             [clear localstorage]
         </ion-item>
 <!--
         <ion-item menu-close href="#/app/playlists">
           Playlists
         </ion-item>
--->           <ion-item>
+-->           <ion-item ng-if="adminMode">
                     <div style="font-size:.8em;color:gray">{{dbname}}</div>
             </ion-item>
       </ion-list>

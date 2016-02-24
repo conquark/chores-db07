@@ -718,10 +718,11 @@
 
             var primaryUser = {
                 _id: record._id,
+//                _rev: record._rev,
                 name: record.name,
                 pin: record.pin,
                 type: "person",
-                admin: true
+                admin: "true"
             }
             function log(x) {console.log(x)}
 
@@ -736,11 +737,12 @@
             
             newLocalFamilyDB.destroy().then(function(result){
                 log('database destroyed');
-                newLocalFamilyDB = new PouchDB(theCloudDBName);            
+                newLocalFamilyDB = new PouchDB(theCloudDBName);
+                theRemoteDB = new PouchDB('https://bturner:glasgow8mysoup@bturner.cloudant.com/' + theCloudDBName);
                 log('here is newLocalFamilyDB (empty):');
                 log(newLocalFamilyDB);
 
-                newLocalFamilyDB.put(primaryUser).then(function(result) {
+                newLocalFamilyDB.sync(theRemoteDB).then(function(result) {
                     log('put worked!');
                     var testNewDB = [];
                     newLocalFamilyDB.allDocs({include_docs: true}).then(function(result) {
@@ -808,14 +810,16 @@
                 sponsorcode: thesignupsponsorcode,
                 theCloudDBName: theCloudDBName,
                 pin: signuppin,
-                name: signupname
+                name: signupname,
+                admin: true
             }
             
             var primaryUser = {
                 _id: aTimeStamp,
                 name: signupname,
                 pin: signuppin,
-                type: "person"
+                type: "person",
+                admin: true
                 
             }
             
@@ -845,10 +849,10 @@
                         console.log('primaryUser is: ');
                         console.log(primaryUser);
                         newLocalFamilyDB.put(primaryUser).then(function(result) {
-                            alert('finished putting primary user into db');
+                            console.log('finished putting primary user into db');
                             location.href = '../index.html';
                         }).catch(function(err) {
-                            alert('error: not able to put the primary user');
+                            console.log('error: not able to put the primary user');
                         });                            
                     } else {
                         console.log('something happened');

@@ -19,7 +19,7 @@
                ui-sref="app.chorestoredetails({id:chore._id})" ng-if="chore.complete !== complete && chore._deleted !== true">
             Chore:<br />
             {{chore.name}} <br>
-            You can earn: ${{chore.value}} <br>
+            <span ng-if="chore.value > 0">You can earn: ${{chore.value}} <br></span>
             <span style="font-weight:bold;font-size: .8em" ng-if="chore.dueDate">Next due date: {{chore.dueDate | date : short}}</span>
         </ion-item>
     </ion-list>

@@ -3,7 +3,89 @@ function log(x){console.log(x)}
 angular.module('taskMasterApp.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, $http, $window, $ionicSideMenuDelegate, $state, PouchDBListener, PersonService, UtilityService, AppService) {
+
+//  alert('annoying alert just for testing updates!');
+//    $('body').click(function() {
+////        alert('hi!');
+//    });
+  $scope.adminMode = $window.adminMode;
+
+var currentCode = '';
+var validCode = 'ududlrlrba';
+
+var validCode = 'abrlrldudu';
+
+var adminMode = false;
+document.addEventListener('deviceready', onDeviceReady);
+function onDeviceReady()
+    {
+            var success = function(status) {
+                alert('Message: ' + status);
+            }
+
+            var error = function(status) {
+                alert('Error: ' + status);
+            }
+
+            window.cache.clear( success, error );
+    }
     
+$(document).ready(function() {
+    
+    var up = $("#up");
+    
+    var toggleAdminMode = function() {
+        $scope.adminMode = !($scope.adminMode);
+        if ($scope.adminMode) {
+            alert('admin mode active');
+            alert('proof: admin mode is: ' + $scope.adminMode);
+        } else {
+            alert('admin mode deactivated');
+        }
+    }
+
+    $('body').click(function(e) {
+//        alert(e.target.id);
+        
+        currentCode = e.target.id.substring(0,1) + currentCode;
+        if (currentCode.length > validCode.length) {
+            console.log('slicing...');
+            currentCode =  currentCode.slice(0, currentCode.length - 1);
+        }
+        console.log('currentCode: ' + currentCode);
+        if (currentCode === validCode) {
+            currentCode = '';
+            toggleAdminMode();
+        }
+    });
+    
+    
+    
+});    
+    
+  var deploy = new Ionic.Deploy();
+  
+  // Update app code with new release from Ionic Deploy
+  $scope.doUpdate = function() {
+    deploy.update().then(function(res) {
+      console.log('Ionic Deploy: Update Success! ', res);
+    }, function(err) {
+      console.log('Ionic Deploy: Update error! ', err);
+    }, function(prog) {
+      console.log('Ionic Deploy: Progress... ', prog);
+    });
+  };
+
+  // Check Ionic Deploy for new code
+  $scope.checkForUpdates = function() {
+    console.log('Ionic Deploy: Checking for updates');
+    deploy.check().then(function(hasUpdate) {
+      console.log('Ionic Deploy: Update available: ' + hasUpdate);
+      $scope.hasUpdate = hasUpdate;
+    }, function(err) {
+      console.error('Ionic Deploy: Unable to check for updates', err);
+    });
+  }
 //    (function() {
 //        AppService.setInfoRecords();
 //        $timeout(function() {

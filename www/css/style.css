@@ -41,10 +41,11 @@ ion-content {
 }
 
 .tm-person-block {
-    width:           250px;
+    width:           350px;
     max-width:       90%;
     font-weight:     bold;
-    float:           left;
+    margin:auto;
+/*    float:           left;*/
     padding:         25px;
     text-align:      center;
 }

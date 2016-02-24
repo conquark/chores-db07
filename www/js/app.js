@@ -49,7 +49,7 @@ setTimeout(function() {
 //
 //var localDB = new PouchDB('tmchores10');
 //var remoteDB = new PouchDB('https://bturner:glasgow8mysoup@bturner.cloudant.com/tmchores10');
-var app = angular.module('taskMasterApp', ['ionic', 'taskMasterApp.controllers', 'taskMasterApp.services','ngIOS9UIWebViewPatch']);
+var app = angular.module('taskMasterApp', ['ionic','ionic.service.core', 'taskMasterApp.controllers', 'taskMasterApp.services','ngIOS9UIWebViewPatch']);
 
 app.run(function($ionicPlatform) {
   localDB.sync(remoteDB, {live: true, retry: true});
