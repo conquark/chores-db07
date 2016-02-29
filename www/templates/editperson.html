@@ -1,6 +1,6 @@
 <ion-modal-view>
   <ion-header-bar> 
-    <h1 class="title">Edit {{person.name}}</h1>
+    <h1 class="title">Pay {{person.name}}</h1>
     <div class="buttons">
       <button class="button button-clear" ng-click="closeEditPerson()">Close</button>
     </div>
@@ -10,20 +10,24 @@
         <ion-item>
                         <form>
     <h2 class="item-text-wrap" style="font-size:1.3em;font-weight:bold;">{{person.name}}</h2>
-    unpaid earnings: <strong style="color:red">${{personEarningsUnpaid}}</strong> <br>
+    unpaid earnings: <strong style="color:red">{{person.moneyowed | currency}}</strong> <br>
         <h2>Pay {{person.name}}?</h2>
         <div class="list item-text-wrap">
-              {{person.name}} has earned ${{personEarningsUnpaid}}.
+              {{person.name}} has earned ${{person.moneyowed}}.
                How much should go toward spending money (cash)?
-                <input type="text" id="addtospendingmoney" ng-keyup="setTotalPercentage()" ng-model="addToSpendingMoney" placeholder="enter amount for spending money">
+                <input type="text" id="addtospendingmoney" ng-keyup="getSpending(addToSpendingMoney)" ng-model="addToSpendingMoney" placeholder="enter amount for spending money">
                How much should go toward savings?
-                <input type="text" id="addtosavings" ng-keyup="setTotalPercentage()" ng-model="addToSavings" placeholder="enter amount for savings">
+                <input type="text" id="addtosavings" ng-keyup="getSavings(addToSavings)" ng-model="addToSavings" placeholder="enter amount for savings">
+<!--
 
-                <h2>Spending Money: {{addToSpendingMoney/personEarningsUnpaid*100 | number:1}}%</h2>
-                <h2>Savings: {{addToSavings/personEarningsUnpaid*100 | number:1}}%</h2>
-                <h2>Total: <strong>{{totalPercentage | number: 1}}%</strong> </h2>
+                <h2>Spending Money: {{addToSpendingMoney/person.moneyowed*100 | number:1}}%</h2>add2spendingmoney[{{addToSpendingMoney}}]
+                <h2>Savings: {{addToSavings/person.moneyowed*100 | number:1}}%</h2>
+                add2savings[{{addToSavings}}]
+-->
+                <h2>Total: <strong>{{add(addToSavings,addToSpendingMoney)/person.moneyowed*100 | number: 1}}%</strong> </h2>
+<!--                moneyowed[{{person.moneyowed}}]-->
         </div>           
-          <button ng-disabled="totalPercentage !== 100" class="button button-block button-positive" ng-click="payPerson()">Pay  {{person.name}}</button>
+          <button ng-disabled="(add(addToSavings,addToSpendingMoney)/person.moneyowed*100) !== 100" class="button button-block button-positive" ng-click="payPerson()">Pay  {{person.name}}</button>
           <div style="color:gray;text-align:center;text-size:.8em" class="item-text-wrap">(total of Spending Money and Savings must be 100%)</div>
         </label>
       </div>

@@ -6,11 +6,11 @@
                     <div class="item-text-wrap">
                         <h2>{{chore.name}}</h2>
                     </div>
-                    <h1 ng-if="chore.value && currentMember.admin !== true">{{chore.value | currency}}</h1>
-                    <h1 ng-if="chore.value && currentMember.admin === true">{{chore.value * 100 | number}} Points</h1>
+                    <h1 ng-if="chore.value && person.admin !== true">{{chore.value | currency}}</h1>
+                    <h1 ng-if="chore.value && person.admin === true">{{chore.value * 100 | number}} Points</h1>
                     {{chore.description}} <br>
                     Due: {{chore.dueDate | date: MM}} <br>
-                    <span class="item-text-wrap" ng-if="chore.assigned === currentMember.name">
+                    <span class="item-text-wrap" ng-if="chore.assigned === person.name">
                         You chose this chore from the Chore Store
                     </span>
                     <br>
@@ -21,16 +21,19 @@
         Chore returned!
     </div>
     <div  ng-if="currentMember.admin === true">
-        <button ng-if="!chore.complete" class="button button-balanced" ng-click="edit()">Edit</button> <br> <br>
+        <button class="button button-balanced" ng-click="edit()">Edit</button> <br> <br>
     </div>
     <div ng-if="chore.complete === false">
         <button class="button button-balanced" ng-click="markcomplete()">Mark this chore complete</button> <br /><br />
     </div>
     
-    <div ng-if="chore.complete === true && !chore.approved && currentMember.admin === true">
+    <div ng-if="chore.complete === true && !chore.approved">
         <button class="button button-energized" ng-click="markincomplete() ">Mark this chore incomplete</button> <br /><br />
     </div>
-    <div ng-if="currentMember.name === chore.assignedby && chore.complete === false">
+    <div ng-if="chore.complete && chore.requiresapproval && !chore.approved && currentMember.admin === true">
+        <button class="button button-positive ion-icon-right" ng-click="markapproved()"><i class="icon ion-checkmark"></i> Approve this chore</button>
+    </div>
+    <div ng-if="person.name === chore.assignedby && chore.complete === false">
         <button class="button button-calm button-small" ng-click="returnchore()">Return this chore to the Chore Store</button>
     </div>
 <!--

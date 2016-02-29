@@ -6,14 +6,17 @@
     <title>Document</title>
     <style>
         body {
-            background-image:url('../img/background.png');background-position:center;
+            background-image:url('../img/background.png');background-position:center 1px;
+            background-size: stretch;
             position:relative;
+            margin-top:20px;
         }
         div {
             padding:20px;
             font-family:sans-serif;
             border:0px solid white;
             border-radius: 12px;
+            background-image: none;
         }
         
         input {
@@ -59,6 +62,7 @@
         
         #signin {
             padding:30px;
+            font-size:1.1em;
             background-color:cornflowerblue;
             max-width:95%;
             margin:auto;
@@ -74,6 +78,7 @@
             color:black;
             border:1px solid gray;
             font-family:sans-serif;
+            font-size:1.1em
         }
         
         #forgotpassword {
@@ -82,6 +87,16 @@
             border:1px solid black;
             max-width:95%;
             margin:auto;
+        }
+        
+        input {
+            margin: 0 !important;
+            font-size: 1.1em;
+            size: 15 !important;
+        }
+        
+        button {
+            font-size: 1.1em;
         }
     </style>
 </head>
@@ -104,10 +119,10 @@
         <div id="userexistserror" class="error">It looks like there's already an account with that email address. If you've forgotton your password, you can <a href="#" onclick="showForgotPassword()">reset it</a>, or you can <a href="" onclick="signIn()">sign in.</a></div>
         <div id="sponsornotfounderror" class="error">We weren't able to find that code. Try again?</div>
         <div id="signin" style="display:none">
-            Sign in here. Use the same email and password on each of your family's devices. <br><br>
-            <input type="text" name="signinemail" id="signinemail" placeholder="email">
-            <input type="password" name="signinpassword" id="signinpassword" placeholder="password">
-            <button onclick="signIn()">Sign In</button><br>
+            Sign in here. Use the same email and password on all of your family's devices. <br><br>
+            <input type="text" size="15" name="signinemail" id="signinemail" placeholder="email">
+            <input type="password" size="15" name="signinpassword" id="signinpassword" placeholder="password"> <br>
+            <button style="padding:15px;border:1px solid white;border-radius:10px; margin-top:10px" onclick="signIn()">Sign In</button><br>
             <div id="passwordError" style="display:none" class="error">Sorry, that password doesn't match our records. Try again? <br><br>
             <a onclick="showForgotPassword()" style="color:darkred;text-decoration:underline">Forgot your password?</a>
             </div>
@@ -120,7 +135,7 @@
                       <td>
                           <div id="nameemptyerror" class="error">Name must not be empty</div>
                           Your name ("Mom", "Dad", "Grandma", etc.) <br>
-                          <input type="text" name="signupname" id="signupname" placeholder="Your name">
+                          <input size="15" type="text" name="signupname" id="signupname" placeholder="Your name">
                       </td>
                   </tr>
                    <tr>
@@ -133,13 +148,13 @@
                        <td>
                            <div id="emailmatchingerror" class="error">Emails must match</div>
                            <div id="emailemptyerror" class="error">Email must not be empty</div>
-                           <input type="text" name="signupemail" id="signupemail" placeholder="Your Email">
+                           <input size="15" type="text" name="signupemail" id="signupemail" placeholder="Your Email">
                        </td>
                    </tr>
                    <tr>
                        <td>Email again:</td>
                    </tr>
-                   <tr><td><input type="text" name="signupemailverify" id="signupemailverify" placeholder="Enter your email again"></td></tr>
+                   <tr><td><input size="15" type="text" name="signupemailverify" id="signupemailverify" placeholder="Enter your email again"></td></tr>
                    <tr><td>&nbsp;</td></tr>
                    <tr>
                        <td>
@@ -148,11 +163,11 @@
                            Choose a password:
                         </td>
                    </tr>
-                   <tr><td><input type="text" name="signuppassword" id="signuppassword" placeholder="Choose a password"></td></tr>
+                   <tr><td><input size="15" type="text" name="signuppassword" id="signuppassword" placeholder="Choose a password"></td></tr>
                    <tr>
                        <td>Password again:</td>
                    </tr>
-                   <tr><td><input type="text" name="signuppasswordverify" id="signuppasswordverify" placeholder="Enter your password again"></td></tr>
+                   <tr><td><input size="15" type="text" name="signuppasswordverify" id="signuppasswordverify" placeholder="Enter your password again"></td></tr>
                    <tr>
                        <td>
                           <div id="pinemptyerror" class="error">Pin must not be empty</div>
@@ -160,15 +175,15 @@
                            Choose a PIN (this is how you'll access the app from now on):
                         </td>
                    </tr>
-                   <tr><td><input type="number" name="pin" id="signuppin" placeholder="Choose a 4-digit PIN number"></td></tr>
+                   <tr><td><input size="15" type="number" name="pin" id="signuppin" placeholder="Choose a 4-digit PIN number"></td></tr>
                    <tr><td><strong>Sponsor code</strong></td></tr>
-                   <tr><td>If you have a sponsor code, enter it here. Your sponsor code unlocks additional features in the app! Or does it? Yes, it does! Maybe!</td></tr>
+                   <tr><td>If you have a sponsor code, enter it here. Your sponsor code unlocks additional features in the app!</td></tr>
                    <tr>
                        <td>Sponsor code:</td>
                    </tr>
-                   <tr><td><input type="text" name="signupsponsor" id="signupsponsor" placeholder="Sponsor Code"></td></tr>
-                   <tr><td><button style="padding:10px;font-size:1.1em;" onclick="doSignUp()">Sign up</button></td></tr>
-                   <tr><td><button style="padding:10px;font-size:1.1em;" onclick="hideSignUp()">Cancel</button></td></tr>
+                   <tr><td><input size="15" type="text" name="signupsponsor" id="signupsponsor" placeholder="Sponsor Code"></td></tr>
+                   <tr><td><button style="padding:10px;font-size:1.1em;border:1px solid black;border-radius:10px" onclick="doSignUp()">Sign up</button></td></tr>
+                   <tr><td><button style="border:1px solid black; border-radius:10px;padding:10px;font-size:1.1em;" onclick="hideSignUp()">Cancel</button></td></tr>
                </table>         
             </div>
         </div>
@@ -178,7 +193,7 @@
             <button onclick=resetPassword()>Reset my password</button>
         </div>
         <div>
-            <div class="button" onclick="showSignIn()">Sign In</div>
+            <div id="bluesignin" class="button" onclick="showSignIn()">Sign In</div>
             <div class="button button-signup" onclick="showSignUp()">Sign up for an account</div>
             <div class="button button-forgot" id="passwordResetButton" style="display:none;" onclick="showForgotPassword()">Reset Password</div>
         </div>            
@@ -388,7 +403,9 @@
                     var record = userDatabase[i];
                     console.log('record.email is ' + record.email);
                     console.log('thisemail is ' + thisemail);
-                    if (record.email === thisemail) {
+                    var recordemailLC = record.email.toLowerCase();
+                    var thisemailLC = thisemail.toLowerCase();
+                    if (recordemailLC == thisemailLC) {
                         // USER EXISTS
                         console.log('found user!');
                         userExists = true;
@@ -439,6 +456,8 @@
                     var record = userDatabase[i];
                     console.log('record.email is ' + record.email);
                     console.log('thisemail is ' + thisemail);
+                    var recordemailLC = record.email.toLowerCase();
+                    var thisemailLC = thisemail.toLowerCase();
                     if (record.email === thisemail) {
                         // USER EXISTS
                         console.log('found user!');
@@ -618,10 +637,13 @@
             document.getElementById("signin").style.display = 'block';
             document.getElementById("signup").style.display = 'none';
             document.getElementById("forgotpassword").style.display = 'none';
+            document.getElementById("bluesignin").style.display = 'none';
+            
         }
         
         var hideSignIn = function() {
             document.getElementById("signin").style.display = 'none';
+            document.getElementById("bluesignin").style.display = 'block';
         }
         
         var showSignUp = function() {
@@ -629,6 +651,7 @@
             document.getElementById("signin").style.display = 'none';
             document.getElementById("signup").style.display = 'block';
             document.getElementById("forgotpassword").style.display = 'none';
+            document.getElementById("bluesignin").style.display = 'block';
             hideAllErrors();
         }
         
@@ -641,6 +664,7 @@
             document.getElementById("signin").style.display = 'none';
             document.getElementById("signup").style.display = 'none';
             document.getElementById("forgotpassword").style.display = 'block';
+            document.getElementById("bluesignin").style.display = 'block';
             hideEmailNotFoundError();
             hideAllErrors();
         }
@@ -839,7 +863,10 @@
                     }
                     for (var i = 0; i < listOfUsers.length; i++) {
                         var record = listOfUsers[i];
-                        if (record.email === newUserRecord.email) {
+                        var recordEmailLowerCase = record.email.toLowerCase();
+                        var newUserRecordLowerCase = newUserRecord.email.toLowerCase();
+//                        if (record.email === newUserRecord.email) {
+                        if (recordEmailLowerCase === newUserRecordLowerCase) {
                             newUserFound = true;
                             console.log('newUserFound = true!');
                         }

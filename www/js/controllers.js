@@ -373,6 +373,20 @@ window.dashscope = $scope;
         $scope.$broadcast('scroll.refreshComplete');
         $scope.$apply();
     };
+    
+  $ionicModal.fromTemplateUrl('templates/dash-modal-help-admin.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.helpmodal = modal;
+  });
+    
+    $scope.help = function() {
+        $scope.helpmodal.show();
+    }
+    $scope.closeHelp = function() {
+        $scope.helpmodal.hide();
+    }
+
 })
 
 
@@ -398,72 +412,94 @@ window.dashscope = $scope;
     };    
 })
 
-.controller('ChoreStoreCtrl', function($scope, $ionicModal, $window, AppService, UtilityService) {
+.controller('ChoreStoreCtrl', function($scope, $ionicModal,$ionicPopup, $timeout, $window, AppService, UtilityService) {
     $scope.service = AppService;
     $scope.chorestore = AppService.chorestore;
+    
+    window.storescope = $scope;
 //    $scope.assignToPerson = false;
     $scope.$on('ionicView.enter', function(e) {
        $scope.doRefresh(); 
     });
     
+    $timeout(function() {
+       $scope.currentMember = AppService.currentMember; 
+    },1300);
+    
     $scope.newChore = UtilityService.newChoreFactory();
     
-        $scope.service.populateChores();
-        $scope.saveNewChore = function() {
-            if ($scope.newChore.repeats) {
-                  // set temporary due date for chore as today
-                  $scope.newChore.dueDate = new Date();
-                  var actualDueDate = UtilityService.calculateNextChoreRepeatDate($scope.newChore);
-                  $scope.newChore.dueDate = actualDueDate;
-                  $scope.newChore.dueDateMilliseconds = actualDueDate.valueOf();
-              } else {
-                  console.log('NEW CHORE DOES NOT REPEAT');
-              }
-                $scope.newChore._id = new Date().toISOString();
-                $scope.newChore.assignedby = $scope.service.currentMember.name;
-        //        alert('newChore.assigned value is: ' + $scope.newChore.assigned);
-                $scope.newChore.dueDateMilliseconds = $scope.newChore.dueDate.valueOf();
-                $scope.chorestore.push($scope.newChore);
-                localDB.put($scope.newChore).then(function(doc, err) {
-                    $scope.newChore = UtilityService.newChoreFactory();
-                    $scope.service.populateChores();
-                    $scope.service.getChoreStore();
-                    $scope.doRefresh();
-                    $scope.closeAddChore();
-        //            $window.location.reload();
-                }).catch(function(err) {
-                    console.log('there was an error updating the chore. Error was: ' + err);
-                });
-        
+    $scope.service.populateChores();
+    $scope.saveNewChore = function() {
+        if ($scope.newChore.repeats) {
+              // set temporary due date for chore as today
+              $scope.newChore.dueDate = new Date();
+              var actualDueDate = UtilityService.calculateNextChoreRepeatDate($scope.newChore);
+              $scope.newChore.dueDate = actualDueDate;
+              $scope.newChore.dueDateMilliseconds = actualDueDate.valueOf();
+          } else {
+              console.log('NEW CHORE DOES NOT REPEAT');
+          }
+            $scope.newChore._id = new Date().toISOString();
+            $scope.newChore.assignedby = $scope.service.currentMember.name;
+            $scope.newChore.approved = false;
+    //        alert('newChore.assigned value is: ' + $scope.newChore.assigned);
+            $scope.newChore.dueDateMilliseconds = $scope.newChore.dueDate.valueOf();
+            $scope.chorestore.push($scope.newChore);
+            localDB.put($scope.newChore).then(function(doc, err) {
+                $scope.newChore = UtilityService.newChoreFactory();
+                $scope.service.populateChores();
+                $scope.service.getChoreStore();
+                $scope.doRefresh();
+                $scope.closeAddChore();
+    //            $window.location.reload();
+            }).catch(function(err) {
+                console.log('there was an error updating the chore. Error was: ' + err);
+            });  
     }
     
-/////// DATEPICKER PLUGIN - SEE: https://github.com/rajeshwarpatlolla/ionic-datepicker
-//        $scope.datepickerObject = {
-//      titleLabel: 'Title',  //Optional
-//      todayLabel: 'Today',  //Optional
-//      closeLabel: 'Close',  //Optional
-//      setLabel: 'Set',  //Optional
-//      setButtonType : 'button-assertive',  //Optional
-//      todayButtonType : 'button-assertive',  //Optional
-//      closeButtonType : 'button-assertive',  //Optional
-//      inputDate: new Date(),  //Optional
-////      mondayFirst: true,  //Optional
-////      disabledDates: disabledDates, //Optional
-//      weekDaysList: weekDaysList, //Optional
-//      monthList: monthList, //Optional
-//      templateType: 'popup', //Optional
-//      showTodayButton: 'true', //Optional
-//      modalHeaderColor: 'bar-positive', //Optional
-//      modalFooterColor: 'bar-positive', //Optional
-//      from: new Date(2012, 8, 2), //Optional
-//      to: new Date(2018, 8, 25),  //Optional
-//      callback: function (val) {  //Mandatory
-//        datePickerCallback(val);
-//      },
-//      dateFormat: 'dd-MM-yyyy', //Optional
-//      closeOnSelect: false, //Optional
-//    };
-//        
+//    $ionicPopup.fromTemplateUrl('templates/approvalhelp.html', {
+//        scope: $scope
+//    }).then(function(popup) {
+//        $scope.approvalhelppopup = popup;
+//    })
+    
+    $scope.approvalHelp = function() {
+         var approvalhelppopup = $ionicPopup.alert({
+            title: 'Chore approval',
+            templateUrl: 'templates/approvalhelp.html'
+        });
+    }
+    
+    $scope.approvalHelpClose = function() {
+        $scope.approvalhelppopup.hide();
+    }
+    
+    $ionicModal.fromTemplateUrl('templates/helpstoreadmin.html', {
+        scope: $scope
+    }).then(function(modal) {
+        $scope.adminmodal = modal;
+    });    
+
+    $ionicModal.fromTemplateUrl('templates/helpstorechild.html', {
+        scope: $scope
+    }).then(function(modal) {
+        $scope.childmodal = modal;
+    });    
+
+    $scope.closeHelp = function() {
+        $scope.adminmodal.hide();
+        $scope.childmodal.hide();
+    }
+    
+    $scope.helpstoreadmin = function() {
+        $scope.adminmodal.show();
+    }
+    
+    $scope.helpstorechild = function() {
+        $scope.childmodal.show();
+    }
+    
+        
     
     $scope.doRefresh = function() {
         AppService.setAllRecords();
@@ -632,7 +668,8 @@ window.dashscope = $scope;
 //    AppService.getGoals();
 })
 
-.controller('PersonCtrl', function($scope, $ionicPopup, AppService,UtilityService, $stateParams, $ionicModal, $ionicHistory, $state) {
+.controller('PersonCtrl', function($scope, $ionicPopup, $timeout, AppService,UtilityService, $stateParams, $ionicModal, $ionicHistory, $state) {
+   function log(x) {console.log(x)};
     window.personscope = $scope;
     
     $scope.$on('$ionicView.enter', function(e) {
@@ -652,20 +689,29 @@ window.dashscope = $scope;
     $scope.savingsNumber = 0;
     $scope.spendingNumber = 0;
     $scope.numberTotal = 0;
+    $scope.chores = [];
+    
 
-    $scope.setTotalPercentage = function() {
-//        alert('hi');
-//        $scope.totalPercentage = $scope.personEarningsUnpaid;
-        var spending = Number(document.getElementById("addtospendingmoney").value);
-        var savings = Number(document.getElementById("addtosavings").value);
-//        var spending = Number($scope.addToSpendingMoney);
-        var unpaid = $scope.personEarningsUnpaid;
-        
-        $scope.totalPercentage = (savings + spending)/unpaid*100;
-        $scope.savingsNumber = savings;
-        $scope.spendingNumber = spending;
-        $scope.numberTotal = savings + spending;
-//        return (savings + spending)/unpaid*100;
+    
+    $scope.add = function(arg1, arg2) {
+        var one = parseFloat(arg1);
+        var two = parseFloat(arg2);
+        var sum = one + two;
+        return sum;
+    }
+    
+    $scope.getSavings = function(savingsInput) {
+        $scope.savingsNumber = savingsInput;
+        log('The savings number is');
+        log($scope.savingsNumber);
+        log('addToSavings is');
+        log($scope.addToSavings);
+    }
+
+    $scope.getSpending = function(spendingInput) {
+        $scope.spendingNumber = spendingInput;
+        log($scope.spendingNumber + ' is the spending number');
+        log($scope.addToSpendingMoney + ' is addToSpendingMoney');
     }
 
     $scope.getPersonClone = function() {
@@ -691,28 +737,28 @@ window.dashscope = $scope;
         }
     }    
     
+    log('$scope.person.name is: ' + $scope.person.name);
     for (var i = 0; i < AppService.allrecords.length; i++) {
         var record = AppService.allrecords[i];
-        if (record.type = 'chore' && record.complete === true && record.assigned === $scope.person.name) {
-            $scope.personEarningsTotal = $scope.personEarningsTotal + record.value;
+//        log('this is the record');
+//        log(record);
+        if (record.type === 'chore' && record.assigned === $scope.person.name) {
+            $scope.chores.push(record);
         }
     }
     
-//    for (var i = 0; i < AppService.allrecords.length; i++) {
-//        var record = AppService.allrecords[i];
-//        var completiondate, completiondatestring, completiondateweek;        
-//            if (record.type === 'chore' && record.completiondate) {
-//                completiondatestring = record.completiondate;
-//                completiondate = new Date();
-//                completiondate.setTime(Date.parse(completiondatestring));
-//                completiondateweek = completiondate.getWeekNumber();
-//                log('GOT COMPLETIONDATE WEEK - IT IS: ');
-//                log(completiondateweek);
-//            }
-//        if (record.type = 'chore' && record.complete === true && record.assigned === $scope.person.name ) {
-//            $scope.personEarningsTotal = $scope.personEarningsTotal + record.value;
-//        }
-//    }
+    log('chores for this person are:');
+    log($scope.chores);
+    log('allrecords length is ' + AppService.allrecords.length);
+    log('allrecords are:');
+    log(AppService.allrecords);
+    
+    for (var i = 0; i < AppService.allrecords.length; i++) {
+        var record = AppService.allrecords[i];
+        if (record.type = 'chore' && record.complete === true && record.assigned === $scope.person.name && (!record.requiresapproval || record.requiresapproval && record.approved)) {
+            $scope.personEarningsTotal = $scope.personEarningsTotal + parseFloat(record.value);
+        }
+    }
     
     $scope.personEarningsUnpaid = $scope.personEarningsTotal - $scope.person.earningsalltime;
     
@@ -768,29 +814,21 @@ window.dashscope = $scope;
     };
     
     $scope.payPerson = function() {
-//        alert('personClone.savings is currently: ' + $scope.personClone.savings);
-//        alert('savingsNumber is: ');
-//        alert($scope.savingsNumber);
-        $scope.personClone.savings = $scope.personClone.savings + $scope.savingsNumber;
-//        alert('personClone.savings is now: ' + $scope.personClone.savings);
-//        alert('personClone.spendingmoneyalltime is: ' + $scope.personClone.spendingmoneyalltime);
-//        alert('spendingNumber is: ');
-//        alert($scope.spendingNumber);
-        $scope.personClone.spendingmoneyalltime = $scope.personClone.spendingmoneyalltime + $scope.spendingNumber;
-//        alert('personClone.spendingmoneyalltime is now: ' + $scope.personClone.spendingmoneyalltime);
-//        alert('personClone.earningsalltime is currently: ');
-//        alert($scope.personClone.earningsalltime);
-        $scope.personClone.earningsalltime = $scope.personClone.earningsalltime + $scope.numberTotal;
-//        alert('personClone.earningsalltime is now: ');
-//        alert($scope.personClone.earningsalltime);
+        $scope.personClone.savings = $scope.personClone.savings + parseFloat($scope.savingsNumber);
+        log('set new savings to: ' + $scope.savingsNumber);
+        $scope.personClone.spendingmoneyalltime = $scope.personClone.spendingmoneyalltime
+            + parseFloat($scope.spendingNumber);
+        $scope.personClone.earningsalltime = $scope.personClone.earningsalltime + Number($scope.person.moneyowed);
+
         localDB.put($scope.personClone).then(function(doc, err) {
-//            alert('tried to do the thing');
+
             $ionicHistory.clearCache();
-            $scope.doRefresh();
-            $scope.person = $scope.personClone;
             $scope.personEarningsUnpaid = 0;
             $scope.closeEditPerson();
             $scope.openBankReminder();
+            $scope.doRefresh();
+
+            $scope.person = $scope.personClone;
         }).catch(function(err) {
             console.log('there was an error paying the person. Error was: ' + err);
         });
@@ -1105,11 +1143,17 @@ window.dashscope = $scope;
       };
     
     $scope.saveRecord = function() {
+            $scope.choreClone.dueDateMilliseconds = $scope.choreClone.dueDate.valueOf();
             localDB.put($scope.choreClone).then(function(doc, err) {
                 $ionicHistory.clearCache();
 //                $scope.chore = $scope.choreClone;
-                $scope.doRefresh;
                 $scope.closeEditChore();
+                $ionicHistory.goBack();
+                AppService.spliceRecord($scope.choreClone._id);
+                $timeout(function() {
+                    $scope.doRefresh;
+                    $scope.service = AppService;
+                }, 1500);
             }).catch(function(err) {
                 console.log('there was an error updating the chore. Error was: ' + err);
             });            
@@ -1157,6 +1201,28 @@ window.dashscope = $scope;
               console.log('NEW CHORE DOES NOT REPEAT *or* chore is currently in the chore store');
           }
     }
+    
+    $scope.markapproved = function() {
+        $ionicHistory.clearCache().then(function(err) {
+            localDB.get($scope.chore._id).then(function(doc,err) {
+                var dbChore = doc;
+                log('this is dbChore');
+                log(dbChore);
+                dbChore.approved = true;
+                dbChore.approveddate = new Date().toISOString();
+                localDB.put(dbChore).then(function(doc, err) {
+                    $timeout(function() {
+                        $scope.doRefresh();
+                        $ionicHistory.goBack(-2);
+                    },250);
+                }).catch(function(err) {
+                    console.log('there was an error marking chore approved. error was: ' + err);
+                });
+            }).catch(function(err) {
+              console.log('there was an error GETting the record from the localDB. error was: ' + err);  
+            });
+        });
+    }
 
     $scope.markcomplete = function() {
         $ionicHistory.clearCache().then(function(err) {
@@ -1201,6 +1267,7 @@ window.dashscope = $scope;
         //        var updatedChore = UtilityService.cloneAnObject($scope.chore);
         //        updatedChore.complete = false;
                 dbChore.complete = false;
+                dbChore.completiondate = '';
                 $scope.chore.complete = false;
                     localDB.put(dbChore).then(function() {
                         $timeout(function(){

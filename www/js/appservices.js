@@ -447,6 +447,37 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
         }
         log('familySize: ' + self.familySize);
         log('familyMembers structure: ' + self.familyMembers);
+        for (var i = 0; i < self.familyMembers.length; i++) {
+            var memberrecord = self.familyMembers[i];
+            memberrecord.alltimecompleted = 0;
+            memberrecord.calculatedearningstotal = 0;
+            memberrecord.calculatedbadgestotal = 0;
+            memberrecord.memberowedmoney = false;
+            for (j = 0; j < self.allrecords.length; j++) {
+                var allrecord = self.allrecords[j];
+                // set completed chores
+                if (allrecord.type === 'chore'
+                    && allrecord.assigned === memberrecord.name
+                    && allrecord.complete === true && (!allrecord.requiresapproval || allrecord.requiresapproval && allrecord.approved)) {
+                    memberrecord.alltimecompleted = memberrecord.alltimecompleted + 1;
+                    if (allrecord.value) {
+                        memberrecord.calculatedearningstotal = 
+                        memberrecord.calculatedearningstotal + parseFloat(allrecord.value);
+                    }
+
+                }
+                if (allrecord.type === 'badge' 
+                    && allrecord.assigned === memberrecord.name) {
+                    memberrecord.calculatedbadgestotal =
+                        memberrecord.calculatedbadgestotal + 1;
+                }
+                if (memberrecord.earningsalltime < memberrecord.calculatedearningstotal) {
+                    memberrecord.memberowedmoney = true;
+                    memberrecord.moneyowed =
+                        memberrecord.calculatedearningstotal - memberrecord.earningsalltime;
+                }
+            }
+        }
         info('STEP (3F) END');
     }
     
@@ -478,7 +509,7 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
         /// completed chores should have a cutoff of 7 days or so (i.e. these are the chores I've completed this week.) Then there should be an option to show "all time chores" somewhere in the app.
 //        info('--setting completed and incompleted chores...')
         self.completedchores = 0;
-        self.incompletechores = 0;
+        self.incompletechoresincompletechores = 0;
 //        info('--looping through allrecords');
         for ( var i = 0; i < self.allrecords.length; i++) {
 //            log('iterating...');
@@ -486,6 +517,67 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
             var record = self.allrecords[i];
             var recordisthisweekornext = false;
             var duedate, duedatestring, duedateweek;
+            var badgeChangeCount = 0;
+            // set badges
+            if (record.type === 'chore' && record.assigned === self.currentMember.name && record.complete && (!record.requiresapproval || (record.requiresapproval && record.approved))) {
+                var name = record.name.toLowerCase();
+                badgeChangeCount = 0;
+                if (!self.currentMember.badges) {
+                    self.currentMember.badges = {};
+                }
+                    if (name.indexOf('mow') !== -1) {
+                        if (!self.currentMember.badges.yard) {
+                            self.currentMember.badges.yard = true;
+                            badgeChangeCount = badgeChangeCount + 1;
+                        }
+                    }
+                    if (name.indexOf('wash') !== -1 && name.indexOf('dishes') !== -1) {
+                        if (!self.currentMember.badges.washdishes) {
+                            self.currentMember.badges.washdishes = true;
+                            badgeChangeCount = badgeChangeCount + 1;
+                        }
+                    }
+                    if (name.indexOf('clean') !== -1) {
+                        if (!self.currentMember.badges.generalCleaning) {
+                            self.currentMember.badges.generalCleaning = true;
+                            badgeChangeCount = badgeChangeCount + 1;
+                        }
+                    }
+                    if (name.indexOf('feed') !== -1) {
+                        if (!self.currentMember.badges.feedpet) {
+                            self.currentMember.badges.feedpet = true;
+                            badgeChangeCount = badgeChangeCount + 1;
+                        }
+                    }
+                    if (name.indexOf('walk pet') !== -1) {
+                        if(!self.currentMember.badges.walkpet) {
+                            self.currentMember.badges.walkpet = true;
+                            badgeChangeCount = badgeChangeCount + 1;
+                        }
+                    }
+                    if (name.indexOf('trash') !== -1 || name.indexOf('garbage') !== -1) {
+                        if (!self.currentMember.badges.trash) {
+                            self.currentMember.badges.trash = true;
+                            badgeChangeCount = badgeChangeCount + 1;
+                        }
+                    }                                
+                    if (name.indexOf('chili') !== -1) {
+                        if (!self.currentMember.badges.chili) {
+                            self.currentMember.badges.chili = true;
+                            badgeChangeCount = badgeChangeCount + 1;
+                        }
+                    }                                
+            }
+            
+            if (badgeChangeCount > 0) {
+                var currentMemberClone = UtilityService.cloneAnObject(self.currentMember);
+                localDB.put(currentMemberClone).then(function(doc, err) {
+                    // do nothing
+                    console.log('Success! Put new member with badges in!');
+                }).catch(function(err) {
+                    console.log('something went wrong updating badges. error was: ' + err);
+                });
+            }
 
             if (record.type === 'chore' && record.dueDate) {
                 duedatestring = record.dueDate;
@@ -503,9 +595,12 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
 //            log('this is the record');
 //            log(record);
 //            if (record.type === 'chore' && record.assigned === self.currentMemberName) {
-            if (record.type === 'chore' && record.assigned === self.currentMember.name && record.dueDate && (recordisthisweekornext || duedate < new Date())) {
+            if (record.type === 'chore' && record.assigned === self.currentMember.name && record.dueDate) {
                 self.mychores.push(record);
             }
+//            if (record.type === 'chore' && record.assigned === self.currentMember.name && record.dueDate && (recordisthisweekornext || duedate < new Date())) {
+//                self.mychores.push(record);
+//            }
             
             if (record.type === 'chore' && record.assigned === self.currentMember.name && !record.dueDate) {
                 self.mychores.push(record);
@@ -577,7 +672,9 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
             var recordisthisweekornext = false;
             var duedate, duedatestring, duedateweek;
             var completiondate, completiondatestring, completiondateweek;
-
+            
+            duedate = new Date();
+            
             if (record.type === 'chore' && record.dueDate) {
                 duedatestring = record.dueDate;
                 duedate = new Date();
@@ -597,7 +694,7 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
             }
 
             //// SET INCOMPLETE CHORES NUMBER
-            if ( record.type === 'chore' && record.complete === false && record.assigned === self.currentMember.name) {
+            if ( record.type === 'chore' && record.complete === false && record.assigned === self.currentMember.name ) {
 //                self.currentStats.incompleteChores = 0;
                 info('calculating incomplete chores');
                 self.currentStats.incompleteChores  = self.currentStats.incompleteChores + 1;
@@ -606,7 +703,7 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
             
             //// SET EARNEDTHISWEEK NUMBER
             if (record.type === 'chore' && record.complete === true && record.assigned === self.currentMember.name && completiondateweek === self.thisweek) {
-                self.currentStats.earnedthisweek = self.currentStats.earnedthisweek + record.value;
+                self.currentStats.earnedthisweek = Number(self.currentStats.earnedthisweek) + Number(record.value);
             }
 
             
@@ -643,7 +740,7 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                 self.savings = self.currentStats.alltimeearnings - self.currentStats.completedgoalsvalue;
                 info('completed setting current savings. total is: ' + self.savings);
                 info('completed all stats totals so far!');
-            }            
+            }           
             ///// SET OWED
             /// TODO set up chore complettion date
             /// TODO set up chore paid status

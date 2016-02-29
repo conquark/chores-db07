@@ -26,19 +26,56 @@
                                 Open cloudinary
                 </a>
 -->
-               <span ng-if="personEarningsUnpaid > 0" class="item-text-wrap">{{person.name}} has earned some money!</span>
-                <button ng-if="personEarningsUnpaid > 0" class="button button-full button-balanced" ng-click="editPerson()">Pay</button>
+               <span ng-if="person.memberowedmoney === true" class="item-text-wrap">{{person.name}} has earned some money!</span>
+                <button ng-if="person.memberowedmoney === true" class="button button-full button-balanced" ng-click="editPerson()">Pay</button>
                 <button class="button button-full button-positive item-icon-right" ng-click="startPersonWidget()"><i class="icon ion-image"></i>Set Picture</button>
                 <button ng-if="person.name === currentMember.name" class="button button-full button-stable button-small" style="color:lightgray" ng-click="showNoDeleteSelf()">Remove {{person.name}} from app</button>
                 <button ng-if="person.name !== currentMember.name" class="button button-full button-stable button-small" style="color:lightgray" ng-click="showConfirm()">Remove {{person.name}} from app</button>
             </ion-item>
         </item-list>
     </div>
-    <div ng-if="currentMember.admin === true" style="margin:auto;margin-top:75px;border:0px solid white;border-radius: 12px;padding:30px;max-width:90%;background-color:white" onclick="window.open('http://nationaltheatre.com','_system', 'location=yes'); return false;">
-        Brought to you by the good folks at <br>
-        <strong>{{sponsor.name}}</strong> <br>
-        <div style="position:absolute;bottom:5px;text-align:center;font-size:.6em;color:gray">Click to open in browser</div>
+    <div class="card">
+                <ion-item>
+                <span ng-if="currentStats.unapprovedchores > 0" class="dark">Chores that still need approval</span>
+             <ion-list>
+                <ion-item ng-repeat="chore in chores"
+                       ui-sref="app.personchoredetails({id:chore._id})" ng-if="chore.complete === true && chore.requiresapproval && chore.approved === false" class="dark animate">
+                    <h2 style="font-weight:bold; color: gray" >Waiting on approval</h2>
+                    {{chore.name}} <br>
+                    <div ng-if="chore.value && person.admin !== true" class="item-text-wrap" style="font-size:.8em;line-height:1em">If this chore is approved, {{person.name}} will earn: ${{chore.value}}</div>
+                    <div ng-if="chore.value && person.admin === true" class="item-text-wrap">If this chore is approved, {{person.name}} will earn: {{chore.value * 100}} points!</div>
+                    <h4>Completed on: {{chore.completiondate | date: 'short'}}</h4>
+                    <h4 ng-if="chore.assignedby !== currentMember.name">Assigned by: {{chore.assignedby}}</h4>
+                    <h4 ng-if="chore.assignedby === person.name">
+                       <div class="item-text-wrap" class="item-icon-right">
+                          <i class="icon ion-android-cart"></i>
+                           {{person.name}} chose this chore from the Chore Store
+                       </div>
+                    </h4>
+                </ion-item>
+              </ion-list>
+            </ion-item>
+        <ion-item>
+                <span class="dark">{{person.name}}'s assigned chores</span>
+             <ion-list>
+                <ion-item ng-repeat="chore in chores"
+                       ui-sref="app.personchoredetails({id:chore._id})" ng-if="chore.complete === false" class="positive animate">
+                    {{chore.name}} <br>
+                    {{chore.description}}
+                    <div ng-if="chore.value && person.admin !== true" class="item-text-wrap" style="font-size:.8em;line-height:1em">This chore is worth ${{chore.value}}</div>
+                    <div ng-if="chore.value && person.admin === true" class="item-text-wrap">This chore is worth {{chore.value * 100}} points!</div>
+                    <h4 ng-if="chore.assignedby !== person.name">Assigned by: {{chore.assignedby}}</h4>
+                    <h4 ng-if="chore.assignedby === person.name">
+                       <div class="item-text-wrap" class="item-icon-right">
+                          <i class="icon ion-android-cart"></i>
+                           {{person.name}} chose this chore from the Chore Store
+                       </div>
+                    </h4>
+                </ion-item>
+              </ion-list>
+            </ion-item>
     </div>
+
   </ion-content>
   </ion-content>
 </ion-view>

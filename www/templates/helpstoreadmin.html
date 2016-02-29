@@ -1,0 +1,25 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Chore Store help</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeHelp()">Close</button>
+    </div>
+  </ion-header-bar>
+   <ion-content>
+       <div class="card dark" style="padding: 30px;padding-top:10px;">
+           <div style="float:left"><i class="ion-information-circled calm" style="font-size:2em;padding:12px;"></i></div>
+            <span ng-if="currentMember.admin !== true">Hi, {{currentMember.name}}!</span>
+            This is the <strong class="calm">Chore Store</strong>.
+
+            <span ng-if="currentMember.admin === true">
+                By clicking the "Add a chore" button, you can add new chores.
+            </span><br /><br />
+            <span ng-if="currentMember.admin !== true">This is the place where you can claim any unassigned chores. To claim a chore, tap the chore, and then tap the "claim this chore" button at the top of the next screen.</span>
+
+            <span ng-if="currentMember.admin === true">
+            <img src="img/addchore.png" alt="" style="max-width:60%;float:right; box-shadow:2px 2px 5px black; margin-left: 10px;margin-bottom: 10px;">
+
+                You can either assign a chore to a particular family member, assign it to yourself, or you can keep it in the Chore Store for someone to claim later.<br/><br />Go ahead and create a chore now!</span>
+        </div>      
+   </ion-content>
+</ion-modal-view>

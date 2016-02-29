@@ -8,11 +8,30 @@
   <ion-content>
    <ion-item>
     <form>
-    <h2 class="item-text-wrap autofocus">{{newChore.name}}</h2>
+    <h2 class="item-text-wrap autofocus">Chore Name: {{newChore.name}}</h2>
     <div class="list">
-        <label class="item item-input item-floating-label">
-            <span class="input-label">Chore Name</span>
-            <input type="text" id="chorename" ng-model="newChore.name" placeholder="Chore Name">
+              <div class="list">
+                  <label class="item item-input item-select">
+                    <div class="input-label">
+                      Choose:
+                    </div>
+                    <select ng-model="newChore.name">
+                      <option>Clean Bathroom</option>
+                      <option>Clean off table</option>
+                      <option>Clean your room</option>
+                      <option>Do homework</option>
+                      <option>Feed Pet(s)</option>
+                      <option>Mow the lawn</option>
+                      <option>Set the table</option>
+                      <option>Take out trash</option>
+                      <option>Vacuum the floor</option>
+                      <option>Walk Pet</option>
+                      <option>Wash Dishes</option>
+                    </select>
+                  </label>
+                </div>
+        
+            Edit chore name or create your own: <input type="text" id="chorename" ng-model="newChore.name" placeholder="Chore Name">
         </label>
     </div>
     <div class="list">
@@ -27,6 +46,12 @@
             <i class="icon ion-social-usd placeholder-icon"></i>
             <input type="number" id="chorevalue" ng-model="newChore.value" placeholder="value">
         </label>
+    </div>
+    <div class="list">
+        <ion-list>
+          <ion-checkbox ng-model="newChore.requiresapproval" class="item-text-wrap" >Does this chore require parent approval to be considered complete?</ion-checkbox>
+          <a ng-click="approvalHelp();" style='font-size:.8em;text-align:right'>what does this mean?</a>
+        </ion-list>        
     </div>
     <div class="list">
             <ion-list>

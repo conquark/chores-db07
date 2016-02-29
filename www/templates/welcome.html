@@ -13,7 +13,8 @@
 <!--      <button class="button button-full button-aggressive" ng-click="destroy()">Destroy!!!</button>-->
        <div style="padding:25px;text-align:center">
         <img id="up" src="https://res.cloudinary.com/ntcapps/image/upload/w_100,h_100,c_thumb,r_max/{{currentMember.personImageUrl}}" alt="">
-        <h2><span id="left">Welcome</span> <span ng-if="currentMember.name.length > 0">, </span><span id="right">{{currentMember.name}}!</span></h2>
+        <h2><span id="left">Welcome</span><span ng-if="currentMember.name.length > 0">, </span><span id="right">{{currentMember.name}}!</span></h2>
+        <h4>{{currentStats.incompleteChores}} chores to do</h4>
         <div style="text-align:center; margin-bottom:0">
 <!--            <img src="img/arrow-right.png" alt=""><br />-->
            <img id="down" src="img/1455078132_touch-gesture-swipe-right-alternate.png" alt="" height="70"><br>

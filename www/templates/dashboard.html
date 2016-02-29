@@ -1,5 +1,8 @@
-<ion-view cache-view="false" view-title="Parent Dashboard">
-   <ion-content style="background-image:url('img/background.png');background-position:48%">
+<ion-view cache-view="false" hide-nav-bar="false">
+     <ion-nav-buttons side="right">
+        <button class="button button-icon button-clear ion-help" ng-click="help()" ></button>
+    </ion-nav-buttons>
+    <ion-content style="background-image:url('img/background.png');background-position:48%">
     <ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()">
     </ion-refresher>
     <div style="background:transparent;">
@@ -15,6 +18,10 @@
                            <div ng-if="member.name.length < 17" style="position:relative;top:-25px;height:70px;background-image:url('img/banner.png');background-size:100% 100%;background-repeat:no-repeat;padding-top:10px;text-align:center">
     <!--                           <img src="img/banner.png" alt="" style="width:150px;height:60px;">-->
     <!--                           <div style="position:absolute;top:15px;text-align;center;font-size:1.4em;font-weight: bold">{{member.name}}</div>-->
+                            <div ng-if="member.memberowedmoney" style="position:absolute;left:5px;top:5px">
+                                 <img src="img/1456564723_money.png" alt="">
+                            </div>
+                              <div style="position:absolute;right:-25px;top:-15px;background-image:url(img/lifetimechores7.png);background-size:contain;width:65px;height:82px;background-repeat:no-repeat;text-align:center;padding-top:18px;font-size:1.2em;font-weight:bold">{{member.alltimecompleted}} </div>
                               <div style="text-align:center;margin-top:5px">{{member.name}}</div>
                            </div>
                            <div ng-if="member.name.length > 16"
@@ -38,10 +45,13 @@
                 
             
         </ion-item>
+<!--
                 <div class="button button-full button-balanced" ng-click="addUser()">
                     Add another family member
                 </div>
+-->
     </div>
+<!--
     <div class="card dark" style="padding: 30px;padding-top:10px;">
                <div style="float:left"><i class="ion-information-circled calm" style="font-size:2em;padding:12px;"></i></div>
                 This is the <strong class="calm">Parent Dashboard</strong>. Here is where you can add additional family members to the app, as well as:<br /><br />
@@ -53,5 +63,10 @@
                     <li>...see how many uncompleted chores are left for each family member</li>
                 </ul>
     </div>
+-->
   </ion-content>
+  
+   <ion-footer-bar class="bar-balanced">
+        <a ng-click="addUser()" class="button button-icon icon ion-person-add">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add another family member</a>
+    </ion-footer-bar>
 </ion-view>

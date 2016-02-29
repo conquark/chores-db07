@@ -50,6 +50,15 @@ ion-content {
     text-align:      center;
 }
 
+.category-block {
+    font-size: .8em;
+    padding: 4px 8px 4px 8px;
+    background-color: deepskyblue;
+    margin: 2px;
+    color: white;
+    border-radius: 3px;
+}
+
 
 <style>
   .with-bg-size
