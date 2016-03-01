@@ -799,6 +799,8 @@ window.dashscope = $scope;
     
     $scope.closeBankReminder = function() {
         $scope.bankReminderModal.hide();
+        $scope.doRefresh();
+        $ionicHistory.goBack(-2);
     }
     
     $scope.savePersonRecord = function() {
@@ -827,7 +829,7 @@ window.dashscope = $scope;
             $scope.closeEditPerson();
             $scope.openBankReminder();
             $scope.doRefresh();
-
+//            $ionicHistory.goBack(-2);
             $scope.person = $scope.personClone;
         }).catch(function(err) {
             console.log('there was an error paying the person. Error was: ' + err);

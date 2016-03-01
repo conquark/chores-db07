@@ -71,12 +71,12 @@
          <i class="icon ion-paper-airplane"></i>
           My Goals <span ng-if="currentStats.currentgoals > 0">({{currentStats.currentgoals}})</span>
         </ion-item>
-       <ion-item ng-if="familySize > 0" class="item-icon-right dark" style="margin-bottom:20px;border-bottom:none">
+       <ion-item ng-if="familySize > 0" class="item-icon-right dark" style="margin-bottom:none;border-bottom:none;padding-bottom:none;">
          <i class="icon ion-trophy energized"></i>
           Badges
         </ion-item>
-        <ion-item style="border-top:none">
-          <div class="item-text-wrap dark" style="text-align:center" ng-repeat="(badge,status) in currentMember.badges">
+        <ion-item style="border-top:none;margin-top:none;padding-top:none">
+          <div class="item-text-wrap dark" style="text-align:center;padding-top:none" ng-repeat="(badge,status) in currentMember.badges">
               <img src="img/badges/bathroom-cleaning.png" ng-if="badge === 'bathroomcleaning' && status === true" alt="" style="width:150px;">
               <img src="img/badges/clean-dishes-badge.png" ng-if="badge === 'washdishes'" alt="" style="width:150px;">
               <img src="img/badges/clean-off-table.png" ng-if="badge === 'cleantable' && status === true" alt="" style="width:150px;">

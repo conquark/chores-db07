@@ -567,6 +567,12 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                             badgeChangeCount = badgeChangeCount + 1;
                         }
                     }                                
+                    if (name.indexOf('vacuum') !== -1) {
+                        if (!self.currentMember.badges.vacuum) {
+                            self.currentMember.badges.vacuum = true;
+                            badgeChangeCount = badgeChangeCount + 1;
+                        }
+                    }                                
             }
             
             if (badgeChangeCount > 0) {

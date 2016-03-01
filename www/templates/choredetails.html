@@ -2,17 +2,22 @@
   <ion-content style="background-image:url('img/background.png');background-position:center">
     <div class="card">
         <div class="item">
-                <div ng-if="chore.assigned !== 'Chore Store'">
+                <div ng-if="chore.assigned !== 'Chore Store'" class="item-text-wrap">
                     <div class="item-text-wrap">
                         <h2>{{chore.name}}</h2>
                     </div>
                     <h1 ng-if="chore.value && currentMember.admin !== true">{{chore.value | currency}}</h1>
                     <h1 ng-if="chore.value && currentMember.admin === true">{{chore.value * 100 | number}} Points</h1>
-                    {{chore.description}} <br>
-                    Due: {{chore.dueDate | date: MM}} <br>
-                    <span class="item-text-wrap" ng-if="chore.assigned === currentMember.name">
+                    <span ng-if="chore.description">
+                        {{chore.description}} <br><br>                    
+                    </span>
+                    <span ng-if="chore.dueDate">
+                        Due: {{chore.dueDate | date: MM}} <br>                    
+                    </span>
+                    <span class="item-text-wrap dark" ng-if="chore.assignedby === currentMember.name">
                         You chose this chore from the Chore Store
                     </span>
+                    <span class="item-text-wrap dark" ng-if="chore.assignedby !== currentMember.name">This chore was assigned by {{chore.assignedby}}</span>
                     <br>
                     <br>
                     <br>

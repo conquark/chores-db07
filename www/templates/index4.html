@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap-theme.css">
     <style>
         body {
             background-image:url('../img/background.png');background-position:center 1px;
@@ -101,6 +103,41 @@
     </style>
 </head>
 <body>
+<!--BOOTSTRAP   -->
+       <div class="container">
+<!--sign in-->
+      <form class="form-signin">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+      
+      <h1 style="text-align:center">Or</h1>
+
+<!--sign up-->
+        <form class="form-signin">
+        <h2 class="form-signin-heading">Sign up for an account</h2>
+        <label for="inputName" class="sr-only">Name</label>
+        <input type="text" id="inputName2" class="form-control" placeholder="Your name in the app (Mom, Dad, etc.)" required autofocus>        
+        <label for="inputName" class="sr-only">Phone</label>
+        <input type="text" id="phone2" class="form-control" placeholder="Phone" required autofocus>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" id="inputEmail2" class="form-control" placeholder="Email address" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword2" class="form-control" placeholder="Password" required>
+        <input type="number" id="inputPIN2" class="form-control" placeholder="Numerical PIN (4 digits)" required>
+        <input type="text" id="inputsponsorcode2" class="form-control" placeholder="Sponsor Code">
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up for account</button>
+      </form>
+   
+    </div> <!-- /container -->
+<!--    BOOTSTRAP-->
+   
+   
     <div style="position:absolute;top:5px;bottom:5px;left:5px;right:5px;background-color:white;opacity:.5;z-index:-1"></div>
     <div style='border:0px solid gray;border-radius:12px;'>
         <div id="spinner" style="display:none;text-align:center;background-color:white;border:1px solid white;border-radius:12px;">

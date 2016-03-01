@@ -55,7 +55,7 @@
             <span ng-if="currentStats.completedchores > 0" class="dark">Recent Completed Chores</span>
          <ion-list>
             <ion-item ng-repeat="chore in service.mychores | orderBy:chore.completiondate:true"
-                   ui-sref="app.choredetails({id:chore._id})" ng-if="chore.complete === true" && (!chore.requiresapproval || (chore.requiresapproval && chore.approved === true)) class="balanced animate">
+                   ui-sref="app.choredetails({id:chore._id})" ng-if="chore.complete === true && (!chore.requiresapproval || (chore.requiresapproval && chore.approved === true))" class="balanced animate">
                 <h2 style="font-weight:bold; color: gray" >Complete</h2>
                 {{chore.name}} <br>
                 <span ng-if="chore.value && currentMember.admin !== true">You've earned: {{chore.value | currency}}!</span>

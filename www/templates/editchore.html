@@ -63,8 +63,15 @@
     <div class="list">
            <span class="label">What do you want to do with this chore?</span>
            <ion-list>
-              <ion-radio checked="checked" ng-model="choreClone.assigned" ng-repeat="member in familyMembers" ng-value="'{{member.name}}'" ng-if="member.admin !== true">Assign to {{member.name}}</ion-radio>
-              <ion-radio ng-model="choreClone.assigned" ng-value="'Chore Store'">Add to Chore Store</ion-radio>
+              <ion-radio checked="checked" ng-model="choreClone.assigned" ng-repeat="member in familyMembers" ng-value="'{{member.name}}'" ng-if="member.admin !== true || member._id === currentMember._id">
+                  <span ng-show="currentMember._id === member._id">
+                      Assign to yourself
+                  </span>
+                  <span ng-show="currentMember._id !== member._id">
+                      Assign to {{member.name}}
+                  </span>
+              </ion-radio>
+              <ion-radio ng-model="choreClone.assigned" ng-value="'Chore Store'">Assign to Chore Store</ion-radio>
 <!--
               <ion-radio checked="checked" ng-model="newChore.assigned" ng-value="'Jimmy'">Assign to Jimmy</ion-radio>
               <ion-radio ng-model="choreClone.assigned" ng-value="'Dad'">Assign to Dad</ion-radio>
