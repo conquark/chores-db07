@@ -27,7 +27,7 @@ function onDeviceReady()
                 alert('Error: ' + status);
             }
 
-            window.cache.clear( success, error );
+//            window.cache.clear( success, error );
     }
     
 $(document).ready(function() {

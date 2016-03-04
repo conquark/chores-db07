@@ -109,6 +109,7 @@
 <!--          <span ng-if="familySize < 1">Enter Premium Code</span><span ng-if="familySize > 0">Switch user</span>-->
               <span ng-if="familySize > 0" style="color:gray;">Log in as a different user</span>
         </ion-item>
+<!--
         <button class="button button-primary button-block " ng-click="checkForUpdates()">
           Check for updates
         </button>
@@ -116,6 +117,7 @@
         <button class="button button-stable button-block button-pulse" ng-if="hasUpdate" ng-click="doUpdate()">
           Download update
         </button>
+-->
         <ion-item ng-if="adminMode" onclick="localStorage.clear()">
             [clear localstorage]
         </ion-item>

@@ -181,6 +181,12 @@ app.factory('UtilityService', function() {
             currentDueDate = new Date();
             currentDueDate.setTime(Date.parse(repeatingchoreobject.dueDate));            
         }
+        
+        // NEW IDEA:
+        // START ITERATING THROUGH FUTURE DAYS STARTING WITH TOMORROW
+        // FOR EACH DAY, GET ITS DAY NUMBER (0-6)
+        // IF THAT DAY NUMBER IS IN THE ARRAY, IT IS THE NEXT DUE DATE
+        // TADA
 
 //        var currentDueDate = repeatingchoreobject.dueDate;
         var currentDay = currentDueDate.getDay();
@@ -247,58 +253,101 @@ app.factory('UtilityService', function() {
             log('this is the arrayOfFlaggedDays:');
             log(arrayOfFlaggedDays);
             
-            /// now get the index of the currentDayNumber in the
-            //  arrayOfFlaggedDays
-            theIndex = arrayOfFlaggedDays.indexOf(currentDay);
-            log('this is the index of the currentDay');
-            log(theIndex);
-            var theNextDayIndex;            
-            if (theIndex !== -1 && repeatingchoreobject.complete === false && false) {
-                log('repeating tasks start today. i.e. the "next day" is today. (this will only happen when creating new tasks)');
-                return currentDueDate;
-            } else {
-                log('trying to get the next element');
-                var nextElement;
-                var nextElementIsSet = false;
-                // cycle through the rest of the index
-                for (var i = 0; i < arrayOfFlaggedDays.length; i++) {
-                    log('cycle ' + i);
-                    var element = arrayOfFlaggedDays[i];
-                    log('element ' + i + ' is ' + element);
-                    if (nextElementIsSet === false && element > currentDay) {
-                        nextElement = element;
-                        nextElementIsSet = true;
-                        theNextDayIndex = i;
-                        log('we have set theNextDayIndex to ' + i);
-                    } else {
-                        theNextDayIndex = 0;
-                        log('we have set theNextDayIndex to the first element, i.e. 0');
+            var findNextDueDate = function(theArrayOfFlaggedDays, recordDueDate) {
+                var daysArray = theArrayOfFlaggedDays;
+                log('this is the daysArray:');
+                log(daysArray);
+                var originalDate = new Date();
+                
+                originalDate.setTime(Date.parse(recordDueDate));
+                log('this is the passed record\'s due date:');
+                log(originalDate);
+                var currentDate = new Date();
+                var nextDueDate;
+                log('starting the loop to look for the next day');
+                for (var i = 0; i < 7; i++) {
+                    log('iteration ' + i);
+                    log('adding 1 to nextDate');
+                    var nextDate = addDays(originalDate, i + 1);
+                    log('nextDate is now ' + nextDate);
+                    var nextDateDayNumber = nextDate.getDay();
+                    log('the DateDayNumber of the next day is: ' + nextDateDayNumber);
+                    log('checking this dayNumber against dayNumbers in the daysArray');
+                    for (var j = 0; j < daysArray.length; j++) {
+                        log('daysArray[' + j + ']:');
+                        var element = daysArray[j];
+                        log(element);
+                        if (element === nextDateDayNumber) {
+                            log('found it! it was element ' + j);
+                            log('which is: ' + element);
+                            nextDueDate = nextDate;
+                            log('setting next date to:');
+                            log(nextDueDate);
+                            return nextDueDate;
+                        }
                     }
                 }
+                    log('did not find it :-(  Returning null');
+                    return null;
             }
+            
+            var theDueDateToReturn = findNextDueDate(arrayOfFlaggedDays, repeatingchoreobject.dueDate);
+            
+            return theDueDateToReturn;
 
-//            if (arrayOfFlaggedDays.length > currentDayNumber + 1) {
-//                theNextDayIndex = theIndex + 1;
+            
+            /// now get the index of the currentDayNumber in the
+            //  arrayOfFlaggedDays
+//            theIndex = arrayOfFlaggedDays.indexOf(currentDay);
+//            log('this is the index of the currentDay');
+//            log(theIndex);
+//            var theNextDayIndex;            
+//            if (theIndex !== -1 && repeatingchoreobject.complete === false && false) {
+//                log('repeating tasks start today. i.e. the "next day" is today. (this will only happen when creating new tasks)');
+//                return currentDueDate;
 //            } else {
-//                theNextDayIndex = 0;
+//                log('trying to get the next element');
+//                var nextElement;
+//                var nextElementIsSet = false;
+//                // cycle through the rest of the index
+//                for (var i = 0; i < arrayOfFlaggedDays.length; i++) {
+//                    log('cycle ' + i);
+//                    var element = arrayOfFlaggedDays[i];
+//                    log('element ' + i + ' is ' + element);
+//                    if (nextElementIsSet === false && element > currentDay) {
+//                        nextElement = element;
+//                        nextElementIsSet = true;
+//                        theNextDayIndex = i;
+//                        log('we have set theNextDayIndex to ' + i);
+//                    } else {
+//                        theNextDayIndex = 0;
+//                        log('we have set theNextDayIndex to the first element, i.e. 0');
+//                    }
+//                }
 //            }
-            
-            theNextDayDayOfWeekNumber = arrayOfFlaggedDays[theNextDayIndex];
-            
-            var daysFromOriginal;
-            
-            if (theNextDayDayOfWeekNumber > currentDay) {
-                daysFromOriginal = theNextDayDayOfWeekNumber - currentDay;
-            } else {
-                daysFromOriginal = 7 + theNextDayDayOfWeekNumber - currentDay;
-            }
-            log('daysFromOriginal has been calculated to be: ' + daysFromOriginal);
-            
-            var dateToReturn = addDays(currentDueDate, daysFromOriginal);
-            log('the date we are returning for clonatizing is: ' );
-            log(dateToReturn);
-            
-            return dateToReturn;
+//
+////            if (arrayOfFlaggedDays.length > currentDayNumber + 1) {
+////                theNextDayIndex = theIndex + 1;
+////            } else {
+////                theNextDayIndex = 0;
+////            }
+//            
+//            theNextDayDayOfWeekNumber = arrayOfFlaggedDays[theNextDayIndex];
+//            
+//            var daysFromOriginal;
+//            
+//            if (theNextDayDayOfWeekNumber > currentDay) {
+//                daysFromOriginal = theNextDayDayOfWeekNumber - currentDay;
+//            } else {
+//                daysFromOriginal = 7 + theNextDayDayOfWeekNumber - currentDay;
+//            }
+//            log('daysFromOriginal has been calculated to be: ' + daysFromOriginal);
+//            
+//            var dateToReturn = addDays(currentDueDate, daysFromOriginal);
+//            log('the date we are returning for clonatizing is: ' );
+//            log(dateToReturn);
+//            
+//            return dateToReturn;
             
         }
     
