@@ -15,9 +15,9 @@
         <div class="list item-text-wrap">
               {{person.name}} has earned ${{person.moneyowed}}.
                How much should go toward spending money (cash)?
-                <input type="text" id="addtospendingmoney" ng-keyup="getSpending(addToSpendingMoney)" ng-model="addToSpendingMoney" placeholder="enter amount for spending money">
+                <input type="text" id="addtospendingmoney" ng-keyup="getSpending(addToSpendingMoney)" ng-model="addToSpendingMoney" placeholder="$ (spending money)">
                How much should go toward savings?
-                <input type="text" id="addtosavings" ng-keyup="getSavings(addToSavings)" ng-model="addToSavings" placeholder="enter amount for savings">
+                <input type="text" id="addtosavings" ng-keyup="getSavings(addToSavings)" ng-model="addToSavings" placeholder="$  (savings)">
 <!--
 
                 <h2>Spending Money: {{addToSpendingMoney/person.moneyowed*100 | number:1}}%</h2>add2spendingmoney[{{addToSpendingMoney}}]

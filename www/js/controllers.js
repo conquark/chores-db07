@@ -881,6 +881,8 @@ window.dashscope = $scope;
         var timestamp = d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate()+ '-' + d.getHours() + d.getMinutes() + d.getSeconds();
         cloudinary.openUploadWidget({upload_preset: 'xisr5ror', 
                                      cropping:true, multiple:false,
+                                     show_powered_by: false,
+                                     stylesheet: '.widget {padding-top:15px}',
                                       public_id: shortname + timestamp}, 
                                         function(error, result) {
                                 console.log(error, result);
@@ -931,6 +933,8 @@ window.dashscope = $scope;
     
     $scope.startGoalWidget = function() {
         cloudinary.openUploadWidget({upload_preset: 'xisr5ror', 
+                                     show_powered_by: false,
+                                     stylesheet: '.widget {padding-top:15px}',
                                      cropping:true, multiple:false}, 
                                         function(error, result) {
                                 console.log(error, result);
