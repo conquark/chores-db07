@@ -11,7 +11,7 @@ angular.module('taskMasterApp.controllers', [])
   $scope.adminMode = $window.adminMode;
 
 var currentCode = '';
-var validCode = 'ududlrlrba';
+//var validCode = 'ududlrlrba';
 
 var validCode = 'abrlrldudu';
 
@@ -28,7 +28,23 @@ function onDeviceReady()
             }
 
 //            window.cache.clear( success, error );
+            document.addEventListener('pause', onPause, false);
+            document.addEventListener('resume', onResume, false);
+//            onResume();
+//            alert('hi');
     }
+    
+function onPause() {
+//    alert('paused');
+    console.log('PAUSED!!!!!!!!!!');
+    // set user left app
+}
+
+function onResume() {
+//    alert('resumed');
+    console.log('PAUSED!!!!!!!!');
+}
+
     
 $(document).ready(function() {
     
@@ -43,10 +59,11 @@ $(document).ready(function() {
             alert('admin mode deactivated');
         }
     }
-
+    
     $('body').click(function(e) {
 //        alert(e.target.id);
-        
+        console.log(e);
+            
         currentCode = e.target.id.substring(0,1) + currentCode;
         if (currentCode.length > validCode.length) {
             console.log('slicing...');
@@ -58,8 +75,6 @@ $(document).ready(function() {
             toggleAdminMode();
         }
     });
-    
-    
     
 });    
     
@@ -326,6 +341,7 @@ window.AppService = AppService;
             // code if using a login system
             $timeout(function() {
               $scope.closeLogin();
+                $scope.doRefresh();
             }, 1000);        
         } else {
 //            alert('sorry - that didn\'t work');    
@@ -344,6 +360,7 @@ window.AppService = AppService;
             // code if using a login system
             $timeout(function() {
               $scope.closeLogin();
+                $scope.doRefresh();
             }, 1000);                
     }
 
@@ -446,11 +463,13 @@ window.dashscope = $scope;
             $scope.newChore.dueDateMilliseconds = $scope.newChore.dueDate.valueOf();
             $scope.chorestore.push($scope.newChore);
             localDB.put($scope.newChore).then(function(doc, err) {
-                $scope.newChore = UtilityService.newChoreFactory();
-                $scope.service.populateChores();
-                $scope.service.getChoreStore();
-                $scope.doRefresh();
                 $scope.closeAddChore();
+                $timeout(function() {
+                    $scope.newChore = UtilityService.newChoreFactory();
+                    $scope.service.populateChores();
+                    $scope.service.getChoreStore();
+                    $scope.doRefresh();
+                },1000);
     //            $window.location.reload();
             }).catch(function(err) {
                 console.log('there was an error updating the chore. Error was: ' + err);
@@ -1004,7 +1023,7 @@ window.dashscope = $scope;
     $scope.service.getGoals();
 })
 
-.controller('MyChoresCtrl', function($scope, AppService) {
+.controller('MyChoresCtrl', function($scope, $timeout, AppService) {
     window.chorescope = $scope;
     $scope.service = AppService;
     $scope.chores = AppService.mychores;
@@ -1014,8 +1033,13 @@ window.dashscope = $scope;
     $scope.todaysDate = new Date().valueOf();
     $scope.doRefresh = function() {
         AppService.setAllRecords();
-        $scope.completedchores =  AppService.completedchores;
-        $scope.incompletechores = AppService.incompletechores;
+        $timeout(function() {
+            $scope.service.setFamilyMembers();
+            $scope.familyMembers = AppService.familyMembers;
+            $scope.currentMember = AppService.currentMember;
+            $scope.currentStats = AppService.getCurrentStats();
+            log($scope.currentStats);
+        }, 800);
 //        $timeout(function(){
 //            $scope.completedchores =  AppService.completedchores;
 //            $scope.incompletechores = AppService.incompletechores;
@@ -1026,6 +1050,7 @@ window.dashscope = $scope;
     
     $scope.$on('$ionicView.enter', function(e) {
         $scope.doRefresh();
+//        alert('entering');
     });
     // populate empty array with list of passed in chores
     
@@ -1059,7 +1084,7 @@ window.dashscope = $scope;
 })
 
 
-.controller('ChoreDetailsCtrl', function($scope,$rootScope, $window, $timeout, AppService, UtilityService, $stateParams, $ionicModal, $ionicHistory, $state) {
+.controller('ChoreDetailsCtrl', function($scope,$rootScope, $window, $timeout, AppService, UtilityService, $stateParams, $ionicModal, $ionicHistory, $state, $ionicSideMenuDelegate) {
     $scope.$on('$ionicView.enter', function(e) {
         $scope.doRefresh();
     });
@@ -1093,10 +1118,16 @@ window.dashscope = $scope;
 
     $scope.doRefresh = function() {
         AppService.setAllRecords();
-        
+        $timeout(function() {
+            $scope.service.setFamilyMembers();
+            $scope.familyMembers = AppService.familyMembers;
+            $scope.currentMember = AppService.currentMember;
+            $scope.currentStats = AppService.getCurrentStats();
+            console.log('got current stats');
+        }, 800);
 //        AppService.populateChores();
-        $scope.$broadcast('scroll.refreshComplete');
-        $scope.$apply();
+//        $scope.$broadcast('scroll.refreshComplete');
+//        $scope.$apply();
     }; 
     
     $scope.sponsor = AppService.sponsor;
@@ -1231,7 +1262,7 @@ window.dashscope = $scope;
     }
 
     $scope.markcomplete = function() {
-        $ionicHistory.clearCache().then(function(err) {
+//        $ionicHistory.clearCache().then(function(err) {
             localDB.get($scope.chore._id).then(function(doc, err) {
                 var dbChore = doc;
                 log('this is dbChore');
@@ -1249,17 +1280,17 @@ window.dashscope = $scope;
                 localDB.put(dbChore).then(function(doc, err) {
                         $timeout(function(){
                             $scope.doRefresh();
-                            $ionicHistory.goBack();                            
-                        },250);
+                            $ionicHistory.goBack();
+                        },1250);
                 }).catch(function(err) {
                     console.log('there was an error updating the chore. Error was: ' + err);
                 });            
             }).catch(function(err) {
                 log('encountered an error GETting from database. Error: ' + err);
             });            
-        }).catch(function(err) {
-            log('encountered an error clearing da cache. Error: ' + err);
-        });
+//        }).catch(function(err) {
+//            log('encountered an error clearing da cache. Error: ' + err);
+//        });
 
 
     };

@@ -102,10 +102,10 @@ app.factory('UtilityService', function() {
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
     var expires = "expires="+d.toUTCString();
-    log('setting new cookie');
+    //log('setting new cookie');
     document.cookie = cname + "=" + cvalue + "; " + expires;
         //    var theCookie = self.getCookie(cname);
-    log('cookie set: ' + document.cookie);
+    //log('cookie set: ' + document.cookie);
     }
 
     self.startwidget = function() {
@@ -168,14 +168,14 @@ app.factory('UtilityService', function() {
         
         
         
-        log('STARTING TO CALCULATE NEXT DATE////////');
-        log('VALUE OF THE repeatingchoreobject.dueDate is: ');
-        log(repeatingchoreobject.dueDate);
+        //log('STARTING TO CALCULATE NEXT DATE////////');
+        //log('VALUE OF THE repeatingchoreobject.dueDate is: ');
+        //log(repeatingchoreobject.dueDate);
         // get the current duedate of the chore object
         
         var currentDueDate;
-        log('REPEATINGCHOREOBJECT.dueDate is: ');
-        log(repeatingchoreobject.dueDate);
+        //log('REPEATINGCHOREOBJECT.dueDate is: ');
+        //log(repeatingchoreobject.dueDate);
         
         if (repeatingchoreobject.dueDate) {
             currentDueDate = new Date();
@@ -191,25 +191,25 @@ app.factory('UtilityService', function() {
 //        var currentDueDate = repeatingchoreobject.dueDate;
         var currentDay = currentDueDate.getDay();
 //        var currentDayNumber = getDayNumberFromDay(currentDay);
-        log('currentDueDate is: ' + currentDueDate);
-        log('currentDay is: ' + currentDay);
+        //log('currentDueDate is: ' + currentDueDate);
+        //log('currentDay is: ' + currentDay);
 //        log('currentDayNumber is: ' + currentDayNumber);
         
         // check to see if there is more than one repeat day per week
         var numberofrepeatingdays = Object.keys(repeatingchoreobject.repeatdays).length;
-        log('calculated number of repeating days: ' + numberofrepeatingdays);
-        log('well that\'s weird. this is the chore object we are looking at: ');
-        log(repeatingchoreobject);
+        //log('calculated number of repeating days: ' + numberofrepeatingdays);
+        //log('well that\'s weird. this is the chore object we are looking at: ');
+        //log(repeatingchoreobject);
         
         // if it's just once a week, just get the date seven days from now
         if (numberofrepeatingdays === 1 && false) {
             oneWeekFromNow = addDays(currentDueDate, 7);
             return oneWeekFromNow;
         } else {
-            log('NOW THE REAL WORK BEGINS');
+        //    log('NOW THE REAL WORK BEGINS');
             var offsetDaysArray = [];
 
-            log('putting the days in order starting from currentduedate of goal');
+          //  log('putting the days in order starting from currentduedate of goal');
             /// put the days of the week in order, but starting with the number
             /// of the current day. i.e if the current day is Saturday, the
             /// first number in the array will be 6, and the second will be 0, etc.
@@ -224,7 +224,7 @@ app.factory('UtilityService', function() {
                 offsetDaysArray.push(dayNumberToPush);
             }
 
-            log('getting the arrayOfFlaggedDays');
+          //  log('getting the arrayOfFlaggedDays');
             //// now get an array of the days that are flagged true in the object
             var arrayOfFlaggedDays = [];
 
@@ -250,44 +250,44 @@ app.factory('UtilityService', function() {
                 arrayOfFlaggedDays.push(6);
             }
             
-            log('this is the arrayOfFlaggedDays:');
-            log(arrayOfFlaggedDays);
+          //  log('this is the arrayOfFlaggedDays:');
+          //  log(arrayOfFlaggedDays);
             
             var findNextDueDate = function(theArrayOfFlaggedDays, recordDueDate) {
                 var daysArray = theArrayOfFlaggedDays;
-                log('this is the daysArray:');
-                log(daysArray);
+          //      log('this is the daysArray:');
+          //      log(daysArray);
                 var originalDate = new Date();
                 
                 originalDate.setTime(Date.parse(recordDueDate));
-                log('this is the passed record\'s due date:');
-                log(originalDate);
+          //      log('this is the passed record\'s due date:');
+          //      log(originalDate);
                 var currentDate = new Date();
                 var nextDueDate;
-                log('starting the loop to look for the next day');
+          //      log('starting the loop to look for the next day');
                 for (var i = 0; i < 7; i++) {
-                    log('iteration ' + i);
-                    log('adding 1 to nextDate');
+          //          log('iteration ' + i);
+          //          log('adding 1 to nextDate');
                     var nextDate = addDays(originalDate, i + 1);
-                    log('nextDate is now ' + nextDate);
+          //          log('nextDate is now ' + nextDate);
                     var nextDateDayNumber = nextDate.getDay();
-                    log('the DateDayNumber of the next day is: ' + nextDateDayNumber);
-                    log('checking this dayNumber against dayNumbers in the daysArray');
+          //          log('the DateDayNumber of the next day is: ' + nextDateDayNumber);
+//                    log('checking this dayNumber against dayNumbers in the daysArray');
                     for (var j = 0; j < daysArray.length; j++) {
-                        log('daysArray[' + j + ']:');
+//                        log('daysArray[' + j + ']:');
                         var element = daysArray[j];
-                        log(element);
+//                        log(element);
                         if (element === nextDateDayNumber) {
-                            log('found it! it was element ' + j);
-                            log('which is: ' + element);
+//                            log('found it! it was element ' + j);
+//                            log('which is: ' + element);
                             nextDueDate = nextDate;
-                            log('setting next date to:');
-                            log(nextDueDate);
+//                            log('setting next date to:');
+//                            log(nextDueDate);
                             return nextDueDate;
                         }
                     }
                 }
-                    log('did not find it :-(  Returning null');
+//                    log('did not find it :-(  Returning null');
                     return null;
             }
             
@@ -392,12 +392,12 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
             }
             self.crabbyPants = self.allinforecords[0].name;
         }).catch(function(err) {
-            log('there was an error getting allDocs. error was: ' + err + '\n\nThis is the expected behavior for the first time app is opened. We\'re specifically trying to figure out if there is a family database created. If so, things are already set up, continue as usual. If not, set things up!');
+//            log('there was an error getting allDocs. error was: ' + err + '\n\nThis is the expected behavior for the first time app is opened. We\'re specifically trying to figure out if there is a family database created. If so, things are already set up, continue as usual. If not, set things up!');
         });
     }
     
     self.setAllRecords = function(currentMemberName) {
-        info('STEP (2) START');
+//        info('STEP (2) START');
         // get all the records from the database [TEMPORARILY FROM STATIC JS FILE]
 //        self.allrecords = tempRecordsList;
         self.allrecords = [];
@@ -405,40 +405,40 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
             for (var i = 0; i < result.rows.length; i++) {
                 self.allrecords.push(result.rows[i].doc);
             }
-            log('allrecords size is: ' + self.allrecords.length);
-            info('STEP (2) END');
+//            log('allrecords size is: ' + self.allrecords.length);
+//            info('STEP (2) END');
             self.setCurrentMember();
             self.setFamilyMembers();
-            console.log('OK - HERE IS THE CURRENT ALLRECORDS ARRAY');
-            console.log(self.allrecords);
+//            console.log('OK - HERE IS THE CURRENT ALLRECORDS ARRAY');
+//            console.log(self.allrecords);
             self.thisweek = self.setThisWeek();
-            log('This week is week');
-            log(self.thisweek);
+//            log('This week is week');
+//            log(self.thisweek);
             self.populateChores();
-            log('HERE IS THE MYCHORES ARRAY');
-            log(self.mychores);
+//            log('HERE IS THE MYCHORES ARRAY');
+//            log(self.mychores);
             self.getGoals();
-            log('mygoals is: ');
-            log(self.mygoals);
+//            log('mygoals is: ');
+//            log(self.mygoals);
             self.getCurrentStats();
-            log('currentStats are: ');
-            log(self.currentStats);
+//            log('currentStats are: ');
+//            log(self.currentStats);
             self.getChoreStore();
-            log('chorestore is:');
-            log(self.chorestore);
+//            log('chorestore is:');
+//            log(self.chorestore);
             self.setSponsor();
-            log('sponsor is: ');
-            log(self.sponsor);
-            log('incompletechores is: ' + self.incompletechores);
-            log('completedchores is: ' + self.completedchores);
-            log('familyMembers is: ');
-            log(self.familyMembers);
+//            log('sponsor is: ');
+//            log(self.sponsor);
+//            log('incompletechores is: ' + self.incompletechores);
+//            log('completedchores is: ' + self.completedchores);
+//            log('familyMembers is: ');
+//            log(self.familyMembers);
         })
     }
     
     self.setCurrentMember = function(indexname) {
         // somehow remember who was logged in. A cookie, perhaps?
-        info('STEP (3) START')
+//        info('STEP (3) START')
 
         var cookieMember = UtilityService.getCookie('currentMemberName');
         var localStorageMember = localStorage.getItem("currentMemberName");
@@ -449,7 +449,7 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                 var record = self.allrecords[i];
                 if (record.name === indexname) {
                     self.currentMember = record;
-                    log('current member is: ' + self.currentMember.name);
+//                    log('current member is: ' + self.currentMember.name);
                     UtilityService.setCookie('currentMemberName', self.currentMember.name, 7000);
                     localStorage.setItem("currentMemberName", self.currentMember.name);
                 }
@@ -459,33 +459,33 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                 var record = self.allrecords[i];
                 if (record.name === localStorageMember) {
                     self.currentMember = record;
-                    log('current member is: ' + self.currentMember.name);
+//                    log('current member is: ' + self.currentMember.name);
                 }
             }
         } else {
-            info('unable to set currentMember from cookie. Starting with OG user.')
+//            info('unable to set currentMember from cookie. Starting with OG user.')
             for (var i = 0; i < self.allrecords.length; i++) {
                 var record = self.allrecords[i];
                 if (record.type === 'person') {
                     self.currentMember = record;
                     UtilityService.setCookie('currentMemberName', self.currentMember.name);
                     localStorage.setItem("currentMemberName", self.currentMember.name);
-                    log('current member is: ' + self.currentMember.name);
-                    log('member cookie is: ' + UtilityService.getCookie('currentMemberName'));
-                    log('localStorage currentMemberName is: ' + localStorage.getItem("currentMemberName"));
-                    info('STEP (3) END');
+//                    log('current member is: ' + self.currentMember.name);
+//                    log('member cookie is: ' + UtilityService.getCookie('currentMemberName'));
+//                    log('localStorage currentMemberName is: ' + localStorage.getItem("currentMemberName"));
+//                    info('STEP (3) END');
                     return;
                 }
             }
         }
-        info('STEP (3) END');
+//        info('STEP (3) END');
         
         return self.currentMember;
 
     }
 
     self.setFamilyMembers = function() {
-        info('STEP (3F) START');
+//        info('STEP (3F) START');
         self.familyMembers = [];
         for (var i = 0; i < self.allrecords.length; i++) {
             record = self.allrecords[i];
@@ -494,8 +494,8 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                 self.familySize = self.familySize + 1;
             }
         }
-        log('familySize: ' + self.familySize);
-        log('familyMembers structure: ' + self.familyMembers);
+//        log('familySize: ' + self.familySize);
+//        log('familyMembers structure: ' + self.familyMembers);
         for (var i = 0; i < self.familyMembers.length; i++) {
             var memberrecord = self.familyMembers[i];
             memberrecord.alltimecompleted = 0;
@@ -527,33 +527,33 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                 }
             }
         }
-        info('STEP (3F) END');
+//        info('STEP (3F) END');
     }
     
     self.spliceFamilyMember = function(memberid) {
-        log('starting the spliceFamilyMember process')
+//        log('starting the spliceFamilyMember process')
         for (var i = 0; i < self.familyMembers.length; i++) {
             var record = self.familyMembers[i];
             if (record._id === memberid) {
-                log('splicing ' + record.name);
+//                log('splicing ' + record.name);
                 self.familyMembers.splice(i,1);
             }
         }
     }
     
     self.spliceRecord = function(recordid) {
-        log('starting the record process')
+//        log('starting the record process')
         for (var i = 0; i < self.allrecords.length; i++) {
             var record = self.allrecords[i];
             if (record._id === recordid) {
-                log('splicing ' + record.name);
+//                log('splicing ' + record.name);
                 self.allrecords.splice(i,1);
             }
         }
     }
 
     self.populateChores = function() {
-        info('STEP (4) START')
+//        info('STEP (4) START')
         self.mychores.length = 0;
         /// completed chores should have a cutoff of 7 days or so (i.e. these are the chores I've completed this week.) Then there should be an option to show "all time chores" somewhere in the app.
 //        info('--setting completed and incompleted chores...')
@@ -628,9 +628,9 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                 var currentMemberClone = UtilityService.cloneAnObject(self.currentMember);
                 localDB.put(currentMemberClone).then(function(doc, err) {
                     // do nothing
-                    console.log('Success! Put new member with badges in!');
+//                    console.log('Success! Put new member with badges in!');
                 }).catch(function(err) {
-                    console.log('something went wrong updating badges. error was: ' + err);
+//                    console.log('something went wrong updating badges. error was: ' + err);
                 });
             }
 
@@ -639,8 +639,8 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                 duedate = new Date();
                 duedate.setTime(Date.parse(duedatestring));
                 duedateweek = duedate.getWeekNumber();
-                log('GOT DUEDATE WEEK - IT IS: ');
-                log(duedateweek);
+//                log('GOT DUEDATE WEEK - IT IS: ');
+//                log(duedateweek);
             }
             
             if (duedateweek >= self.thisweek && duedateweek < self.thisweek + 2) {
@@ -675,7 +675,7 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
     };
     
     self.getGoals = function() {
-        info('STEP (4) INTERMEDIATE - STARTING MYGOALS');
+//        info('STEP (4) INTERMEDIATE - STARTING MYGOALS');
         self.mygoals = [];
         for (var i = 0; i < self.allrecords.length; i++) {
             record = self.allrecords[i];
@@ -684,7 +684,7 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
             }
         }
         
-        info('STEP (4) END');
+//        info('STEP (4) END');
         
         return self.mygoals;
     }
@@ -707,7 +707,7 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
     }
 
     self.getCurrentStats = function() {
-        log('STEP (5) START');
+//        log('STEP (5) START');
         self.currentStats = {
             incompleteChores: 0,
             alltimechores: 0,
@@ -735,8 +735,8 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                 duedate = new Date();
                 duedate.setTime(Date.parse(duedatestring));
                 duedateweek = duedate.getWeekNumber();
-                log('GOT DUEDATE WEEK - IT IS: ');
-                log(duedateweek);
+//                log('GOT DUEDATE WEEK - IT IS: ');
+//                log(duedateweek);
             }
             
             if (record.type === 'chore' && record.completiondate) {
@@ -744,16 +744,16 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                 completiondate = new Date();
                 completiondate.setTime(Date.parse(completiondatestring));
                 completiondateweek = completiondate.getWeekNumber();
-                log('GOT COMPLETIONDATE WEEK - IT IS: ');
-                log(completiondateweek);
+//                log('GOT COMPLETIONDATE WEEK - IT IS: ');
+//                log(completiondateweek);
             }
 
             //// SET INCOMPLETE CHORES NUMBER
             if ( record.type === 'chore' && record.complete === false && record.assigned === self.currentMember.name ) {
 //                self.currentStats.incompleteChores = 0;
-                info('calculating incomplete chores');
+//                info('calculating incomplete chores');
                 self.currentStats.incompleteChores  = self.currentStats.incompleteChores + 1;
-                info('done calculating incomplete chores. total is: ' + self.currentStats.incompleteChores);
+//                info('done calculating incomplete chores. total is: ' + self.currentStats.incompleteChores);
             }
             
             //// SET EARNEDTHISWEEK NUMBER
@@ -764,37 +764,37 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
             
             ///// SET ALLTIME CHORES AND ALLTIME EARNINGS
             if ( record.type === 'chore' && record.complete === true && record.assigned === self.currentMember.name ) {
-                info('calculating alltimechores')
+//                info('calculating alltimechores')
                 self.currentStats.alltimechores = self.currentStats.alltimechores + 1;
                 self.currentStats.alltimeearnings = self.currentStats.alltimeearnings + Number(record.value);
-                info('done calculating alltimechores. total is: ' + self.alltimechores);
-                info('also done calculating alltime earnings. total is: ' + self.alltimeearnings);
+//                info('done calculating alltimechores. total is: ' + self.alltimechores);
+//                info('also done calculating alltime earnings. total is: ' + self.alltimeearnings);
             }
             ///// SET  NOPE- NUMBER OF CURRENT GOALS and COST and image
             ///// CHANGED TO SET NAME OF CURRENT GOAL AND ITS COST PER WARD 2016-02-10
             if ( record.type === 'goal' && record.complete === false && record.owner === self.currentMember.name ) {
-                info('setting name of current goal and its cost');
+//                info('setting name of current goal and its cost');
                 self.currentStats.currentgoals = self.currentStats.currentgoals + 1;
                 self.currentStats.currentgoalname = record.name;
                 self.currentStats.currentgoalimageurl = record.goalimageurl;
                 self.currentStats.currentgoalscosttotal = self.currentStats.currentgoalscosttotal + Number(record.cost);
-                info('done setting name of current goal. it is: ' + self.currentStats.currentgoalname);
-                info('also done setting total current goal cost. total is: ' + self.currentStats.currentgoalscosttotal);
+//                info('done setting name of current goal. it is: ' + self.currentStats.currentgoalname);
+//                info('also done setting total current goal cost. total is: ' + self.currentStats.currentgoalscosttotal);
             }
             ////// SET NUMBER OF COMPLETE GOALS AND THEIR VALUE
             if ( record.type === 'goal' && record.complete === true && record.owner === self.currentMember.name ) {
-                info('setting number of complete goals and their value...');
+//                info('setting number of complete goals and their value...');
                 self.currentStats.completedgoals = self.currentStats.completedgoals + 1;
                 self.currentStats.completedgoalsvalue = self.currentStats.completedgoalsvalue + Number(record.cost);
-                info('done setting number of completed goals. total is: ' + self.currentStats.completedgoals);
-                info('also done setting the total value of completed goals. total is: ' + self.currentStats.completedgoalsvalue);
+//                info('done setting number of completed goals. total is: ' + self.currentStats.completedgoals);
+//                info('also done setting the total value of completed goals. total is: ' + self.currentStats.completedgoalsvalue);
             }            
             ///// SET CURRENT SAVINGS
             if ( record.type === 'chore' && record.complete === true && record.assigned === self.currentMember.name ) {
-                info('setting current savings');
+//                info('setting current savings');
                 self.savings = self.currentStats.alltimeearnings - self.currentStats.completedgoalsvalue;
-                info('completed setting current savings. total is: ' + self.savings);
-                info('completed all stats totals so far!');
+//                info('completed setting current savings. total is: ' + self.savings);
+//                info('completed all stats totals so far!');
             }           
             ///// SET OWED
             /// TODO set up chore complettion date
@@ -807,7 +807,7 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
             
         }
         return self.currentStats;
-        log('STEP (5) END');
+//        log('STEP (5) END');
     }    
     
     self.setFamily = function() {
@@ -818,9 +818,9 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                 self.family = record;
             }
         }
-        log('the family\'s email is: ' + self.family.name);
-        log('this is the family:');
-        log(self.family);
+//        log('the family\'s email is: ' + self.family.name);
+//        log('this is the family:');
+//        log(self.family);
     }
     
     self.setSponsor = function() {
@@ -831,12 +831,12 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                 self.sponsor = record;
             }
         }
-        log('the sponsor is ' + self.sponsor.name);
-        log(self.sponsor);
+//        log('the sponsor is ' + self.sponsor.name);
+//        log(self.sponsor);
 //        self.sponsor.name = 'happy fun bank';
         self.sponsor.name = 'Your Logo Here';
-        log(self.sponsor.name);
-        log(self.allrecords);
+//        log(self.sponsor.name);
+//        log(self.allrecords);
             
     }
 
@@ -876,7 +876,7 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
         choreobject._id = idFromDate;
         
         localDB.put(choreobject).then(function(doc, err) {
-            console.log('tried to add a chore');
+//            console.log('tried to add a chore');
 //            AppService.allrecords.push(doc);
         }).catch(function(err) {
             // do something
@@ -885,13 +885,13 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
     
     self.updateChore = function(chorerecord) {
         localDB.get(chorerecord._id).then(function(chorerecord){
-            console.log('revision before update: ' + chorerecord._rev);
-            console.log('and this is the chore record we are trying to update:');
-            console.log(chorerecord);
+//            console.log('revision before update: ' + chorerecord._rev);
+//            console.log('and this is the chore record we are trying to update:');
+//            console.log(chorerecord);
             localDB.put(chorerecord).then(function(doc,err){
                 var choreIndex = self.findIndexOfRecord(doc);
-                console.log('this is "doc":');
-                console.log(doc);
+//                console.log('this is "doc":');
+//                console.log(doc);
 //                alert('the choreIndex is: ' + choreIndex);
             }).catch(function(err) {
 //                alert('unable to update chore :(  | the error was: ' + err);
@@ -989,14 +989,14 @@ app.factory('PersonService', function(PouchDBListener) {
         // TODO: check if person name already exists
         
         var idFromDate = new Date().toISOString();
-        console.log('this is the idFromDate;');
-        console.log(idFromDate);
+//        console.log('this is the idFromDate;');
+//        console.log(idFromDate);
         localDB.put({
             _id: familymemberobject.name,
             name: familymemberobject.name,
             admin: familymemberobject.admin
         }).then(function(doc, err) {
-            console.log('added new family member.');
+//            console.log('added new family member.');
         }).catch(function(err) {
             alert('That name already exists. Please pick a unique name!');
         });//test

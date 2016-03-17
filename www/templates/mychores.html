@@ -8,7 +8,7 @@
       <ion-item>
 <!--         <div style="text-align:center;margin-bottom:20px;"><span style="color:lightgray">pull to refresh</span></div>-->
           My Chores: 
-          <div ng-if="incompletechores > 0 && incompletechores < 2"><span class="positive" style="font-weight:bold">{{currentStats.incompleteChores}}</span> chore to do</div>
+          <div ng-if="currentStats.incompleteChores > 0 && currentStats.incompleteChores < 2"><span class="positive" style="font-weight:bold">{{currentStats.incompleteChores}}</span> chore to do</div>
           <div ng-if="service.mychores.length < 1">No chores to do!</div>
           <div ng-if="incompletechores > 1"><span class="positive" style="font-weight:bold">{{currentStats.incompleteChores}}</span> chores to do</div>
       </ion-item>
