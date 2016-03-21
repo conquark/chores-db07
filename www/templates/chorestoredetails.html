@@ -1,5 +1,5 @@
 <ion-view cache-view="false" view-title="Chore Details">
-  <ion-content style="background-image:url('img/background.png');background-position:center">
+  <ion-content style="background-image:url('img/background.png');background-position:center;background-size:stretch">
     <ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()">
     </ion-refresher>
     <div class="card">
@@ -13,16 +13,16 @@
     <ion-item>
     <div ng-if="chore.assigned === 'Chore Store'">
     <div class="item-text-wrap" style="margin-bottom:20px;">
+        <div style="font-size:1.2em;float:right;font-weight:bold">${{chore.value}}</div>
         <span class="dark"><strong>{{chore.name}}</strong></span><br>
-        <div ng-if="currentMember.admin !== true" style="font-size:1.2em">${{chore.value}}</div>
-        <div ng-if="currentMember.admin === true" style="font-size:1.2em">{{chore.value * 100 | number}} points</div>
+<!--        <div ng-if="currentMember.admin === true" style="font-size:1.2em">{{chore.value * 100 | number}} points</div>-->
         
         <div ng-if="chore.description">
         <hr>
         Description:<br />
-        {{chore.description}} <br><br>
+        {{chore.description}}
         </div>
-        <span ng-if="chore.repeat">Repeats on</span><br>
+        <span ng-if="chore.repeat"><br><br>Repeats on</span><br>
         <button class="button button-small button-calm" ng-if="chore.repeatdays.Sunday">Sundays</button>
         <button class="button button-small button-calm" ng-if="chore.repeatdays.Monday">Mondays</button>
         <button class="button button-small button-calm" ng-if="chore.repeatdays.Tuesday">Tuesdays</button>
@@ -32,9 +32,11 @@
         <button class="button button-small button-calm" ng-if="chore.repeatdays.Saturday">Saturdays</button>        
         <hr>
 
+<!--
         <span style="color:gray;margin-bottom:15px;font-size: .8em">Categories</span>
         <br>
         <span ng-if="status === true" class="category-block" ng-repeat="(category,status) in chore.categories">{{category}}</span>                
+-->
     </div>
 <!--
     <div ng-if="currentMember.name !== chore.assignedby && chore.complete === false">

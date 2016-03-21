@@ -72,3 +72,48 @@ ion-content {
     background-size: cover;
   }
 </style>
+.flip .normal{
+  -webkit-perspective: 800;
+/*
+   width: 100% !important;
+   height: 150px !important;
+*/
+    position: relative;
+    margin: 50px auto;
+}
+.flip .flipcard.flipped {
+  -webkit-transform: rotatey(-180deg);
+}
+.flip .flipcard {
+  width: 100%;
+  height: 100%;
+  -webkit-transform-style: preserve-3d;
+  -webkit-transition: 0.5s;
+}
+.flip .flipcard .flipface {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  -webkit-backface-visibility: hidden ;
+  z-index: 2;
+/*    font-family: Georgia;*/
+/*    font-size: 3em;*/
+    text-align: center;
+/*    line-height: 200px;*/
+}
+.flip .flipcard .flipfront {
+  position: absolute;
+  z-index: 1;
+    background: white;
+    color: black;
+    cursor: pointer;
+    text-align: center;
+/*    line-height: 200px;*/
+}
+.flip .flipcard .flipback {
+  -webkit-transform: rotatey(-180deg);
+    background: blue;
+    background: white;
+    color: black;
+    cursor: pointer;
+}

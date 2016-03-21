@@ -30,8 +30,8 @@
                     <span ng-if="!currentMember.admin">Goals: {{currentStats.currentgoals}} <br></span>
                     Chores to do: {{currentStats.incompleteChores}} <br>
                     Earnings this week: 
-                    <span ng-if="currentMember.admin !== true">{{currentStats.earnedthisweek | currency}}</span>
-                    <span ng-if="currentMember.admin === true"><br>{{currentStats.earnedthisweek * 100| number}} points</span>
+                    <span>{{currentStats.earnedthisweek | currency}}</span>
+<!--                    <span ng-if="currentMember.admin === true"><br>{{currentStats.earnedthisweek * 100| number}} points</span>-->
                  </div>
             </div>
             <div class="row">
@@ -71,36 +71,24 @@
          <i class="icon ion-paper-airplane"></i>
           My Goals <span ng-if="currentStats.currentgoals > 0">({{currentStats.currentgoals}})</span>
         </ion-item>
-       <ion-item ng-if="familySize > 0" class="item-icon-right dark" style="margin-bottom:none;border-bottom:none;padding-bottom:none;">
+       <ion-item menu-close href="#/app/mybadges" class="item-icon-right dark" style="margin-bottom:none;border-bottom:none;padding-bottom:none;">
          <i class="icon ion-trophy energized"></i>
           Badges
         </ion-item>
-        <ion-item style="border-top:none;margin-top:none;padding-top:none">
-          <div class="item-text-wrap dark" style="text-align:center;padding-top:none" ng-repeat="(badge,status) in currentMember.badges">
-              <img src="img/badges/bathroom-cleaning.png" ng-if="badge === 'bathroomcleaning' && status === true" alt="" style="width:150px;">
-              <img src="img/badges/clean-dishes-badge.png" ng-if="badge === 'washdishes'" alt="" style="width:150px;">
-              <img src="img/badges/clean-off-table.png" ng-if="badge === 'cleantable' && status === true" alt="" style="width:150px;">
-              <img src="img/badges/feed-animal-badge.png" ng-if="badge === 'feedpet' && status === true" alt="" style="width:150px;">
-              <img src="img/badges/general-cleaning-badge.png" ng-if="badge === 'generalCleaning' && status === true" alt="" style="width:150px;">
-              <img src="img/badges/trash-badge.png" ng-if="badge === 'trash' && status === true" alt="" style="width:150px;">
-              <img src="img/badges/vacuum-badge.png" ng-if="badge === 'vacuum' && status === true" alt="" style="width:150px;">
-              <img src="img/badges/walk-pet-badge.png" ng-if="badge === 'walkpet' && status === true" alt="" style="width:150px;">
-              <img src="img/badges/wash-clothes-badge.png" ng-if="badge === 'washclothes' && status === true" alt="" style="width:150px;">
-              <img src="img/badges/yard-work-badge.png" ng-if="badge === 'yard' && status === true" alt="" style="width:150px;">              
-              <img src="img/chili.jpg" ng-if="badge === 'chili' && status === true" alt="" style="width:150px;">
-              <div class="center" ng-if="badge === 'chili' && status === true" class="balanced" style="font-weight:bold">Chili Master!</div>
-              <div class="center" ng-if="badge === 'bathroomcleaning' && status === true" class="balanced" style="font-weight:bold">Bathroom Buster!</div>
-              <div class="center" ng-if="badge === 'cleantable' && status === true" class="balanced" style="font-weight:bold">Table Cleanup Squad!</div>
-              <div class="center" ng-if="badge === 'feedpet' && status === true" class="balanced" style="font-weight:bold">Pet Chef!</div>
-              <div class="center" ng-if="badge === 'generalCleaning' && status === true" class="balanced" style="font-weight:bold">Clean-inator!</div>
-              <div class="center" ng-if="badge === 'trash' && status === true" class="balanced" style="font-weight:bold">TrashMaster!</div>
-              <div class="center" ng-if="badge === 'vacuum' && status === true" class="balanced" style="font-weight:bold">Vacuum Wizard</div>
-              <div class="center" ng-if="badge === 'walkpet' && status === true" class="balanced" style="font-weight:bold">Pet Walker!</div>
-              <div class="center" ng-if="badge === 'washclothes' && status === true" class="balanced" style="font-weight:bold">Clothes Wrangler!</div>
-              <div class="center" ng-if="badge === 'yard' && status === true" class="balanced" style="font-weight:bold">Yard Hero!</div>
-              <div class="center" ng-if="badge === 'washdishes' && status === true" class="balanced" style="font-weight:bold">Dish Master!</div>
-              <hr>
-          </div>
+        <ion-item menu-close href="#/app/mybadges" style="border-top:none;margin-top:none;padding-top:none">
+          <span class="item-text-wrap" style="text-align:center;padding-top:none" ng-repeat="(badge,status) in currentMember.badges">
+              <img src="img/badges/bathroom-cleaning.png" ng-if="badge === 'bathroomcleaning' && status === true" alt="" style="width:40px;">
+              <img src="img/badges/clean-dishes-badge.png" ng-if="badge === 'washdishes'" alt="" style="width:40px;">
+              <img src="img/badges/clean-off-table.png" ng-if="badge === 'cleantable' && status === true" alt="" style="width:40px;">
+              <img src="img/badges/feed-animal-badge.png" ng-if="badge === 'feedpet' && status === true" alt="" style="width:40px;">
+              <img src="img/badges/general-cleaning-badge.png" ng-if="badge === 'generalCleaning' && status === true" alt="" style="width:40px;">
+              <img src="img/badges/trash-badge.png" ng-if="badge === 'trash' && status === true" alt="" style="width:40px;">
+              <img src="img/badges/vacuum-badge.png" ng-if="badge === 'vacuum' && status === true" alt="" style="width:40px;">
+              <img src="img/badges/walk-pet-badge.png" ng-if="badge === 'walkpet' && status === true" alt="" style="width:40px;">
+              <img src="img/badges/wash-clothes-badge.png" ng-if="badge === 'washclothes' && status === true" alt="" style="width:40px;">
+              <img src="img/badges/yard-work-badge.png" ng-if="badge === 'yard' && status === true" alt="" style="width:40px;">              
+              <img src="img/chili.jpg" ng-if="badge === 'chili' && status === true" alt="" style="width:40px;">
+          </span>
         </ion-item>        
         <ion-item menu-close href="#/app/welcome">
           Home Screen

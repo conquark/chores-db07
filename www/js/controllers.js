@@ -218,7 +218,7 @@ window.AppService = AppService;
   $scope.newUser = {
       _id: "",
       name: "",
-      admin: true,
+      admin: false,
       pin: "",
       type: "person"
   }
@@ -702,8 +702,8 @@ window.dashscope = $scope;
     $scope.sponsor == AppService.sponsor;
     $scope.personEarningsTotal = 0;
     $scope.personEarningsUnpaid = 0;
-    $scope.addToSavings;
-    $scope.addToSpendingMoney;
+    $scope.addToSavings = 0;
+    $scope.addToSpendingMoney = 0;
     $scope.totalPercentage = 0;
     $scope.savingsNumber = 0;
     $scope.spendingNumber = 0;

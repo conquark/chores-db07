@@ -16,16 +16,16 @@
     </div>
     <div class="list">
         <label class="item item-input item-floating-label">
-            <span class="item-text-wrap">You can set a user as an "admin" user. Admin users can create and delete chores, add other users, and manage payments in the app.</span><br /><br />
-            <span>Will this user be an admin?</span>
+            <span class="item-text-wrap">You can set a user as a Parent. Parents can create and delete chores, add other users, and manage payments in the app.</span><br /><br />
+            <span>Is this new user a Parent user?</span>
             <ion-radio ng-model="newUser.admin" ng-value="true">Yes</ion-radio>
             <ion-radio ng-model="newUser.admin" ng-value="false">No</ion-radio>
         </label>
     </div>
     <div class="list item-text-wrap" ng-if="newUser.admin === true">
-        <strong>All admins use the same pin.</strong> The current pin is <strong>{{currentMember.pin}}</strong>.
+        <strong>All Parents use the same pin.</strong> The current pin is <strong>{{currentMember.pin}}</strong>.
     </div>
-          <button class="button button-block button-positive" ng-click="saveNewSecondaryUser()">Add user</button>
+          <button class="button button-block button-positive" ng-click="saveNewSecondaryUser()">Add this user</button>
         </label>
       </div>
     </form>

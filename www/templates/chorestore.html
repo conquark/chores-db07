@@ -3,7 +3,7 @@
         <button ng-if="currentMember.admin === true" class="button button-icon button-clear ion-help" ng-click="helpstoreadmin()" ></button>
         <button ng-if="currentMember.admin !== true" class="button button-icon button-clear ion-help" ng-click="helpstorechild()" ></button>
     </ion-nav-buttons>
-   <ion-content style="background-image:url('img/background.png');background-position:center">
+   <ion-content style="background-image:url('img/background.png');background-position:center;background-size:stretch">
     <ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()">
     </ion-refresher>
     <div class="card">
@@ -12,25 +12,33 @@
       Add a new Chore
     </button>
     <ion-list>
+      <ion-item ng-if="service.chorestore.length > 0" class="item-text-wrap item-icon-right">
+          <i class="icon ion-ios-cart positive"></i>
+          <h1>Chore Store</h1>
+          <h2>Click on a chore if you'd like to claim it!</h2>
+      </ion-item>
        <ion-item ng-if="service.chorestore.length < 1" class="item-text-wrap item-icon-left">
           <i class="icon ion-ios-cart-outline"></i>
-           #empty <br>
            All Chore Store chores have been claimed!
            <span ng-if="currentMember.admin === false">Check again later to see if more have been added.</span>
            <span ng-if="currentMember.admin === true"><br><br>Tap the blue button above to add more chores to the store.</span>
        </ion-item>
         <ion-item class="item-text-wrap" ng-repeat="chore in service.chorestore"
                ui-sref="app.chorestoredetails({id:chore._id})" ng-if="chore.complete !== complete && chore._deleted !== true">
-            Chore:<br />
-            {{chore.name}} <br>
-            <span ng-if="chore.value > 0 && currentMember.admin !== true">You can earn: ${{chore.value}} <br></span>
-            <span ng-if="chore.value > 0 && currentMember.admin === true">You can earn: {{chore.value * 100 | number}} points <br></span>
+<!--            Chore:<br />-->
+           <span style="float:right;font-size:1.5em;margin-top:10px;margin-left:20px;font-weight:bold"><span ng-if="chore.value > 0">$</span>{{chore.value}}</span>
+            <strong class="">{{chore.name}}</strong> <br>
+            <span ng-if="chore.description">{{chore.description}}</span>
+
+<!--            <span ng-if="chore.value > 0 && currentMember.admin === true">You can earn: {{chore.value * 100 | number}} points <br></span>-->
             <span style="font-seight:bold;font-size: .8em" ng-if="chore.repeat">Next due date:</span>
             <span style="font-weight:bold;font-size: .8em" ng-if="chore.dueDate && !chore.repeat">Due date: {{chore.dueDate | date : short}}</span>
             <div style="border:0px solid gray;padding:10px; padding-top:2px; border-radius: 8px;">
+<!--
                 <span style="color:gray;margin-bottom:15px;font-size: .8em">Categories</span>
                 <br>
-                <span ng-if="status === true" class="category-block" ng-repeat="(category,status) in chore.categories">{{category}}</span>                
+-->
+<!--                <span ng-if="status === true" class="category-block" ng-repeat="(category,status) in chore.categories">{{category}}</span>                -->
             </div>
 
 <!--            <img src="img/badges/trash-badge.png" ng-if="chore.categories.kitchen === true" alt="" style="width:40px">-->

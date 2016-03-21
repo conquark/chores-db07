@@ -8,12 +8,13 @@
   <ion-content>
    <ion-item>
     <form>
-    <h2 class="item-text-wrap autofocus">Chore Name: {{newChore.name}}</h2>
+<!--    <h2 class="item-text-wrap autofocus">{{newChore.name}}</h2>-->
     <div class="list">
+            <input type="text" style="font-size:1.8em" id="chorename" ng-model="newChore.name" placeholder="Enter Chore Name Here"><br>
               <div class="list">
                   <label class="item item-input item-select">
-                    <div class="input-label">
-                      Choose:
+                    <div class="input-label item-text-wrap">
+                      ...or choose a chore from the list:
                     </div>
                     <select ng-model="newChore.name">
                       <option>Clean Bathroom</option>
@@ -31,13 +32,12 @@
                   </label>
                 </div>
         
-            Edit chore name or create your own: <input type="text" id="chorename" ng-model="newChore.name" placeholder="Chore Name">
         </label>
     </div>
     <div class="list">
         <label class="item item-input item-floating-label">
-            <span class="input-label">Chore Description</span>
-            <input type="text" id="choredescription" ng-model="newChore.description" placeholder="Chore Description">
+            <span class="input-label">Describe this chore</span>
+            <input type="text" id="choredescription" ng-model="newChore.description" placeholder="Describe this chore">
         </label>
     </div>
     <div class="list">
@@ -49,7 +49,7 @@
     </div>
     <div class="list">
         <ion-list>
-          <ion-checkbox ng-model="newChore.requiresapproval" class="item-text-wrap" >Does this chore require parent approval to be considered complete?</ion-checkbox>
+          <ion-checkbox ng-model="newChore.requiresapproval" class="item-text-wrap"  >Does this chore require parent approval to be considered complete?</ion-checkbox>
           <a ng-click="approvalHelp();" style='font-size:.8em;text-align:right'>what does this mean?</a>
         </ion-list>        
     </div>
@@ -81,6 +81,7 @@
 
     </div>
     
+<!--
     <div class="list">
         <div>
           Categories - select any that apply
@@ -104,6 +105,7 @@
       </label>
 
     </div>
+-->
     <div class="list">
            <span class="label">What do you want to do with this chore?</span>
            <ion-list>

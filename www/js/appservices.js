@@ -33,7 +33,8 @@ app.factory('UtilityService', function() {
             markedCompleteCount: 0,
             completiondate: '',
             createddate: '',
-            assigneddate: ''
+            assigneddate: '',
+            requiresapproval: true
             };
         return newChore;
     }

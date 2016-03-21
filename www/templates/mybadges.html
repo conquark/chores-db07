@@ -1,0 +1,65 @@
+<ion-view cache-view="false" view-title="{{currentMember.name}}'s Badges">
+   <ion-content style="background-image:url('img/background.png');background-position:center;background-size:stretch">
+
+    <div class="card">
+        <ion-list>
+            <ion-item ng-repeat="(badge,status) in currentMember.badges">
+                <div class="flip" style="width:100%;height:150px;margin-bottom:10px;">
+                    <div class="flipcard" ng-class="{'flipped':isFlipped}" ng-click="isFlipped=!isFlipped">
+                        <div class="flipface flipfront">
+                          <img src="img/badges/bathroom-cleaning.png" ng-if="badge === 'bathroomcleaning' && status === true" alt="" style="width:150px;">
+                          <img src="img/badges/clean-dishes-badge.png" ng-if="badge === 'washdishes'" alt="" style="width:150px;">
+                          <img src="img/badges/clean-off-table.png" ng-if="badge === 'cleantable' && status === true" alt="" style="width:150px;">
+                          <img src="img/badges/feed-animal-badge.png" ng-if="badge === 'feedpet' && status === true" alt="" style="width:150px;">
+                          <img src="img/badges/general-cleaning-badge.png" ng-if="badge === 'generalCleaning' && status === true" alt="" style="width:150px;">
+                          <img src="img/badges/trash-badge.png" ng-if="badge === 'trash' && status === true" alt="" style="width:150px;">
+                          <img src="img/badges/vacuum-badge.png" ng-if="badge === 'vacuum' && status === true" alt="" style="width:150px;">
+                          <img src="img/badges/walk-pet-badge.png" ng-if="badge === 'walkpet' && status === true" alt="" style="width:50%;">
+                          <img src="img/badges/wash-clothes-badge.png" ng-if="badge === 'washclothes' && status === true" alt="" style="width:150px;">
+                          <img src="img/badges/yard-work-badge.png" ng-if="badge === 'yard' && status === true" alt="" style="width:150px;">              
+                          <img src="img/chili.jpg" ng-if="badge === 'chili' && status === true" alt="" style="width:150px;">
+                          <div class="center" ng-if="badge === 'chili' && status === true" class="balanced" style="font-weight:bold">Chili Master!</div>
+                          <div class="center" ng-if="badge === 'bathroomcleaning' && status === true" class="balanced" style="font-weight:bold">Bathroom Buster!</div>
+                          <div class="center" ng-if="badge === 'cleantable' && status === true" class="balanced" style="font-weight:bold">Table Cleanup Squad!</div>
+                          <div class="center" ng-if="badge === 'feedpet' && status === true" class="balanced" style="font-weight:bold">Pet Chef!</div>
+                          <div class="center" ng-if="badge === 'generalCleaning' && status === true" class="balanced" style="font-weight:bold">Clean-inator!</div>
+                          <div class="center" ng-if="badge === 'trash' && status === true" class="balanced" style="font-weight:bold">TrashMaster!</div>
+                          <div class="center" ng-if="badge === 'vacuum' && status === true" class="balanced" style="font-weight:bold">Vacuum Wizard</div>
+                          <span class="center" ng-if="badge === 'walkpet' && status === true" class="balanced" style="font-weight:bold;display:block">Pet Walker!</span>
+                          <div class="center" ng-if="badge === 'washclothes' && status === true" class="balanced" style="font-weight:bold">Clothes Wrangler!</div>
+                          <div class="center" ng-if="badge === 'yard' && status === true" class="balanced" style="font-weight:bold">Yard Hero!</div>
+                          <div class="center" ng-if="badge === 'washdishes' && status === true" class="balanced" style="font-weight:bold">Dish Master!</div>
+                          
+                        </div>
+                        <div class="flipface flipback">
+                          <img src="img/badges/bathroom-cleaning.png" ng-if="badge === 'bathroomcleaning' && status === true" alt="" style="width:75px;">
+                          <img src="img/badges/clean-dishes-badge.png" ng-if="badge === 'washdishes'" alt="" style="width:75px;">
+                          <img src="img/badges/clean-off-table.png" ng-if="badge === 'cleantable' && status === true" alt="" style="width:75px;">
+                          <img src="img/badges/feed-animal-badge.png" ng-if="badge === 'feedpet' && status === true" alt="" style="width:75px;">
+                          <img src="img/badges/general-cleaning-badge.png" ng-if="badge === 'generalCleaning' && status === true" alt="" style="width:75px;">
+                          <img src="img/badges/trash-badge.png" ng-if="badge === 'trash' && status === true" alt="" style="width:75px;">
+                          <img src="img/badges/vacuum-badge.png" ng-if="badge === 'vacuum' && status === true" alt="" style="width:75px;">
+                          <img src="img/badges/walk-pet-badge.png" ng-if="badge === 'walkpet' && status === true" alt="" style="width:75px;">
+                          <img src="img/badges/wash-clothes-badge.png" ng-if="badge === 'washclothes' && status === true" alt="" style="width:75px;">
+                          <img src="img/badges/yard-work-badge.png" ng-if="badge === 'yard' && status === true" alt="" style="width:75px;">
+                          <img src="img/chili.jpg" ng-if="badge === 'chili' && status === true" alt="" style="width:50px;">
+                          
+                          <div class="center item-text-wrap" ng-if="badge === 'chili' && status === true" class="balanced" style="font-weight:bold">It may be cold outside, but our insides are nice and warm, thanks to the magnificent Chili Master!</div>
+                          <div class="center item-text-wrap" ng-if="badge === 'bathroomcleaning' && status === true" class="balanced" style="font-weight:bold">Who you gonna call?</div>
+                          <div class="center item-text-wrap" ng-if="badge === 'cleantable' && status === true" class="balanced" style="font-weight:bold">Table Cleanup Squad! When the table needs cleaning, there's only one squad to call, and you're on it.</div>
+                          <div class="center item-text-wrap" ng-if="badge === 'feedpet' && status === true" class="balanced" style="font-weight:bold">Your preparation of pet food is magnificent. What's your secret?</div>
+                          <div class="center item-text-wrap" ng-if="badge === 'generalCleaning' && status === true" class="balanced" style="font-weight:bold">Nobody cleans like you. You are the Cleaninator!</div>
+                          <div class="center item-text-wrap" ng-if="badge === 'trash' && status === true" class="balanced" style="font-weight:bold">You have shown great ability in the area of trash-portation. Nice work, TrashMaster!</div>
+                          <div class="center item-text-wrap" ng-if="badge === 'vacuum' && status === true" class="balanced" style="font-weight:bold">Vacuum Wizard, you wield a vacuum cleaner with awesome cleaning power. Dust cowers in your presence!</div>
+                          <div class="center item-text-wrap" ng-if="badge === 'walkpet' && status === true" class="balanced" style="font-weight:bold;display:block">As a pet walker, you have mastered the ancient art of pet walking. Give yourself a high five!</div>
+                          <div class="center item-text-wrap" ng-if="badge === 'washclothes' && status === true" class="balanced" style="font-weight:bold">You have definitively shown the clothes who's boss. (It's you.)</div>
+                          <div class="center item-text-wrap" ng-if="badge === 'yard' && status === true" class="balanced" style="font-weight:bold">The yard needed a hero, and it found one in you!</div>
+                          <div class="center item-text-wrap" ng-if="badge === 'washdishes' && status === true" class="balanced" style="font-weight:bold">Why are all the dirty dishes rattling? The Dish Master is in town, and ready to clean things up around here.</div>  
+                        </div>
+                    </div>
+                </div>
+            </ion-item>
+        </ion-list>
+    </div>
+  </ion-content>
+</ion-view>

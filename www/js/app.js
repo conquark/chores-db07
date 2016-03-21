@@ -167,6 +167,17 @@ app.run(function($ionicPlatform) {
     }
   })
   
+  .state('app.mybadges', {
+        url: '/mybadges',
+        cache: false,
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/mybadges.html',
+                controller: 'AppCtrl'
+            }
+        }
+    })
+  
   .state('app.choredetails', {
     url: '/mychores/:id',
     cache: false,
