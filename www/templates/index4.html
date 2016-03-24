@@ -158,15 +158,15 @@
         </div>
         <div id="emailSignInNotFoundError" class="error">Sorry, we couldn't find that email address. Try again?
         </div>
-        <div id="userexistserror" class="error">It looks like there's already an account with that email address. If you've forgotton your password, you can <a href="#" onclick="showForgotPassword()">reset it</a>, or you can <a href="" onclick="signIn()">sign in.</a></div>
+        <div id="userexistserror" class="error">It looks like there's already an account with that email address. If you've forgotton your password, you can email <strong>taskmasterforgot@nationaltheatre.com</strong>, and we will send you your account info.</div>
         <div id="sponsornotfounderror" class="error">We weren't able to find that code. Try again?</div>
         <div id="signin" style="display:none">
             Sign in here. Use the same email and password on all of your family's devices. <br><br>
             <input type="text" size="15" name="signinemail" id="signinemail" placeholder="email">
             <input type="password" size="15" name="signinpassword" id="signinpassword" placeholder="password"> <br>
             <button style="padding:15px;border:1px solid white;border-radius:10px; margin-top:10px" onclick="signIn()">Sign In</button><br>
-            <div id="passwordError" style="display:none" class="error">Sorry, that password doesn't match our records. Try again? <br><br>
-            <a onclick="showForgotPassword()" style="color:darkred;text-decoration:underline">Forgot your password?</a>
+            <div id="passwordError" style="display:none" class="error">Sorry, that password doesn't match our records.<br><br>
+            Forgot your password? Email us at taskmasterforgot@nationaltheatre.com to have your account info re-sent to your email.
             </div>
         </div>
         <div id="signup" style="display:none">
@@ -359,6 +359,9 @@
             return matches;
         }
         
+        var sponsorRecord = {};
+        var sponsorIsEmpty = true;
+        
         var checkSponsorDB = function(sponsorcode) {
             console.log('starting to check sponsor db');
             showSpinner();
@@ -376,8 +379,14 @@
                     var record = sponsorDatabase[i];
                     if (record.sponsorcode === theSponsorCode) {
                         sponsorcodevalid = true;
+                        sponsorRecord = record;
+                        sponsorIsEmpty = false;
 //                        alert('SPONSORCODE IS VALID');
-                        setSpinnerMessage('Sponsor code validated...');
+                        if (sponsorcode === 'zerocode'){
+                            setSpinnerMessage('No code entered. Continuing setup...');
+                        } else {
+                            setSpinnerMessage('Sponsor code validated...');
+                        }
                         setTimeout(function() {
                             setSpinnerMessage('Setting up device...');
                             setSignUpLocalStorageItems();
@@ -404,7 +413,9 @@
                 }
                 for (var i = 0; i < userDatabase.length; i++) {
                     var record = userDatabase[i];
-                    if (record.email === email) {
+                    var recordEmailLowerCase = record.email.toLowerCase();
+                    var emailLowerCase = email.toLowerCase();
+                    if (recordEmailLowerCase === emailLowerCase) {
                         // USER EXISTS
                         userExists = true;
                         userRecord = record;
@@ -425,8 +436,11 @@
                     } else {
                         spinnerHide();
                         hideSpinnerMessage();
-                        alert('signing in without a code...');
-                        alert('so, yeah, put localstorage and stuff here.')
+                        // use default sponsor code
+                        var defaultCode = 'zerocode';
+                        checkSponsorDB(defaultCode);
+//                        alert('signing in without a code...');
+//                        alert('so, yeah, put localstorage and stuff here.')
                     }
                 }
             });
@@ -790,6 +804,7 @@
                 type: "person",
                 admin: "true"
             }
+            
             function log(x) {console.log(x)}
 
             log('here is record._id, record.name and record.pin:');
@@ -821,7 +836,13 @@
                         console.log('newLocalFamilyDB is: ');
                         console.log(testNewDB);
                         console.log('if there was something there, we can move on to next page I think.');
-                        location.href = '../index.html';
+                        showSpinnerMessage();
+                        setSpinnerMessage('Remember your PIN:<br><strong style="font-size:1.2em">' + primaryUser.pin + '</strong><br>You will need this in the next step.');
+                        setTimeout(function() {
+                            location.href = '../index.html';
+                        },4000);
+                        
+//                        location.href = '../index.html';
                     }).catch(function(err) {
                         console.log('unable to get allDocs from newLocalFamilyDB. error was ' + err);
                     })
@@ -846,6 +867,7 @@
         var signupname = document.getElementById("signupname").value;
         var thesignupsponsorcode = document.getElementById("signupsponsor").value;
         var aTimeStamp = new Date().toISOString();
+        var bTimeStamp = new Date().toISOString();
         var theCloudDBName = thesignupsponsorcode + aTimeStamp;
             theCloudDBName = theCloudDBName.replace(/:|-|\./g, '').toLowerCase();
             
@@ -886,7 +908,21 @@
                 pin: signuppin,
                 type: "person",
                 admin: true
-                
+            }
+            
+            log(sponsorRecord.name);
+            log(sponsorRecord.tagline);
+            log(sponsorRecord.logo);
+            log(sponsorRecord.linkbanking);
+            log(sponsorRecord);
+            
+            var primarySponsor = {
+                _id: "thisisthesponsor",
+                name: sponsorRecord.name,
+                type: "sponsor",
+                tagline: sponsorRecord.tagline,
+                logo: sponsorRecord.logo,
+                linkbanking: sponsorRecord.linkbanking
             }
             
             var newLocalFamilyDB = new PouchDB(theCloudDBName);
@@ -920,10 +956,22 @@
                         console.log(primaryUser);
                         newLocalFamilyDB.put(primaryUser).then(function(result) {
                             console.log('finished putting primary user into db');
-                            location.href = '../index.html';
+                            //location.href = '../index.html';
+                            setTimeout(function() {
+                                newLocalFamilyDB.put(primarySponsor).then(function(result) {
+                                    console.log('finished putting primary sponsor into db');
+                                    showSpinnerMessage();
+                                    setSpinnerMessage("Remember your PIN:<br><strong>" + primaryUser.pin + "</strong><br>You will need this in the next step.");
+                                    setTimeout(function() {
+                                        location.href = '../index.html';
+                                    },4000);
+                                }).catch(function(err) {
+                                    console.log('error: not able to put the primary sponsor. error was: ' + err);
+                                });                                
+                            },1500);
                         }).catch(function(err) {
                             console.log('error: not able to put the primary user');
-                        });                            
+                        });
                     } else {
                         console.log('something happened');
                         showSpinner();

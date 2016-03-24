@@ -14,8 +14,10 @@ function info(x){console.info(x)}
 //});
 
 var dbname = 'dbname';
+var sponsorcode = 'sponsorcode';
 if (window.localStorage.getItem('cloudDBName')) {
     dbname = window.localStorage.getItem('cloudDBName');
+    sponsorcode = window.localStorage.getItem('sponsorCode');
 } else {
     location.href = 'templates/index4.html';
 }
@@ -36,10 +38,12 @@ var sponsorDB;
 var localDB;
 var remoteDB;
 
+
 var setupDatabases = function(dbname) {
     info('STEP (1) START');
     localDB = new PouchDB(dbname);
     remoteDB = new PouchDB('https://bturner:glasgow8mysoup@bturner.cloudant.com/' + dbname);
+    sponsorDB = new PouchDB('https://bturner:glasgow8mysoup@bturner.cloudant.com/taskmastersponsors');
 }
 
 setupDatabases(dbname);

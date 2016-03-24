@@ -471,10 +471,8 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
                     self.currentMember = record;
                     UtilityService.setCookie('currentMemberName', self.currentMember.name);
                     localStorage.setItem("currentMemberName", self.currentMember.name);
-//                    log('current member is: ' + self.currentMember.name);
-//                    log('member cookie is: ' + UtilityService.getCookie('currentMemberName'));
-//                    log('localStorage currentMemberName is: ' + localStorage.getItem("currentMemberName"));
-//                    info('STEP (3) END');
+//                    self.forceLogin = true;
+                    localStorage.setItem('forceLogin', 'true');
                     return;
                 }
             }
@@ -826,16 +824,29 @@ app.factory('AppService', function(PouchDBListener, UtilityService) {
     
     self.setSponsor = function() {
         // get the Sponsor record from allRecords
+        var gotSponsor = false;
         for (var i = 0; i < self.allrecords.length; i++) {
             var record = self.allrecords[i];
             if (record.type === 'sponsor') {
                 self.sponsor = record;
+                gotSponsor = true;
+            }
+        }
+        
+        if (gotSponsor) {
+            // do nothing - already set
+        } else {
+            // create default sponsor record
+            self.sponsor = {
+                name: "NTC Corporate",
+                logo: "http://www.ntccorporate.com/wp-content/themes/twentyeleven/images/logo.png",
+                tagline: "Helping You Reach the Future"
             }
         }
 //        log('the sponsor is ' + self.sponsor.name);
 //        log(self.sponsor);
 //        self.sponsor.name = 'happy fun bank';
-        self.sponsor.name = 'Your Logo Here';
+        //self.sponsor.name = 'Your Logo Here';
 //        log(self.sponsor.name);
 //        log(self.allrecords);
             

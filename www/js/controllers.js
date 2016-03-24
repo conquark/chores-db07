@@ -151,8 +151,15 @@ $(document).ready(function() {
         $scope.service.setFamilyMembers();
         $scope.familyMembers = AppService.familyMembers;
         $scope.currentMember = AppService.currentMember;
-        $scope.currentStats = AppService.getCurrentStats();         
-    }, 1300);
+        $scope.currentStats = AppService.getCurrentStats();
+//        $scope.forceLogin = AppService.forceLogin;
+        $timeout(function() {
+              if (localStorage.getItem('forceLogin') === 'true') {
+                  localStorage.setItem('forceLogin', 'false');
+                  $scope.login();
+              }
+        },300);
+    }, 1100);
     
 
 window.dollarscope = $scope;
@@ -319,8 +326,8 @@ window.AppService = AppService;
         $scope.currentStats = AppService.getCurrentStats();
               $scope.modal.show();
     }, 800);
-
   };
+
 
   // Perform the login action when the user submits the login form
   $scope.setCurrentMember = function($index) {
@@ -783,6 +790,13 @@ window.dashscope = $scope;
     
     $scope.doRefresh = function() {
         AppService.setAllRecords();
+        $timeout(function() {
+            $scope.service.setFamilyMembers();
+            $scope.familyMembers = AppService.familyMembers;
+            $scope.currentMember = AppService.currentMember;
+            $scope.currentStats = AppService.getCurrentStats();
+            log($scope.currentStats);
+        }, 800);
         $scope.$broadcast('scroll.refreshComplete');
         $scope.$apply();
     };
@@ -1249,9 +1263,9 @@ window.dashscope = $scope;
                 dbChore.approveddate = new Date().toISOString();
                 localDB.put(dbChore).then(function(doc, err) {
                     $timeout(function() {
-                        $scope.doRefresh();
-                        $ionicHistory.goBack(-2);
-                    },250);
+                        //$scope.doRefresh();
+                        $ionicHistory.goBack();
+                    },1250);
                 }).catch(function(err) {
                     console.log('there was an error marking chore approved. error was: ' + err);
                 });
@@ -1279,7 +1293,7 @@ window.dashscope = $scope;
                 }
                 localDB.put(dbChore).then(function(doc, err) {
                         $timeout(function(){
-                            $scope.doRefresh();
+                            //$scope.doRefresh();
                             $ionicHistory.goBack();
                         },1250);
                 }).catch(function(err) {
@@ -1308,7 +1322,7 @@ window.dashscope = $scope;
                 $scope.chore.complete = false;
                     localDB.put(dbChore).then(function() {
                         $timeout(function(){
-                            $scope.doRefresh();
+                            //$scope.doRefresh();
                             $ionicHistory.goBack();                            
                         },250);
 //                            $scope.doRefresh();

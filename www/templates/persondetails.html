@@ -1,5 +1,7 @@
 <ion-view view-title="{{person.name}}">
-  <ion-content style="background-image:url('img/background.png');background-position:center;;background-size:stretch">
+  <ion-content style="background-image:url('img/background.png');background-position:center;background-size:stretch">
+       <ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()">
+    </ion-refresher>
     <div class="card">
         <item-list>
             <ion-item class="item-text-wrap">
@@ -63,9 +65,28 @@
                     {{chore.name}} <br>
                     {{chore.description}}
                     <div ng-if="chore.value && person.admin !== true" class="item-text-wrap" style="font-size:.8em;line-height:1em">This chore is worth ${{chore.value}}</div>
-                    <div ng-if="chore.value && person.admin === true" class="item-text-wrap">This chore is worth {{chore.value * 100}} points!</div>
+<!--                    <div ng-if="chore.value" class="item-text-wrap">This chore is worth {{chore.value * 100}} points!</div>-->
                     <h4 ng-if="chore.assignedby !== person.name">Assigned by: {{chore.assignedby}}</h4>
                     <h4 ng-if="chore.assignedby === person.name">
+                       <div class="item-text-wrap" class="item-icon-right">
+                          <i class="icon ion-android-cart"></i>
+                           {{person.name}} chose this chore from the Chore Store
+                       </div>
+                    </h4>
+                </ion-item>
+              </ion-list>
+            </ion-item>
+        <ion-item>
+                <span class="dark">{{person.name}}'s completed chores</span>
+             <ion-list>
+                <ion-item ng-repeat="chore in chores"
+                       ui-sref="app.personchoredetails({id:chore._id})" ng-if="chore.complete === true" class="dark animate item-text-wrap">
+                    COMPLETE&mdash;{{chore.name}} <br>
+                    {{chore.description}}
+                    <div ng-if="chore.value" class="item-text-wrap" style="font-size:.8em;line-height:1em">Earnings: ${{chore.value}}</div>
+<!--                    <div ng-if="chore.value && person.admin === true" class="item-text-wrap">This chore is worth {{chore.value * 100}} points!</div>-->
+                    <h4 ng-if="chore.assignedby !== person.name">Assigned by: {{chore.assignedby}}</h4>
+                    <h4 ng-if="chore.assignedby === person.name && person.name !== currentMember.name">
                        <div class="item-text-wrap" class="item-icon-right">
                           <i class="icon ion-android-cart"></i>
                            {{person.name}} chose this chore from the Chore Store

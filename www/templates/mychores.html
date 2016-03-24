@@ -17,7 +17,7 @@
            You have no uncompleted chores!
        </ion-item>
 -->
-        <ion-item ng-repeat="chore in service.mychores"
+        <ion-item ng-repeat="chore in service.mychores | orderBy:chore.dueDate:false"
                ui-sref="app.choredetails({id:chore._id})" ng-if="chore.complete !== true" class="positive animate item-text-wrap">
             {{chore.name}} <br>
             <span ng-if="chore.value > 0">You can earn: {{chore.value | currency}}</span>
@@ -55,11 +55,11 @@
             <span ng-if="currentStats.completedchores > 0" class="dark">Recent Completed Chores</span>
          <ion-list>
             <ion-item ng-repeat="chore in service.mychores | orderBy:chore.completiondate:true"
-                   ui-sref="app.choredetails({id:chore._id})" ng-if="chore.complete === true && (!chore.requiresapproval || (chore.requiresapproval && chore.approved === true))" class="balanced animate">
+                   ui-sref="app.choredetails({id:chore._id})" ng-if="chore.complete === true && (!chore.requiresapproval || (chore.requiresapproval && chore.approved === true))" class="dark animate">
                 <h2 style="font-weight:bold; color: gray" >Complete</h2>
                 {{chore.name}} <br>
-                <span ng-if="chore.value && currentMember.admin !== true">You've earned: {{chore.value | currency}}!</span>
-                <span ng-if="chore.value && currentMember.admin === true">You've earned: {{chore.value * 100}} points!</span>
+                <span ng-if="chore.value">You've earned: {{chore.value | currency}}!</span>
+<!--                <span ng-if="chore.value && currentMember.admin === true">You've earned: {{chore.value * 100}} points!</span>-->
                 <h4>Completed on: {{chore.completiondate | date: 'short'}}</h4>
                 <h4 ng-if="chore.assignedby !== currentMember.name">Assigned by: {{chore.assignedby}}</h4>
                 <h4 ng-if="chore.assignedby === currentMember.name">
