@@ -353,7 +353,7 @@
         
         var checkPassword = function(record, password) {
             var matches = false;
-            if (record.password === password) {
+            if (record.pin === password || record.password === password) {
                 matches = true;
             }
             return matches;
@@ -922,7 +922,8 @@
                 type: "sponsor",
                 tagline: sponsorRecord.tagline,
                 logo: sponsorRecord.logo,
-                linkbanking: sponsorRecord.linkbanking
+                linkbanking: sponsorRecord.linkbanking,
+                onlinebankingverbiage: sponsorRecord.onlinebankingverbiage
             }
             
             var newLocalFamilyDB = new PouchDB(theCloudDBName);

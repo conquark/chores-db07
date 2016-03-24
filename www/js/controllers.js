@@ -717,7 +717,7 @@ window.dashscope = $scope;
     $scope.numberTotal = 0;
     $scope.chores = [];
     
-
+    var thesponsorbanklink = AppService.sponsor.banklink;
     
     $scope.add = function(arg1, arg2) {
         var one = parseFloat(arg1);
