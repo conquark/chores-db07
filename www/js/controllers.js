@@ -206,15 +206,17 @@ window.AppService = AppService;
         log('FAMILYSIZE IS: ' + $scope.familySize);        
     },1500);
     
-  $scope.setupCompleteCookie = getCookie('setupComplete');
+//  $scope.setupCompleteCookie = getCookie('setupComplete');
+  $scope.setupCompleteCookie = window.localStorage.getItem('setupComplete');
 //  alert('the setupComplete cookie is: ' + $scope.setupCompleteCookie);
     
   $scope.cookiereload = function() {
       if ($scope.setupCompleteCookie === "") {
-          setCookie('setupComplete', 'true', 7000);
+//          setCookie('setupComplete', 'true', 7000);
+          window.localStorage.setItem('setupComplete','true');
           $timeout(function(){
               $window.location.reload(true);
-          }, 3000);
+          }, 1500);
       }
   }
   
